@@ -1,0 +1,30 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>Prompt Generator</title>
+  <link rel="stylesheet" href="styles.css">
+</head>
+<body>
+  <div class="container">
+    <h1>Prompt Generator</h1>
+    <form id="promptForm">
+      <div class="input-group">
+        <label>Paper/Thesis Title</label>
+        <textarea id="titleInput" maxlength="300"></textarea>
+      </div>
+      <div class="input-group">
+        <label>Research Question</label>
+        <textarea id="researchInput" maxlength="300"></textarea>
+      </div>
+      <div class="input-group">
+        <label>Relevance Section</label>
+        <textarea id="relevanceInput" maxlength="5000"></textarea>
+      </div>
+      <button type="submit">Generate Prompt</button>
+    </form>
+    <div id="outputArea"></div>
+  </div>
+  <script src="script.js"></script>
+</body>
+</html>
