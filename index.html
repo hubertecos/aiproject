@@ -65,7 +65,7 @@
     </select>
   </div>
 
-  <!-- Option 1: Research Question -->
+  <!-- 1. Topic & Research Question -->
   <div id="rq-section" class="input-section">
     <label for="title">Paper/Thesis Title</label>
     <input type="text" id="title" maxlength="300">
@@ -76,54 +76,104 @@
     <div class="char-count" id="rq-count">0 / 300</div>
   </div>
 
-  <!-- Option 2: Relevance (stub) -->
+  <!-- 2. Relevance Table -->
   <div id="relevance-section" class="input-section hidden">
+    <label for="relevance-rq">Research Question</label>
+    <input type="text" id="relevance-rq" maxlength="300">
+    <div class="char-count" id="relevance-rq-count">0 / 300</div>
+
     <label for="relevance">Relevance Section</label>
     <textarea id="relevance" maxlength="5000" rows="6"></textarea>
     <div class="char-count" id="relevance-count">0 / 5000</div>
   </div>
 
-  <button id="submit-btn">Submit</button>
+  <!-- 3. Literature Review Structure -->
+  <div id="lit-structure-section" class="input-section hidden">
+    <label for="lit-structure-rq">Research Question</label>
+    <input type="text" id="lit-structure-rq" maxlength="300">
+    <div class="char-count" id="lit-structure-rq-count">0 / 300</div>
 
+    <label for="lit-structure">Literature Review Structure</label>
+    <textarea id="lit-structure" maxlength="5000" rows="4"></textarea>
+    <div class="char-count" id="lit-structure-count">0 / 5000</div>
+  </div>
+
+  <!-- 4. Literature Review -->
+  <div id="literature-review-section" class="input-section hidden">
+    <label for="literature-review-rq">Research Question</label>
+    <input type="text" id="literature-review-rq" maxlength="300">
+    <div class="char-count" id="literature-review-rq-count">0 / 300</div>
+
+    <label for="literature-review-structure">Literature Review Structure</label>
+    <textarea id="literature-review-structure" maxlength="5000" rows="4"></textarea>
+    <div class="char-count" id="literature-review-structure-count">0 / 5000</div>
+
+    <label for="literature-review">Literature Review</label>
+    <textarea id="literature-review" maxlength="5000" rows="6"></textarea>
+    <div class="char-count" id="literature-review-count">0 / 5000</div>
+  </div>
+
+  <!-- 5. Analytical Framework -->
+  <div id="analytical-framework-section" class="input-section hidden">
+    <label for="analytical-framework-rq">Research Question</label>
+    <input type="text" id="analytical-framework-rq" maxlength="300">
+    <div class="char-count" id="analytical-framework-rq-count">0 / 300</div>
+
+    <label for="analytical-framework-lit-review">Literature Review</label>
+    <textarea id="analytical-framework-lit-review" maxlength="5000" rows="4"></textarea>
+    <div class="char-count" id="analytical-framework-lit-review-count">0 / 5000</div>
+
+    <label for="analytical-framework">Analytical Framework</label>
+    <textarea id="analytical-framework" maxlength="5000" rows="6"></textarea>
+    <div class="char-count" id="analytical-framework-count">0 / 5000</div>
+  </div>
+
+  <button id="submit-btn">Submit</button>
   <div id="result"></div>
 
   <script>
-    // Helpers to show/hide sections
+    // Show/hide sections
     const sections = {
       rq: document.getElementById('rq-section'),
       relevance: document.getElementById('relevance-section'),
-      // placeholders for future options:
-      'lit-structure': null,
-      'literature-review': null,
-      'analytical-framework': null
+      'lit-structure': document.getElementById('lit-structure-section'),
+      'literature-review': document.getElementById('literature-review-section'),
+      'analytical-framework': document.getElementById('analytical-framework-section'),
     };
-
     const modeSelect = document.getElementById('modeSelect');
     function updateSections() {
-      Object.keys(sections).forEach(key => {
-        const el = sections[key];
-        if (!el) return;
+      Object.entries(sections).forEach(([key, el]) => {
         el.classList.toggle('hidden', modeSelect.value !== key);
       });
-      // Clear previous result when switching
       document.getElementById('result').textContent = '';
     }
     modeSelect.addEventListener('change', updateSections);
-    updateSections(); // on load
+    updateSections();
 
     // Character counters
-    function setupCounter(id, counterId) {
-      const input = document.getElementById(id);
-      const counter = document.getElementById(counterId);
-      input.addEventListener('input', () => {
-        counter.textContent = `${input.value.length} / ${input.maxLength}`;
+    function setupCounter(id, countId) {
+      const el = document.getElementById(id);
+      const cnt = document.getElementById(countId);
+      el.addEventListener('input', () => {
+        cnt.textContent = `${el.value.length} / ${el.maxLength}`;
       });
     }
-    setupCounter('title', 'title-count');
-    setupCounter('research-question', 'rq-count');
-    setupCounter('relevance', 'relevance-count');
+    [
+      ['title', 'title-count'],
+      ['research-question', 'rq-count'],
+      ['relevance-rq', 'relevance-rq-count'],
+      ['relevance', 'relevance-count'],
+      ['lit-structure-rq', 'lit-structure-rq-count'],
+      ['lit-structure', 'lit-structure-count'],
+      ['literature-review-rq', 'literature-review-rq-count'],
+      ['literature-review-structure', 'literature-review-structure-count'],
+      ['literature-review', 'literature-review-count'],
+      ['analytical-framework-rq', 'analytical-framework-rq-count'],
+      ['analytical-framework-lit-review', 'analytical-framework-lit-review-count'],
+      ['analytical-framework', 'analytical-framework-count'],
+    ].forEach(args => setupCounter(...args));
 
-    // Generate prompts
+    // Generate prompt
     document.getElementById('submit-btn').addEventListener('click', () => {
       const mode = modeSelect.value;
       let prompt = '';
@@ -133,22 +183,58 @@
         const rq    = document.getElementById('research-question').value.trim();
         prompt = `EcoS Prompt-Generator: Research Question
 
-Please provide feedback on the clarity, specificity, and feasibility of this research question:
+Please provide feedback on this research question:
 
 Title: "${title}"
 Research Question: "${rq}"`;
       }
       else if (mode === 'relevance') {
+        const rq  = document.getElementById('relevance-rq').value.trim();
         const rel = document.getElementById('relevance').value.trim();
         prompt = `EcoS Prompt-Generator: Relevance
 
-Please provide feedback on the relevance of the research question according to the standards at EcoS.
+Research Question: "${rq}"
 
 My relevance section:
 ${rel}`;
       }
-      else {
-        prompt = 'This option is coming soon!';
+      else if (mode === 'lit-structure') {
+        const rq = document.getElementById('lit-structure-rq').value.trim();
+        const str = document.getElementById('lit-structure').value.trim();
+        prompt = `EcoS Prompt-Generator: Literature Review Structure
+
+Research Question: "${rq}"
+
+Proposed Literature Review Structure:
+${str}`;
+      }
+      else if (mode === 'literature-review') {
+        const rq  = document.getElementById('literature-review-rq').value.trim();
+        const str = document.getElementById('literature-review-structure').value.trim();
+        const rev = document.getElementById('literature-review').value.trim();
+        prompt = `EcoS Prompt-Generator: Literature Review
+
+Research Question: "${rq}"
+
+Literature Review Structure:
+${str}
+
+Literature Review:
+${rev}`;
+      }
+      else if (mode === 'analytical-framework') {
+        const rq   = document.getElementById('analytical-framework-rq').value.trim();
+        const lit  = document.getElementById('analytical-framework-lit-review').value.trim();
+        const af   = document.getElementById('analytical-framework').value.trim();
+        prompt = `EcoS Prompt-Generator: Analytical Framework
+
+Research Question: "${rq}"
+
+Literature Review:
+${lit}
+
+Analytical Framework:
+${af}`;
       }
 
       document.getElementById('result').textContent = prompt;
