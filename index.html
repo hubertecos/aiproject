@@ -2,8 +2,8 @@
 <html lang="en">
 <head>
   <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Prompt Generator</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>EcoS Prompt Generator</title>
   <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600&display=swap" rel="stylesheet">
   <style>
     body {
@@ -11,52 +11,40 @@
       max-width: 800px;
       margin: 0 auto;
       padding: 20px;
-      line-height: 1.6;
       color: #333;
+      line-height: 1.6;
     }
-    h1 {
-      text-align: center;
-      color: #2c3e50;
-    }
-    .instructions {
-      background-color: #f4f4f4;
-      padding: 15px;
-      border-radius: 5px;
-      margin-bottom: 20px;
-    }
-    .input-section {
-      margin-bottom: 15px;
-    }
-    input, textarea {
+    h1 { text-align: center; color: #2c3e50; }
+    .input-section { margin-bottom: 15px; }
+    .input-section.hidden { display: none; }
+    label { font-weight: 600; }
+    input, textarea, select, button {
       width: 100%;
       padding: 10px;
       margin-top: 5px;
       border: 1px solid #ddd;
       border-radius: 4px;
       box-sizing: border-box;
+      font: inherit;
     }
     .char-count {
       text-align: right;
-      color: #888;
       font-size: 0.8em;
+      color: #888;
+      margin-top: 2px;
     }
     #submit-btn {
-      width: 100%;
-      padding: 10px;
       background-color: #3498db;
-      color: white;
+      color: #fff;
       border: none;
-      border-radius: 4px;
       cursor: pointer;
-      transition: background-color 0.3s ease;
+      transition: background-color .2s;
     }
-    #submit-btn:hover {
-      background-color: #2980b9;
-    }
+    #submit-btn:hover { background-color: #2980b9; }
     #result {
       margin-top: 20px;
-      background-color: #f9f9f9;
       padding: 15px;
+      background: #f9f9f9;
       border-radius: 5px;
       white-space: pre-wrap;
     }
@@ -64,24 +52,33 @@
 </head>
 <body>
   <h1>EcoS Prompt Generator</h1>
-  <div class="instructions">
-    <p>Instructions: Enter the information on your project in the three windows below. After clicking "Submit", a prompt will be generated. You can copy and paste this text into any AI you would like to use, such as ChatGPT, Claude, Gemini, Perplexity, etc.</p>
+
+  <!-- Mode selector -->
+  <div class="input-section">
+    <label for="modeSelect">Choose what to generate:</label>
+    <select id="modeSelect">
+      <option value="rq">1. Topic &amp; Research Question</option>
+      <option value="relevance">2. Relevance Table</option>
+      <option value="lit-structure">3. Literature Review Structure</option>
+      <option value="literature-review">4. Literature Review</option>
+      <option value="analytical-framework">5. Analytical Framework</option>
+    </select>
   </div>
 
-  <div class="input-section">
-    <label for="title">1. Enter the title of your paper or thesis here</label>
+  <!-- Option 1: Research Question -->
+  <div id="rq-section" class="input-section">
+    <label for="title">Paper/Thesis Title</label>
     <input type="text" id="title" maxlength="300">
     <div class="char-count" id="title-count">0 / 300</div>
-  </div>
 
-  <div class="input-section">
-    <label for="research-question">2. Enter the research question here</label>
+    <label for="research-question">Research Question</label>
     <input type="text" id="research-question" maxlength="300">
     <div class="char-count" id="rq-count">0 / 300</div>
   </div>
 
-  <div class="input-section">
-    <label for="relevance">3. Paste the text of your relevance section here</label>
+  <!-- Option 2: Relevance (stub) -->
+  <div id="relevance-section" class="input-section hidden">
+    <label for="relevance">Relevance Section</label>
     <textarea id="relevance" maxlength="5000" rows="6"></textarea>
     <div class="char-count" id="relevance-count">0 / 5000</div>
   </div>
@@ -91,45 +88,68 @@
   <div id="result"></div>
 
   <script>
-    // Character count updates
-    const updateCharCount = (id, countId) => {
-      const input = document.getElementById(id);
-      const count = document.getElementById(countId);
-      input.addEventListener('input', () => {
-        count.textContent = `${input.value.length} / ${input.maxLength}`;
-      });
+    // Helpers to show/hide sections
+    const sections = {
+      rq: document.getElementById('rq-section'),
+      relevance: document.getElementById('relevance-section'),
+      // placeholders for future options:
+      'lit-structure': null,
+      'literature-review': null,
+      'analytical-framework': null
     };
 
-    updateCharCount('title', 'title-count');
-    updateCharCount('research-question', 'rq-count');
-    updateCharCount('relevance', 'relevance-count');
+    const modeSelect = document.getElementById('modeSelect');
+    function updateSections() {
+      Object.keys(sections).forEach(key => {
+        const el = sections[key];
+        if (!el) return;
+        el.classList.toggle('hidden', modeSelect.value !== key);
+      });
+      // Clear previous result when switching
+      document.getElementById('result').textContent = '';
+    }
+    modeSelect.addEventListener('change', updateSections);
+    updateSections(); // on load
 
-    // Generate the prompt
+    // Character counters
+    function setupCounter(id, counterId) {
+      const input = document.getElementById(id);
+      const counter = document.getElementById(counterId);
+      input.addEventListener('input', () => {
+        counter.textContent = `${input.value.length} / ${input.maxLength}`;
+      });
+    }
+    setupCounter('title', 'title-count');
+    setupCounter('research-question', 'rq-count');
+    setupCounter('relevance', 'relevance-count');
+
+    // Generate prompts
     document.getElementById('submit-btn').addEventListener('click', () => {
-      const title = document.getElementById('title').value;
-      const researchQuestion = document.getElementById('research-question').value;
-      const relevance = document.getElementById('relevance').value;
+      const mode = modeSelect.value;
+      let prompt = '';
 
-      const prompt = `EcoS Prompt-Generator: Relevance
+      if (mode === 'rq') {
+        const title = document.getElementById('title').value.trim();
+        const rq    = document.getElementById('research-question').value.trim();
+        prompt = `EcoS Prompt-Generator: Research Question
+
+Please provide feedback on the clarity, specificity, and feasibility of this research question:
+
+Title: "${title}"
+Research Question: "${rq}"`;
+      }
+      else if (mode === 'relevance') {
+        const rel = document.getElementById('relevance').value.trim();
+        prompt = `EcoS Prompt-Generator: Relevance
 
 Please provide feedback on the relevance of the research question according to the standards at EcoS.
 
-The title of my project is „${title}“. 
-The Research Question is „${researchQuestion}“. 
-
-The standards to consider include:
-1. Do I answer the question „who can benefit why and how from knowing the answer to my RQ"?
-2. Do I discuss the relevance of my RQ, and not of my topic?
-3. Do I discuss the relevance of my RQ, and not of some related issue?
-4. Do I include a list of stakeholders („who") regarding the relevance of my RQ?
-5. Have I, for each stakeholder, provided arguments and reasons ("why and how") explaining the relevance of my RQ for them?
-6. Do I provide evidence (data, citations) for the alleged interests of each stakeholder?
-7. Do I provide a reasonable number of potential stakeholders?
-8. Do I not just claim some interest (e.g. "academics will be interested…")?
-9. Do I provide evidence of such an interest instead, for example through citations, data, etc.?
-
 My relevance section:
-${relevance}`;
+${rel}`;
+      }
+      else {
+        prompt = 'This option is coming soon!';
+      }
 
       document.getElementById('result').textContent = prompt;
     });
