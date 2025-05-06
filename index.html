@@ -2,29 +2,137 @@
 <html lang="en">
 <head>
   <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>Prompt Generator</title>
-  <link rel="stylesheet" href="styles.css">
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600&display=swap" rel="stylesheet">
+  <style>
+    body {
+      font-family: 'Inter', sans-serif;
+      max-width: 800px;
+      margin: 0 auto;
+      padding: 20px;
+      line-height: 1.6;
+      color: #333;
+    }
+    h1 {
+      text-align: center;
+      color: #2c3e50;
+    }
+    .instructions {
+      background-color: #f4f4f4;
+      padding: 15px;
+      border-radius: 5px;
+      margin-bottom: 20px;
+    }
+    .input-section {
+      margin-bottom: 15px;
+    }
+    input, textarea {
+      width: 100%;
+      padding: 10px;
+      margin-top: 5px;
+      border: 1px solid #ddd;
+      border-radius: 4px;
+      box-sizing: border-box;
+    }
+    .char-count {
+      text-align: right;
+      color: #888;
+      font-size: 0.8em;
+    }
+    #submit-btn {
+      width: 100%;
+      padding: 10px;
+      background-color: #3498db;
+      color: white;
+      border: none;
+      border-radius: 4px;
+      cursor: pointer;
+      transition: background-color 0.3s ease;
+    }
+    #submit-btn:hover {
+      background-color: #2980b9;
+    }
+    #result {
+      margin-top: 20px;
+      background-color: #f9f9f9;
+      padding: 15px;
+      border-radius: 5px;
+      white-space: pre-wrap;
+    }
+  </style>
 </head>
 <body>
-  <div class="container">
-    <h1>Prompt Generator</h1>
-    <form id="promptForm">
-      <div class="input-group">
-        <label>Paper/Thesis Title</label>
-        <textarea id="titleInput" maxlength="300"></textarea>
-      </div>
-      <div class="input-group">
-        <label>Research Question</label>
-        <textarea id="researchInput" maxlength="300"></textarea>
-      </div>
-      <div class="input-group">
-        <label>Relevance Section</label>
-        <textarea id="relevanceInput" maxlength="5000"></textarea>
-      </div>
-      <button type="submit">Generate Prompt</button>
-    </form>
-    <div id="outputArea"></div>
+  <h1>EcoS Prompt Generator</h1>
+  <div class="instructions">
+    <p>Instructions: Enter the information on your project in the three windows below. After clicking "Submit", a prompt will be generated. You can copy and paste this text into any AI you would like to use, such as ChatGPT, Claude, Gemini, Perplexity, etc.</p>
   </div>
-  <script src="script.js"></script>
+
+  <div class="input-section">
+    <label for="title">1. Enter the title of your paper or thesis here</label>
+    <input type="text" id="title" maxlength="300">
+    <div class="char-count" id="title-count">0 / 300</div>
+  </div>
+
+  <div class="input-section">
+    <label for="research-question">2. Enter the research question here</label>
+    <input type="text" id="research-question" maxlength="300">
+    <div class="char-count" id="rq-count">0 / 300</div>
+  </div>
+
+  <div class="input-section">
+    <label for="relevance">3. Paste the text of your relevance section here</label>
+    <textarea id="relevance" maxlength="5000" rows="6"></textarea>
+    <div class="char-count" id="relevance-count">0 / 5000</div>
+  </div>
+
+  <button id="submit-btn">Submit</button>
+
+  <div id="result"></div>
+
+  <script>
+    // Character count updates
+    const updateCharCount = (id, countId) => {
+      const input = document.getElementById(id);
+      const count = document.getElementById(countId);
+      input.addEventListener('input', () => {
+        count.textContent = `${input.value.length} / ${input.maxLength}`;
+      });
+    };
+
+    updateCharCount('title', 'title-count');
+    updateCharCount('research-question', 'rq-count');
+    updateCharCount('relevance', 'relevance-count');
+
+    // Generate the prompt
+    document.getElementById('submit-btn').addEventListener('click', () => {
+      const title = document.getElementById('title').value;
+      const researchQuestion = document.getElementById('research-question').value;
+      const relevance = document.getElementById('relevance').value;
+
+      const prompt = `EcoS Prompt-Generator: Relevance
+
+Please provide feedback on the relevance of the research question according to the standards at EcoS.
+
+The title of my project is „${title}“. 
+The Research Question is „${researchQuestion}“. 
+
+The standards to consider include:
+1. Do I answer the question „who can benefit why and how from knowing the answer to my RQ"?
+2. Do I discuss the relevance of my RQ, and not of my topic?
+3. Do I discuss the relevance of my RQ, and not of some related issue?
+4. Do I include a list of stakeholders („who") regarding the relevance of my RQ?
+5. Have I, for each stakeholder, provided arguments and reasons ("why and how") explaining the relevance of my RQ for them?
+6. Do I provide evidence (data, citations) for the alleged interests of each stakeholder?
+7. Do I provide a reasonable number of potential stakeholders?
+8. Do I not just claim some interest (e.g. "academics will be interested…")?
+9. Do I provide evidence of such an interest instead, for example through citations, data, etc.?
+
+My relevance section:
+${relevance}`;
+
+      document.getElementById('result').textContent = prompt;
+    });
+  </script>
 </body>
 </html>
