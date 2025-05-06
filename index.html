@@ -1,135 +1,143 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1">
-  <title>EcoS Prompt Generator</title>
-  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600&display=swap" rel="stylesheet">
-  <style>
-    body {
-      font-family: 'Inter', sans-serif;
-      max-width: 800px;
-      margin: 0 auto;
-      padding: 20px;
-      color: #333;
-      line-height: 1.6;
-    }
-    h1 { text-align: center; color: #2c3e50; }
-    .input-section { margin-bottom: 15px; }
-    .input-section.hidden { display: none; }
-    label { font-weight: 600; }
-    input, textarea, select, button {
-      width: 100%;
-      padding: 10px;
-      margin-top: 5px;
-      border: 1px solid #ddd;
-      border-radius: 4px;
-      box-sizing: border-box;
-      font: inherit;
-    }
-    .char-count {
-      text-align: right;
-      font-size: 0.8em;
-      color: #888;
-      margin-top: 2px;
-    }
-    #submit-btn {
-      background-color: #3498db;
-      color: #fff;
-      border: none;
-      cursor: pointer;
-      transition: background-color .2s;
-    }
-    #submit-btn:hover { background-color: #2980b9; }
-    #result {
-      margin-top: 20px;
-      padding: 15px;
-      background: #f9f9f9;
-      border-radius: 5px;
-      white-space: pre-wrap;
-    }
-  </style>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>EcoS Prompt-Generator</title>
+  <!-- 1️⃣ Add Tailwind CSS -->
+  <script src="https://cdn.tailwindcss.com"></script>
 </head>
-<body>
-  <h1>EcoS Prompt Generator</h1>
+<body class="bg-gray-50 text-gray-900 font-sans">
+  <!-- 2️⃣ Page container -->
+  <div class="max-w-3xl mx-auto p-6">
 
-  <!-- Mode selector -->
-  <div class="input-section">
-    <label for="modeSelect">Choose what to generate:</label>
-    <select id="modeSelect">
-      <option value="rq">1. Topic &amp; Research Question</option>
-      <option value="relevance">2. Relevance Table</option>
-      <option value="lit-structure">3. Literature Review Structure</option>
-      <option value="literature-review">4. Literature Review</option>
-      <option value="analytical-framework">5. Analytical Framework</option>
-    </select>
-  </div>
+    <!-- Title & Instructions -->
+    <h1 class="text-3xl font-bold mb-4">EcoS Prompt-Generator</h1>
+    <p class="mb-6 text-sm text-gray-700">
+      <strong>Instructions:</strong>
+      Select a mode, fill in the fields, then click “Submit” to generate your prompt.  
+      You can copy it into ChatGPT, Claude, Gemini, etc.
+    </p>
 
-  <!-- 1. Topic & Research Question -->
-  <div id="rq-section" class="input-section">
-    <label for="title">Paper/Thesis Title</label>
-    <input type="text" id="title" maxlength="300">
-    <div class="char-count" id="title-count">0 / 300</div>
+    <!-- All form sections share this spacing wrapper -->
+    <div class="space-y-6">
 
-    <label for="research-question">Research Question</label>
-    <input type="text" id="research-question" maxlength="300">
-    <div class="char-count" id="rq-count">0 / 300</div>
-  </div>
+      <!-- 3️⃣ Mode selector -->
+      <div>
+        <label for="modeSelect" class="block font-medium mb-1">Choose what to generate:</label>
+        <select id="modeSelect"
+                class="w-full p-3 border border-gray-300 rounded-xl shadow-sm focus:outline-none focus:ring-2 focus:ring-blue-500">
+          <option value="rq">1. Topic &amp; Research Question</option>
+          <option value="relevance">2. Relevance Table</option>
+          <option value="lit-structure">3. Literature Review Structure</option>
+          <option value="literature-review">4. Literature Review</option>
+          <option value="analytical-framework">5. Analytical Framework</option>
+        </select>
+      </div>
 
-  <!-- 2. Relevance Table -->
-  <div id="relevance-section" class="input-section hidden">
-    <label for="relevance-rq">Research Question</label>
-    <input type="text" id="relevance-rq" maxlength="300">
-    <div class="char-count" id="relevance-rq-count">0 / 300</div>
+      <!-- 4️⃣ Option 1: Topic & Research Question -->
+      <div id="rq-section" class="space-y-4">
+        <div>
+          <label for="title" class="block font-medium">Paper/Thesis Title</label>
+          <input type="text" id="title" maxlength="300" required
+                 class="w-full p-3 border border-gray-300 rounded-xl shadow-sm focus:outline-none focus:ring-2 focus:ring-blue-500"/>
+          <div id="title-count" class="text-right text-xs text-gray-500">0 / 300</div>
+        </div>
+        <div>
+          <label for="research-question" class="block font-medium">Research Question</label>
+          <input type="text" id="research-question" maxlength="300" required
+                 class="w-full p-3 border border-gray-300 rounded-xl shadow-sm focus:outline-none focus:ring-2 focus:ring-blue-500"/>
+          <div id="rq-count" class="text-right text-xs text-gray-500">0 / 300</div>
+        </div>
+      </div>
 
-    <label for="relevance">Relevance Section</label>
-    <textarea id="relevance" maxlength="5000" rows="6"></textarea>
-    <div class="char-count" id="relevance-count">0 / 5000</div>
-  </div>
+      <!-- 5️⃣ Option 2: Relevance Table -->
+      <div id="relevance-section" class="space-y-4 hidden">
+        <div>
+          <label for="relevance-rq" class="block font-medium">Research Question</label>
+          <input type="text" id="relevance-rq" maxlength="300" required
+                 class="w-full p-3 border border-gray-300 rounded-xl shadow-sm focus:outline-none focus:ring-2 focus:ring-blue-500"/>
+          <div id="relevance-rq-count" class="text-right text-xs text-gray-500">0 / 300</div>
+        </div>
+        <div>
+          <label for="relevance" class="block font-medium">Relevance Section</label>
+          <textarea id="relevance" rows="6" maxlength="5000" required
+                    class="w-full p-3 border border-gray-300 rounded-xl shadow-sm focus:outline-none focus:ring-2 focus:ring-blue-500"></textarea>
+          <div id="relevance-count" class="text-right text-xs text-gray-500">0 / 5000</div>
+        </div>
+      </div>
 
-  <!-- 3. Literature Review Structure -->
-  <div id="lit-structure-section" class="input-section hidden">
-    <label for="lit-structure-rq">Research Question</label>
-    <input type="text" id="lit-structure-rq" maxlength="300">
-    <div class="char-count" id="lit-structure-rq-count">0 / 300</div>
+      <!-- 6️⃣ Option 3: Literature Review Structure -->
+      <div id="lit-structure-section" class="space-y-4 hidden">
+        <div>
+          <label for="lit-structure-rq" class="block font-medium">Research Question</label>
+          <input type="text" id="lit-structure-rq" maxlength="300" required
+                 class="w-full p-3 border border-gray-300 rounded-xl shadow-sm focus:outline-none focus:ring-2 focus:ring-blue-500"/>
+          <div id="lit-structure-rq-count" class="text-right text-xs text-gray-500">0 / 300</div>
+        </div>
+        <div>
+          <label for="lit-structure" class="block font-medium">Literature Review Structure</label>
+          <textarea id="lit-structure" rows="4" maxlength="5000" required
+                    class="w-full p-3 border border-gray-300 rounded-xl shadow-sm focus:outline-none focus:ring-2 focus:ring-blue-500"></textarea>
+          <div id="lit-structure-count" class="text-right text-xs text-gray-500">0 / 5000</div>
+        </div>
+      </div>
 
-    <label for="lit-structure">Literature Review Structure</label>
-    <textarea id="lit-structure" maxlength="5000" rows="4"></textarea>
-    <div class="char-count" id="lit-structure-count">0 / 5000</div>
-  </div>
+      <!-- 7️⃣ Option 4: Literature Review -->
+      <div id="literature-review-section" class="space-y-4 hidden">
+        <div>
+          <label for="literature-review-rq" class="block font-medium">Research Question</label>
+          <input type="text" id="literature-review-rq" maxlength="300" required
+                 class="w-full p-3 border border-gray-300 rounded-xl shadow-sm focus:outline-none focus:ring-2 focus:ring-blue-500"/>
+          <div id="literature-review-rq-count" class="text-right text-xs text-gray-500">0 / 300</div>
+        </div>
+        <div>
+          <label for="literature-review-structure" class="block font-medium">Literature Review Structure</label>
+          <textarea id="literature-review-structure" rows="4" maxlength="5000" required
+                    class="w-full p-3 border border-gray-300 rounded-xl shadow-sm focus:outline-none focus:ring-2 focus:ring-blue-500"></textarea>
+          <div id="literature-review-structure-count" class="text-right text-xs text-gray-500">0 / 5000</div>
+        </div>
+        <div>
+          <label for="literature-review" class="block font-medium">Literature Review</label>
+          <textarea id="literature-review" rows="6" maxlength="5000" required
+                    class="w-full p-3 border border-gray-300 rounded-xl shadow-sm focus:outline-none focus:ring-2 focus:ring-blue-500"></textarea>
+          <div id="literature-review-count" class="text-right text-xs text-gray-500">0 / 5000</div>
+        </div>
+      </div>
 
-  <!-- 4. Literature Review -->
-  <div id="literature-review-section" class="input-section hidden">
-    <label for="literature-review-rq">Research Question</label>
-    <input type="text" id="literature-review-rq" maxlength="300">
-    <div class="char-count" id="literature-review-rq-count">0 / 300</div>
+      <!-- 8️⃣ Option 5: Analytical Framework -->
+      <div id="analytical-framework-section" class="space-y-4 hidden">
+        <div>
+          <label for="analytical-framework-rq" class="block font-medium">Research Question</label>
+          <input type="text" id="analytical-framework-rq" maxlength="300" required
+                 class="w-full p-3 border border-gray-300 rounded-xl shadow-sm focus:outline-none focus:ring-2 focus:ring-blue-500"/>
+          <div id="analytical-framework-rq-count" class="text-right text-xs text-gray-500">0 / 300</div>
+        </div>
+        <div>
+          <label for="analytical-framework-lit-review" class="block font-medium">Literature Review</label>
+          <textarea id="analytical-framework-lit-review" rows="4" maxlength="5000" required
+                    class="w-full p-3 border border-gray-300 rounded-xl shadow-sm focus:outline-none focus:ring-2 focus:ring-blue-500"></textarea>
+          <div id="analytical-framework-lit-review-count" class="text-right text-xs text-gray-500">0 / 5000</div>
+        </div>
+        <div>
+          <label for="analytical-framework" class="block font-medium">Analytical Framework</label>
+          <textarea id="analytical-framework" rows="6" maxlength="5000" required
+                    class="w-full p-3 border border-gray-300 rounded-xl shadow-sm focus:outline-none focus:ring-2 focus:ring-blue-500"></textarea>
+          <div id="analytical-framework-count" class="text-right text-xs text-gray-500">0 / 5000</div>
+        </div>
+      </div>
 
-    <label for="literature-review-structure">Literature Review Structure</label>
-    <textarea id="literature-review-structure" maxlength="5000" rows="4"></textarea>
-    <div class="char-count" id="literature-review-structure-count">0 / 5000</div>
+      <!-- 9️⃣ Submit button -->
+      <button id="submit-btn"
+              class="w-full bg-blue-600 text-white px-5 py-2 rounded-xl shadow hover:bg-blue-700 transition">
+        Submit
+      </button>
+    </div>
 
-    <label for="literature-review">Literature Review</label>
-    <textarea id="literature-review" maxlength="5000" rows="6"></textarea>
-    <div class="char-count" id="literature-review-count">0 / 5000</div>
-  </div>
-
-  <!-- 5. Analytical Framework -->
-  <div id="analytical-framework-section" class="input-section hidden">
-    <label for="analytical-framework-rq">Research Question</label>
-    <input type="text" id="analytical-framework-rq" maxlength="300">
-    <div class="char-count" id="analytical-framework-rq-count">0 / 300</div>
-
-    <label for="analytical-framework-lit-review">Literature Review</label>
-    <textarea id="analytical-framework-lit-review" maxlength="5000" rows="4"></textarea>
-    <div class="char-count" id="analytical-framework-lit-review-count">0 / 5000</div>
-
-    <label for="analytical-framework">Analytical Framework</label>
-    <textarea id="analytical-framework" maxlength="5000" rows="6"></textarea>
-    <div class="char-count" id="analytical-framework-count">0 / 5000</div>
-  </div>
-
-  <button id="submit-btn">Submit</button>
-  <div id="result"></div>
+    <!-- 10️⃣ Output -->
+    <div id="result" class="mt-8 whitespace-pre-wrap bg-white border border-gray-300 rounded-xl p-4 text-sm"></div>
+  
+  </div><!-- end container -->
 
   <script>
     // Show/hide sections
@@ -138,7 +146,7 @@
       relevance: document.getElementById('relevance-section'),
       'lit-structure': document.getElementById('lit-structure-section'),
       'literature-review': document.getElementById('literature-review-section'),
-      'analytical-framework': document.getElementById('analytical-framework-section'),
+      'analytical-framework': document.getElementById('analytical-framework-section')
     };
     const modeSelect = document.getElementById('modeSelect');
     function updateSections() {
@@ -150,7 +158,7 @@
     modeSelect.addEventListener('change', updateSections);
     updateSections();
 
-    // Character counters
+    // Character counters setup
     function setupCounter(id, countId) {
       const el = document.getElementById(id);
       const cnt = document.getElementById(countId);
@@ -170,7 +178,7 @@
       ['literature-review', 'literature-review-count'],
       ['analytical-framework-rq', 'analytical-framework-rq-count'],
       ['analytical-framework-lit-review', 'analytical-framework-lit-review-count'],
-      ['analytical-framework', 'analytical-framework-count'],
+      ['analytical-framework', 'analytical-framework-count']
     ].forEach(args => setupCounter(...args));
 
     // Generate prompt
@@ -179,66 +187,36 @@
       let prompt = '';
 
       if (mode === 'rq') {
-        const title = document.getElementById('title').value.trim();
-        const rq    = document.getElementById('research-question').value.trim();
-        prompt = `EcoS Prompt-Generator: Research Question
-
-Please provide feedback on this research question:
-
-Title: "${title}"
-Research Question: "${rq}"`;
+        const t = document.getElementById('title').value.trim();
+        const q = document.getElementById('research-question').value.trim();
+        prompt = `EcoS Prompt-Generator: Research Question\n\nTitle: "${t}"\nResearch Question: "${q}"`;
       }
       else if (mode === 'relevance') {
-        const rq  = document.getElementById('relevance-rq').value.trim();
-        const rel = document.getElementById('relevance').value.trim();
-        prompt = `EcoS Prompt-Generator: Relevance
-
-Research Question: "${rq}"
-
-My relevance section:
-${rel}`;
+        const q = document.getElementById('relevance-rq').value.trim();
+        const r = document.getElementById('relevance').value.trim();
+        prompt = `EcoS Prompt-Generator: Relevance\n\nResearch Question: "${q}"\n\nRelevance Section:\n${r}`;
       }
       else if (mode === 'lit-structure') {
-        const rq = document.getElementById('lit-structure-rq').value.trim();
-        const str = document.getElementById('lit-structure').value.trim();
-        prompt = `EcoS Prompt-Generator: Literature Review Structure
-
-Research Question: "${rq}"
-
-Proposed Literature Review Structure:
-${str}`;
+        const q = document.getElementById('lit-structure-rq').value.trim();
+        const s = document.getElementById('lit-structure').value.trim();
+        prompt = `EcoS Prompt-Generator: Literature Review Structure\n\nResearch Question: "${q}"\n\nStructure:\n${s}`;
       }
       else if (mode === 'literature-review') {
-        const rq  = document.getElementById('literature-review-rq').value.trim();
-        const str = document.getElementById('literature-review-structure').value.trim();
-        const rev = document.getElementById('literature-review').value.trim();
-        prompt = `EcoS Prompt-Generator: Literature Review
-
-Research Question: "${rq}"
-
-Literature Review Structure:
-${str}
-
-Literature Review:
-${rev}`;
+        const q = document.getElementById('literature-review-rq').value.trim();
+        const s = document.getElementById('literature-review-structure').value.trim();
+        const r = document.getElementById('literature-review').value.trim();
+        prompt = `EcoS Prompt-Generator: Literature Review\n\nResearch Question: "${q}"\n\nStructure:\n${s}\n\nReview:\n${r}`;
       }
       else if (mode === 'analytical-framework') {
-        const rq   = document.getElementById('analytical-framework-rq').value.trim();
-        const lit  = document.getElementById('analytical-framework-lit-review').value.trim();
-        const af   = document.getElementById('analytical-framework').value.trim();
-        prompt = `EcoS Prompt-Generator: Analytical Framework
-
-Research Question: "${rq}"
-
-Literature Review:
-${lit}
-
-Analytical Framework:
-${af}`;
+        const q  = document.getElementById('analytical-framework-rq').value.trim();
+        const lr = document.getElementById('analytical-framework-lit-review').value.trim();
+        const af = document.getElementById('analytical-framework').value.trim();
+        prompt = `EcoS Prompt-Generator: Analytical Framework\n\nResearch Question: "${q}"\n\nLiterature Review:\n${lr}\n\nAnalytical Framework:\n${af}`;
       }
 
       document.getElementById('result').textContent = prompt;
     });
   </script>
+
 </body>
 </html>
