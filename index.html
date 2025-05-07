@@ -4,27 +4,24 @@
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
   <title>EcoS Prompt-Generator</title>
-  <!-- 1️⃣ Add Tailwind CSS -->
+  <!-- Tailwind CSS -->
   <script src="https://cdn.tailwindcss.com"></script>
 </head>
 <body class="bg-gray-50 text-gray-900 font-sans">
-  <!-- 2️⃣ Page container -->
   <div class="max-w-3xl mx-auto p-6">
 
     <!-- Title & Instructions -->
     <h1 class="text-3xl font-bold mb-4">EcoS Prompt-Generator</h1>
     <p class="mb-6 text-sm text-gray-700">
-      <strong>Instructions:</strong>
-      <br>
-      Select the current phase of your research project, fill in the fields, then click “Submit” to generate your prompt.  
-      <br>
-      You can the copy the prompt and paste it into ChatGPT, Claude, Gemini, etc.
+      <strong>Instructions:</strong><br>
+      Select the current phase of your research project, fill in the fields, then click “Submit” to generate your prompt.<br>
+      You can then copy the prompt and paste it into ChatGPT, Claude, Gemini, etc.
     </p>
 
-    <!-- All form sections share this spacing wrapper -->
+    <!-- Form wrapper -->
     <div class="space-y-6">
 
-      <!-- 3️⃣ Mode selector -->
+      <!-- Mode selector -->
       <div>
         <label for="modeSelect" class="block font-medium mb-1">Choose what to generate:</label>
         <select id="modeSelect"
@@ -37,7 +34,7 @@
         </select>
       </div>
 
-      <!-- 4️⃣ Option 1: Topic & Research Question -->
+      <!-- 1. Topic & Research Question -->
       <div id="rq-section" class="space-y-4">
         <div>
           <label for="title" class="block font-medium">Title of the Thesis</label>
@@ -53,7 +50,7 @@
         </div>
       </div>
 
-      <!-- 5️⃣ Option 2: Relevance Table -->
+      <!-- 2. Relevance Table -->
       <div id="relevance-section" class="space-y-4 hidden">
         <div>
           <label for="relevance-rq" class="block font-medium">Research Question</label>
@@ -69,7 +66,7 @@
         </div>
       </div>
 
-      <!-- 6️⃣ Option 3: Literature Review Structure -->
+      <!-- 3. Literature Review Structure -->
       <div id="lit-structure-section" class="space-y-4 hidden">
         <div>
           <label for="lit-structure-rq" class="block font-medium">Research Question</label>
@@ -85,7 +82,7 @@
         </div>
       </div>
 
-      <!-- 7️⃣ Option 4: Literature Review -->
+      <!-- 4. Literature Review -->
       <div id="literature-review-section" class="space-y-4 hidden">
         <div>
           <label for="literature-review-rq" class="block font-medium">Research Question</label>
@@ -107,7 +104,7 @@
         </div>
       </div>
 
-      <!-- 8️⃣ Option 5: Analytical Framework -->
+      <!-- 5. Analytical Framework -->
       <div id="analytical-framework-section" class="space-y-4 hidden">
         <div>
           <label for="analytical-framework-rq" class="block font-medium">Research Question</label>
@@ -129,20 +126,25 @@
         </div>
       </div>
 
-      <!-- 9️⃣ Submit button -->
+      <!-- Submit button -->
       <button id="submit-btn"
               class="w-full bg-blue-600 text-white px-5 py-2 rounded-xl shadow hover:bg-blue-700 transition">
         Submit
       </button>
+
     </div>
 
-    <!-- 10️⃣ Output -->
+    <!-- Output & Copy -->
     <div id="result" class="mt-8 whitespace-pre-wrap bg-white border border-gray-300 rounded-xl p-4 text-sm"></div>
-  
-  </div><!-- end container -->
+    <button id="copy-btn"
+            class="mt-4 w-full bg-green-600 text-white px-5 py-2 rounded-xl shadow hover:bg-green-700 transition hidden">
+      Copy to Clipboard
+    </button>
+
+  </div>
 
   <script>
-    // Show/hide sections
+    // Sections toggling
     const sections = {
       rq: document.getElementById('rq-section'),
       relevance: document.getElementById('relevance-section'),
@@ -155,38 +157,38 @@
       Object.entries(sections).forEach(([key, el]) => {
         el.classList.toggle('hidden', modeSelect.value !== key);
       });
-      document.getElementById('result').textContent = '';
+      // hide copy button & clear output when switching
+      copyBtn.classList.add('hidden');
+      resultDiv.textContent = '';
     }
     modeSelect.addEventListener('change', updateSections);
     updateSections();
 
-    // Character counters setup
+    // Character counters
     function setupCounter(id, countId) {
-      const el = document.getElementById(id);
-      const cnt = document.getElementById(countId);
+      const el = document.getElementById(id), cnt = document.getElementById(countId);
       el.addEventListener('input', () => {
         cnt.textContent = `${el.value.length} / ${el.maxLength}`;
       });
     }
     [
-      ['title', 'title-count'],
-      ['research-question', 'rq-count'],
-      ['relevance-rq', 'relevance-rq-count'],
-      ['relevance', 'relevance-count'],
-      ['lit-structure-rq', 'lit-structure-rq-count'],
-      ['lit-structure', 'lit-structure-count'],
-      ['literature-review-rq', 'literature-review-rq-count'],
-      ['literature-review-structure', 'literature-review-structure-count'],
-      ['literature-review', 'literature-review-count'],
-      ['analytical-framework-rq', 'analytical-framework-rq-count'],
-      ['analytical-framework-lit-review', 'analytical-framework-lit-review-count'],
-      ['analytical-framework', 'analytical-framework-count']
+      ['title','title-count'], ['research-question','rq-count'],
+      ['relevance-rq','relevance-rq-count'], ['relevance','relevance-count'],
+      ['lit-structure-rq','lit-structure-rq-count'], ['lit-structure','lit-structure-count'],
+      ['literature-review-rq','literature-review-rq-count'],
+      ['literature-review-structure','literature-review-structure-count'],
+      ['literature-review','literature-review-count'],
+      ['analytical-framework-rq','analytical-framework-rq-count'],
+      ['analytical-framework-lit-review','analytical-framework-lit-review-count'],
+      ['analytical-framework','analytical-framework-count']
     ].forEach(args => setupCounter(...args));
 
-    // Generate prompt
+    // Generate prompt & show copy button
+    const resultDiv = document.getElementById('result');
+    const copyBtn = document.getElementById('copy-btn');
     document.getElementById('submit-btn').addEventListener('click', () => {
-      const mode = modeSelect.value;
       let prompt = '';
+      const mode = modeSelect.value;
 
       if (mode === 'rq') {
         const t = document.getElementById('title').value.trim();
@@ -216,9 +218,17 @@
         prompt = `EcoS Prompt-Generator: Analytical Framework\n\nResearch Question: "${q}"\n\nLiterature Review:\n${lr}\n\nAnalytical Framework:\n${af}`;
       }
 
-      document.getElementById('result').textContent = prompt;
+      resultDiv.textContent = prompt;
+      copyBtn.classList.remove('hidden');
+    });
+
+    // Copy functionality
+    copyBtn.addEventListener('click', () => {
+      const text = resultDiv.textContent;
+      navigator.clipboard.writeText(text)
+        .then(() => copyBtn.textContent = 'Copied!')
+        .catch(() => copyBtn.textContent = 'Copy Failed');
     });
   </script>
-
 </body>
 </html>
