@@ -141,10 +141,15 @@
       Copy to Clipboard
     </button>
 
-  </div>
+  </div><!-- end container -->
 
   <script>
-    // Sections toggling
+    // 1️⃣ Cache essential elements BEFORE using them
+    const resultDiv = document.getElementById('result');
+    const copyBtn   = document.getElementById('copy-btn');
+    const modeSelect = document.getElementById('modeSelect');
+
+    // 2️⃣ Sections map
     const sections = {
       rq: document.getElementById('rq-section'),
       relevance: document.getElementById('relevance-section'),
@@ -152,21 +157,22 @@
       'literature-review': document.getElementById('literature-review-section'),
       'analytical-framework': document.getElementById('analytical-framework-section')
     };
-    const modeSelect = document.getElementById('modeSelect');
+
+    // 3️⃣ Show/hide sections & reset
     function updateSections() {
       Object.entries(sections).forEach(([key, el]) => {
         el.classList.toggle('hidden', modeSelect.value !== key);
       });
-      // hide copy button & clear output when switching
       copyBtn.classList.add('hidden');
       resultDiv.textContent = '';
     }
     modeSelect.addEventListener('change', updateSections);
-    updateSections();
+    updateSections(); // initial
 
-    // Character counters
+    // 4️⃣ Character counters
     function setupCounter(id, countId) {
-      const el = document.getElementById(id), cnt = document.getElementById(countId);
+      const el = document.getElementById(id);
+      const cnt = document.getElementById(countId);
       el.addEventListener('input', () => {
         cnt.textContent = `${el.value.length} / ${el.maxLength}`;
       });
@@ -183,9 +189,7 @@
       ['analytical-framework','analytical-framework-count']
     ].forEach(args => setupCounter(...args));
 
-    // Generate prompt & show copy button
-    const resultDiv = document.getElementById('result');
-    const copyBtn = document.getElementById('copy-btn');
+    // 5️⃣ Generate prompt & reveal Copy button
     document.getElementById('submit-btn').addEventListener('click', () => {
       let prompt = '';
       const mode = modeSelect.value;
@@ -222,10 +226,9 @@
       copyBtn.classList.remove('hidden');
     });
 
-    // Copy functionality
+    // 6️⃣ Copy to clipboard
     copyBtn.addEventListener('click', () => {
-      const text = resultDiv.textContent;
-      navigator.clipboard.writeText(text)
+      navigator.clipboard.writeText(resultDiv.textContent)
         .then(() => copyBtn.textContent = 'Copied!')
         .catch(() => copyBtn.textContent = 'Copy Failed');
     });
