@@ -13,7 +13,11 @@
     <p class="text-sm text-gray-700">
       <strong>Instructions:</strong><br>
       First choose what to generate, then pick a mode.  
-      In Testing Mode you get a single input for rapid prototyping; in Official Mode you get the full form.<br>
+      <br>
+      <em>Official Mode:</em> full form inputs.  
+      <br>
+      <em>Testing Mode:</em> single textarea for rapid prototyping.  
+      <br>
       Click Submit to build your prompt.
     </p>
 
@@ -41,15 +45,15 @@
       </div>
     </div>
 
-    <!-- Testing Mode: single textarea -->
+    <!-- Testing Mode -->
     <div id="testing-section" class="hidden">
       <label for="testing-input" class="block font-medium mb-1">Testing Input</label>
       <textarea id="testing-input" rows="10"
                 class="w-full p-3 border border-gray-300 rounded-xl shadow-sm focus:ring-2 focus:ring-blue-500"
-                placeholder="Paste all your test inputs here…"></textarea>
+                placeholder="Paste your test input here…"></textarea>
     </div>
 
-    <!-- Official Mode: phase-specific forms -->
+    <!-- Official Mode -->
     <div id="official-section" class="space-y-6">
 
       <!-- 1. Topic & Research Question -->
@@ -99,7 +103,7 @@
             + Add issue
           </button>
           <button id="remove-issue-btn" type="button"
-                  class="flex-1 bg-red-200 p-2 rounded-xl hover:bg-red-300">
+                  class="flex-1 bg-red-200 p-2 rounded-xl hover:bg-red-300 hidden">
             – Remove last issue
           </button>
         </div>
@@ -168,29 +172,28 @@
 
   <script>
     // Elements
-    const phaseSelect       = document.getElementById('phaseSelect');
-    const phaseModeSelect   = document.getElementById('phaseModeSelect');
-    const testingSection    = document.getElementById('testing-section');
-    const officialSection   = document.getElementById('official-section');
-    const testingInput      = document.getElementById('testing-input');
+    const phaseSelect      = document.getElementById('phaseSelect');
+    const phaseModeSelect  = document.getElementById('phaseModeSelect');
+    const testingSection   = document.getElementById('testing-section');
+    const officialSection  = document.getElementById('official-section');
+    const testingInput     = document.getElementById('testing-input');
+    const resultDiv        = document.getElementById('result');
+    const copyBtn          = document.getElementById('copy-btn');
 
     const sections = {
       rq:                  document.getElementById('rq-section'),
       relevance:           document.getElementById('relevance-section'),
       'lit-structure':     document.getElementById('lit-structure-section'),
       'literature-review': document.getElementById('literature-review-section'),
-      'analytical-framework': document.getElementById('analytical-framework-section'),
+      'analytical-framework': document.getElementById('analytical-framework-section')
     };
-
-    const resultDiv        = document.getElementById('result');
-    const copyBtn          = document.getElementById('copy-btn');
 
     // Lit-structure controls
     const issuesDiv        = document.getElementById('lit-structure-issues');
     const addIssueBtn      = document.getElementById('add-issue-btn');
     const removeIssueBtn   = document.getElementById('remove-issue-btn');
 
-    // Switch between Testing vs Official
+    // Interface mode toggle
     function updateInterface() {
       const isTesting = phaseModeSelect.value === 'testing';
       testingSection.classList.toggle('hidden', !isTesting);
@@ -201,7 +204,7 @@
     phaseModeSelect.addEventListener('change', updateInterface);
     updateInterface();
 
-    // Show only the selected phase in Official mode
+    // Phase selector in official mode
     function updateSections() {
       Object.entries(sections).forEach(([key, el]) => {
         el.classList.toggle('hidden', phaseSelect.value !== key);
@@ -213,23 +216,28 @@
     updateSections();
 
     // Character counters
-    [
-      ['title',500],['research-question',500],
-      ['relevance-rq',500],['relevance',50000],
-      ['lit-structure-rq',500],
-      ['literature-review-rq',500],['literature-review-structure',50000],
-      ['literature-review',50000],
-      ['analytical-framework-rq',500],['analytical-framework-lit-review',50000],
-      ['analytical-framework',50000]
+    [['title',500],['research-question',500],
+     ['relevance-rq',500],['relevance',50000],
+     ['lit-structure-rq',500],
+     ['literature-review-rq',500],['literature-review-structure',50000],
+     ['literature-review',50000],
+     ['analytical-framework-rq',500],['analytical-framework-lit-review',50000],
+     ['analytical-framework',50000]
     ].forEach(([id,max])=>{
       const el = document.getElementById(id);
       const cnt= document.getElementById(id+'-count');
       el.addEventListener('input',()=>cnt.textContent=`${el.value.length} / ${max}`);
     });
 
-    // Lit-Structure: add/remove last issue
+    // Lit-Structure: add/remove issues
     function updateRemoveBtn() {
-      removeIssueBtn.disabled = issuesDiv.children.length <= 3;
+      removeIssueBtn.classList.toggle('hidden', issuesDiv.children.length <= 3);
+    }
+    function renumberIssues() {
+      Array.from(issuesDiv.children).forEach((w,i)=>{
+        w.querySelector('label:nth-of-type(1)').textContent = `Issue ${i+1}: Title`;
+        w.querySelector('label:nth-of-type(2)').textContent = `Issue ${i+1}: Explanation / Purpose`;
+      });
     }
     function addIssue() {
       const num = issuesDiv.children.length + 1;
@@ -241,14 +249,13 @@
       l1.className = 'block font-medium';
       l1.textContent = `Issue ${num}: Title`;
       const i1 = document.createElement('input');
-      i1.type='text'; i1.maxLength=500;
-      i1.required=true;
+      i1.type='text'; i1.maxLength=500; i1.required=true;
       i1.className='w-full p-3 border border-gray-300 rounded-xl shadow-sm focus:ring-2 focus:ring-blue-500';
       const c1 = document.createElement('div');
       c1.className='text-xs text-gray-500'; c1.textContent='0 / 500';
       i1.addEventListener('input',()=>c1.textContent=`${i1.value.length} / ${i1.maxLength}`);
 
-      // Explanation / Purpose
+      // Explanation
       const l2 = document.createElement('label');
       l2.className = 'block font-medium';
       l2.textContent = `Issue ${num}: Explanation / Purpose`;
@@ -266,19 +273,28 @@
     function removeIssue() {
       if(issuesDiv.children.length > 3) {
         issuesDiv.removeChild(issuesDiv.lastChild);
+        renumberIssues();
         updateRemoveBtn();
       }
     }
     addIssueBtn.addEventListener('click', addIssue);
     removeIssueBtn.addEventListener('click', removeIssue);
-    // init 3 issues
+    // initialize 3 issues
     for(let i=0;i<3;i++) addIssue();
 
-    // Submit: build prompt
-    document.getElementById('submit-btn').addEventListener('click', ()=>{
-      let prompt = '';
+    // Submit logic
+    document.getElementById('submit-btn').addEventListener('click',()=>{
+      let prompt='';
       if(phaseModeSelect.value==='testing') {
-        prompt = testingInput.value;
+        const inpt = testingInput.value.trim();
+        const headerMap = {
+          'rq': 'EcoS Prompt-Generator: Research Question',
+          'relevance': 'EcoS Prompt-Generator: Relevance',
+          'lit-structure': 'EcoS Prompt-Generator: Literature Review Structure',
+          'literature-review': 'EcoS Prompt-Generator: Literature Review',
+          'analytical-framework': 'EcoS Prompt-Generator: Analytical Framework'
+        };
+        prompt = headerMap[ phaseSelect.value ] + '\n\n' + inpt;
       } else {
         const mode = phaseSelect.value;
         if(mode==='rq') {
@@ -293,11 +309,21 @@
         }
         else if(mode==='lit-structure') {
           const rq = document.getElementById('lit-structure-rq').value.trim();
-          const items = Array.from(issuesDiv.children).map(w=>{
-            const t = w.querySelector('input').value.trim();
-            const e = w.querySelector('textarea').value.trim();
-            return `Issue: ${t}\nExplanation / Purpose: ${e}`;
-          }).join('\n\n');
+          const parts = [];
+          for(const [i,w] of Array.from(issuesDiv.children).entries()) {
+            const title = w.querySelector('input').value.trim();
+            const expl  = w.querySelector('textarea').value.trim();
+            if(!title && !expl) continue;
+            if(!title || !expl) {
+              if(!confirm(`Issue ${i+1} is missing ${!title?'Title':'Explanation/Purpose'}. Proceed anyway?`)) {
+                return; // cancel generation
+              }
+            }
+            if(title && expl) {
+              parts.push(`Issue: ${title}\nExplanation / Purpose: ${expl}`);
+            }
+          }
+          const body = parts.join('\n\n');
           prompt = `<PromptTemplate>
 <!-- ===== ROLE ===== -->
 <Role>
@@ -351,7 +377,7 @@
 </ResearchQuestion>
 
 <LiteratureReview>
-${items.split('\n').map(l=>'    '+l).join('\n')}
+${body.split('\n').map(l=>'    '+l).join('\n')}
 </LiteratureReview>
 </PromptTemplate>`;
         }
@@ -372,8 +398,8 @@ ${items.split('\n').map(l=>'    '+l).join('\n')}
       copyBtn.classList.remove('hidden');
     });
 
-    // Copy to clipboard
-    copyBtn.addEventListener('click', ()=>{
+    // Copy
+    copyBtn.addEventListener('click',()=>{
       navigator.clipboard.writeText(resultDiv.textContent)
         .then(()=>copyBtn.textContent='Copied!')
         .catch(()=>copyBtn.textContent='Copy Failed');
