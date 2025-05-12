@@ -1,12 +1,11 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-  <meta charset="UTF-8" />
+  <meta charset="UTF-8"/>
   <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
   <title>EcoS Prompt-Generator</title>
   <script src="https://cdn.tailwindcss.com"></script>
 </head>
-
 <body class="bg-gray-50 text-gray-900 font-sans">
   <div class="max-w-3xl mx-auto p-6">
     <h1 class="text-3xl font-bold mb-4">EcoS Prompt-Generator</h1>
@@ -34,15 +33,15 @@
       <div id="rq-section" class="space-y-4">
         <div>
           <label class="block font-medium">Title of the Thesis</label>
-          <input id="title" type="text" maxlength="300" required
+          <input id="title" type="text" maxlength="500" required
                  class="w-full p-3 border border-gray-300 rounded-xl shadow-sm focus:ring-2 focus:ring-blue-500"/>
-          <div id="title-count" class="text-right text-xs text-gray-500">0 / 300</div>
+          <div id="title-count" class="text-right text-xs text-gray-500">0 / 500</div>
         </div>
         <div>
           <label class="block font-medium">Research Question</label>
-          <input id="research-question" type="text" maxlength="300" required
+          <input id="research-question" type="text" maxlength="500" required
                  class="w-full p-3 border border-gray-300 rounded-xl shadow-sm focus:ring-2 focus:ring-blue-500"/>
-          <div id="rq-count" class="text-right text-xs text-gray-500">0 / 300</div>
+          <div id="rq-count" class="text-right text-xs text-gray-500">0 / 500</div>
         </div>
       </div>
 
@@ -50,9 +49,9 @@
       <div id="relevance-section" class="space-y-4 hidden">
         <div>
           <label class="block font-medium">Research Question</label>
-          <input id="relevance-rq" type="text" maxlength="300" required
+          <input id="relevance-rq" type="text" maxlength="500" required
                  class="w-full p-3 border border-gray-300 rounded-xl shadow-sm focus:ring-2 focus:ring-blue-500"/>
-          <div id="relevance-rq-count" class="text-right text-xs text-gray-500">0 / 300</div>
+          <div id="relevance-rq-count" class="text-right text-xs text-gray-500">0 / 500</div>
         </div>
         <div>
           <label class="block font-medium">Relevance Section</label>
@@ -64,9 +63,15 @@
 
       <!-- 3. Literature Review Structure -->
       <div id="lit-structure-section" class="space-y-4 hidden">
-        <div id="lit-structure-issues" class="space-y-4">
-          <!-- Issue pairs will go here -->
+        <!-- Research Question for this mode -->
+        <div>
+          <label class="block font-medium">Research Question</label>
+          <input id="lit-structure-rq" type="text" maxlength="500" required
+                 class="w-full p-3 border border-gray-300 rounded-xl shadow-sm focus:ring-2 focus:ring-blue-500"/>
+          <div id="lit-structure-rq-count" class="text-right text-xs text-gray-500">0 / 500</div>
         </div>
+        <!-- Dynamic issues container -->
+        <div id="lit-structure-issues" class="space-y-6"></div>
         <button id="add-issue-btn" type="button"
                 class="bg-gray-200 text-gray-800 px-4 py-2 rounded-xl hover:bg-gray-300 transition">
           + Add another issue
@@ -77,9 +82,9 @@
       <div id="literature-review-section" class="space-y-4 hidden">
         <div>
           <label class="block font-medium">Research Question</label>
-          <input id="literature-review-rq" type="text" maxlength="300" required
+          <input id="literature-review-rq" type="text" maxlength="500" required
                  class="w-full p-3 border border-gray-300 rounded-xl shadow-sm focus:ring-2 focus:ring-blue-500"/>
-          <div id="literature-review-rq-count" class="text-right text-xs text-gray-500">0 / 300</div>
+          <div id="literature-review-rq-count" class="text-right text-xs text-gray-500">0 / 500</div>
         </div>
         <div>
           <label class="block font-medium">Literature Review Structure</label>
@@ -99,9 +104,9 @@
       <div id="analytical-framework-section" class="space-y-4 hidden">
         <div>
           <label class="block font-medium">Research Question</label>
-          <input id="analytical-framework-rq" type="text" maxlength="300" required
+          <input id="analytical-framework-rq" type="text" maxlength="500" required
                  class="w-full p-3 border border-gray-300 rounded-xl shadow-sm focus:ring-2 focus:ring-blue-500"/>
-          <div id="analytical-framework-rq-count" class="text-right text-xs text-gray-500">0 / 300</div>
+          <div id="analytical-framework-rq-count" class="text-right text-xs text-gray-500">0 / 500</div>
         </div>
         <div>
           <label class="block font-medium">Literature Review</label>
@@ -134,13 +139,13 @@
 
   <script>
     // Cache
-    const modeSelect = document.getElementById('modeSelect');
-    const resultDiv  = document.getElementById('result');
-    const copyBtn    = document.getElementById('copy-btn');
-    const litIssues  = document.getElementById('lit-structure-issues');
-    let issueCount   = 0;
+    const modeSelect  = document.getElementById('modeSelect');
+    const resultDiv   = document.getElementById('result');
+    const copyBtn     = document.getElementById('copy-btn');
+    const issuesDiv   = document.getElementById('lit-structure-issues');
+    let issueCount    = 0;
 
-    // Section mapping
+    // Sections mapping
     const sections = {
       rq:                  document.getElementById('rq-section'),
       relevance:           document.getElementById('relevance-section'),
@@ -149,7 +154,6 @@
       'analytical-framework': document.getElementById('analytical-framework-section')
     };
 
-    // Show/hide
     function updateSections() {
       Object.entries(sections).forEach(([k, el]) => {
         el.classList.toggle('hidden', modeSelect.value !== k);
@@ -158,180 +162,167 @@
       copyBtn.classList.add('hidden');
     }
     modeSelect.addEventListener('change', updateSections);
-    updateSections(); // initial
+    updateSections();
 
-    // Char counters
-    function setupCounter(id, countId) {
-      document.getElementById(id).addEventListener('input', e => {
-        document.getElementById(countId).textContent =
-          `${e.target.value.length} / ${e.target.maxLength}`;
+    // Character counter helper
+    function setupCounter(el, countEl, maxLen) {
+      el.addEventListener('input', () => {
+        countEl.textContent = `${el.value.length} / ${maxLen}`;
       });
     }
-    [
-      ['title','title-count'], ['research-question','rq-count'],
-      ['relevance-rq','relevance-rq-count'], ['relevance','relevance-count'],
-      ['literature-review-rq','literature-review-rq-count'],
-      ['literature-review-structure','literature-review-structure-count'],
-      ['literature-review','literature-review-count'],
-      ['analytical-framework-rq','analytical-framework-rq-count'],
-      ['analytical-framework-lit-review','analytical-framework-lit-review-count'],
-      ['analytical-framework','analytical-framework-count']
-    ].forEach(args => setupCounter(...args));
 
-    // Add default 3 issues
+    // Add issue block
     function addIssue() {
       issueCount++;
       const wrapper = document.createElement('div');
-      wrapper.className = 'space-y-2 border-t pt-4';
+      wrapper.className = 'space-y-2 border-t pt-4 relative';
+      wrapper.dataset.issue = issueCount;
 
-      // Issue title
-      const lbl1    = document.createElement('label');
-      lbl1.className= 'block font-medium';
-      lbl1.textContent = `Issue ${issueCount} Title`;
-      const inp1    = document.createElement('input');
-      inp1.type     = 'text';
-      inp1.maxLength= 200;
-      inp1.required = true;
-      inp1.className= 'lit-issue-title w-full p-3 border border-gray-300 rounded-xl shadow-sm focus:ring-2 focus:ring-blue-500';
-      inp1.id       = `issue-title-${issueCount}`;
-      const cnt1    = document.createElement('div');
-      cnt1.id      = `issue-title-count-${issueCount}`;
-      cnt1.className = 'text-right text-xs text-gray-500';
-      cnt1.textContent = '0 / 200';
-      inp1.addEventListener('input', () => {
-        cnt1.textContent = `${inp1.value.length} / ${inp1.maxLength}`;
+      // Delete button
+      const delBtn = document.createElement('button');
+      delBtn.type    = 'button';
+      delBtn.textContent = '–';
+      delBtn.title  = 'Remove this issue';
+      delBtn.className = 'absolute top-0 right-0 bg-red-200 text-red-800 px-2 rounded-full hover:bg-red-300';
+      delBtn.addEventListener('click', () => {
+        if (issuesDiv.children.length > 3) {
+          wrapper.remove();
+          updateDeleteButtons();
+        }
       });
+      wrapper.appendChild(delBtn);
 
-      // Issue explanation
-      const lbl2    = document.createElement('label');
-      lbl2.className= 'block font-medium';
-      lbl2.textContent = `Issue ${issueCount} Explanation`;
-      const inp2    = document.createElement('textarea');
-      inp2.rows     = 3;
-      inp2.maxLength= 500;
-      inp2.required = true;
-      inp2.className= 'lit-issue-explanation w-full p-3 border border-gray-300 rounded-xl shadow-sm focus:ring-2 focus:ring-blue-500';
-      inp2.id       = `issue-expl-${issueCount}`;
-      const cnt2    = document.createElement('div');
-      cnt2.id      = `issue-expl-count-${issueCount}`;
-      cnt2.className = 'text-right text-xs text-gray-500';
-      cnt2.textContent = '0 / 500';
-      inp2.addEventListener('input', () => {
-        cnt2.textContent = `${inp2.value.length} / ${inp2.maxLength}`;
-      });
+      // Title
+      const titleLabel = document.createElement('label');
+      titleLabel.className = 'block font-medium';
+      titleLabel.textContent = `Issue ${issueCount}: Title`;
+      const titleInput = document.createElement('input');
+      titleInput.type = 'text';
+      titleInput.maxLength = 500;
+      titleInput.required = true;
+      titleInput.className = 'w-full p-3 border border-gray-300 rounded-xl shadow-sm focus:ring-2 focus:ring-blue-500';
+      const titleCount = document.createElement('div');
+      titleCount.className = 'text-right text-xs text-gray-500';
+      titleCount.textContent = '0 / 500';
+      setupCounter(titleInput, titleCount, 500);
 
-      wrapper.append(lbl1, inp1, cnt1, lbl2, inp2, cnt2);
-      litIssues.append(wrapper);
+      // Explanation
+      const explLabel = document.createElement('label');
+      explLabel.className = 'block font-medium';
+      explLabel.textContent = `Issue ${issueCount}: Explanation / Purpose`;
+      const explInput = document.createElement('textarea');
+      explInput.rows = 4;
+      explInput.maxLength = 5000;
+      explInput.required = true;
+      explInput.className = 'w-full p-3 border border-gray-300 rounded-xl shadow-sm focus:ring-2 focus:ring-blue-500';
+      const explCount = document.createElement('div');
+      explCount.className = 'text-right text-xs text-gray-500';
+      explCount.textContent = '0 / 5000';
+      setupCounter(explInput, explCount, 5000);
+
+      // Append all
+      wrapper.append(titleLabel, titleInput, titleCount, explLabel, explInput, explCount);
+      issuesDiv.append(wrapper);
+      updateDeleteButtons();
     }
-    // init 3
-    for(let i=0;i<3;i++) addIssue();
 
-    document.getElementById('add-issue-btn')
-      .addEventListener('click', addIssue);
+    function updateDeleteButtons() {
+      Array.from(issuesDiv.children).forEach(w => {
+        const btn = w.querySelector('button');
+        btn.style.visibility = (issuesDiv.children.length <= 3 ? 'hidden' : 'visible');
+      });
+    }
 
-    // Generate & copy
+    // Initialize default 3 issues
+    for (let i = 0; i < 3; i++) addIssue();
+    document.getElementById('add-issue-btn').addEventListener('click', addIssue);
+
+    // Generate & show
     document.getElementById('submit-btn').addEventListener('click', () => {
       let prompt = '';
       const mode = modeSelect.value;
-      // RQ & relevance as before
-      if(mode === 'rq') {
+
+      if (mode === 'rq') {
         const t = document.getElementById('title').value.trim();
         const q = document.getElementById('research-question').value.trim();
         prompt = `EcoS Prompt-Generator: Research Question\n\nTitle: "${t}"\nResearch Question: "${q}"`;
-      }
-      else if(mode === 'relevance') {
+      } 
+      else if (mode === 'relevance') {
         const q = document.getElementById('relevance-rq').value.trim();
         const r = document.getElementById('relevance').value.trim();
         prompt = `EcoS Prompt-Generator: Relevance\n\nResearch Question: "${q}"\n\nRelevance Section:\n${r}`;
-      }
-      else if(mode === 'lit-structure') {
-        const q = document.getElementById('lit-structure-section')
-                         .querySelector('input[id^="issue-title-"]')
-                         .value.trim(); // ignore, we use generic below
-        // Actually get RQ from first lit-structure-rq
-        const rqInput = document.getElementById('lit-structure-rq');
-        const rq = rqInput ? rqInput.value.trim() : '';
-        // Gather all issues
-        const titles = Array.from(document.querySelectorAll('.lit-issue-title'))
-                            .map(el => el.value.trim());
-        const expls  = Array.from(document.querySelectorAll('.lit-issue-explanation'))
-                            .map(el => el.value.trim());
-        let lrsBlock = titles.map((title,i) =>
-          `Issue ${i+1}: ${title}\nExplanation: ${expls[i]}`
-        ).join('\n\n');
+      } 
+      else if (mode === 'lit-structure') {
+        const rq = document.getElementById('lit-structure-rq').value.trim();
+        const lines = Array.from(issuesDiv.children).map(w => {
+          const title = w.querySelector('input').value.trim();
+          const expl  = w.querySelector('textarea').value.trim();
+          return `Issue: ${title}\nExplanation / Purpose: ${expl}`;
+        }).join('\n\n');
         prompt = `<PromptTemplate>
-    <!-- ============ ROLE ============ -->
-    <Role>
-        You are acting as the professor’s assistant.
-        Your sole job is to analyse students’ proposed **Literature Review Structures (LRS)** and give them feedback *before* they submit to the professor.
-    </Role>
+<!-- ===== ROLE ===== -->
+<Role>
+    You are acting as the professor’s assistant.
+    Your sole job is to analyse students’ proposed **Literature Review Structures (LRS)** and give them feedback *before* they submit to the professor.
+</Role>
 
-    <!-- ===== PURPOSE ===== -->
-    <Background>
-        The **Literature Review Structure (LRS)** is a planning tool.
-        It helps students identify the conceptual fields, debates, and analytical tools they will need to review in the full Literature Review (LR).
-        The LR will be a **systematic review of existing scholarly work**, used to build a foundation for the student's own **Analytical Framework (AF)**.
-        The AF will be derived from the literature review and represent the student's own method for answering their research question in the empirical chapter.
-    </Background>
+<!-- ===== PURPOSE ===== -->
+<Background>
+    The **Literature Review Structure (LRS)** is a planning tool.
+    It helps students identify the conceptual fields, debates, and analytical tools they will need to review in the full Literature Review (LR).
+    The LR will be a **systematic review of existing scholarly work**, used to build a foundation for the student's own **Analytical Framework (AF)**.
+    The AF will be derived from the literature review and represent the student's own method for answering their research question in the empirical chapter.
+</Background>
 
-    <!-- ===== INSTRUCTIONS ===== -->
-    <Instructions>
-        1. Judge each LRS section only on whether it contributes directly to answering the **key analytical term** in the Research Question (RQ).
-           - This key term can be multi-layered (e.g. “economic statecraft strategies,” “regional infrastructure diplomacy,” or “supply chain resilience policy frameworks”).
-           - Everything in the literature review should help define, categorize, or provide tools for analysing this key term—**not explain it or justify it with cases**.
-        2. The LRS should prepare the *how* (concepts, typologies, frameworks)—**not** the *why* (causes, drivers) or *what* (cases, results).
-        3. If a section drifts into:
-           • causal explanations (e.g. why states adopt certain policies)
-           • historical background or timelines
-           • descriptive details about countries or actors
-           • findings or results from specific empirical studies
-           then it must be labelled **Off-target** and reallocated to the empirical or interpretive part of the thesis.
-        4. Definitions are allowed only if:
-           • they clarify core terms used in the RQ, and
-           • they are concise (no more than 2–3 sentences). If they become too long, redundant, or shallow, label them **Adapt**.
-        5. Keep tone supportive but academically precise. Remind students that the final judgement always lies with the professor.
-    </Instructions>
+<!-- ===== INSTRUCTIONS ===== -->
+<Instructions>
+    1. Judge each LRS section only on whether it contributes directly to answering the **key analytical term** in the Research Question (RQ).
+    2. The LRS should prepare the *how* (concepts, typologies, frameworks)—**not** the *why* (causes, drivers) or *what* (cases, results).
+    3. If a section drifts into causal explanations, history, cases, or results, label it **Off-target**.
+    4. Definitions are allowed only if concise (≤2–3 sentences); otherwise label **Adapt**.
+    5. Keep tone supportive but academically precise; remind student professor has final say.
+</Instructions>
 
-    <!-- ===== TAGS ===== -->
-    <Tags>
-        ✅ On-target – squarely supports answering the RQ’s key analytical term.
-        ⚠️ Off-target – does not help answer the RQ and should be cut, moved, or rethought.
-        🛠️ Adapt – relevant but needs shortening, clearer focus, or better alignment.
-        🧩 Suggestion – optional constructive improvement or clarification.
-    </Tags>
+<!-- ===== TAGS ===== -->
+<Tags>
+    ✅ On-target – supports the key analytical term.  
+    ⚠️ Off-target – should be cut or moved.  
+    🛠️ Adapt – needs refocusing or shortening.  
+    🧩 Suggestion – optional improvement.
+</Tags>
 
-    <!-- ===== EXPECTED OUTPUT ===== -->
-    <ExpectedOutput>
-        For **each** LRS section:
-        • Begin with a tag (e.g. ✅ On-target, ⚠️ Off-target, 🛠️ Adapt, 🧩 Suggestion).
-        • Give a one-sentence verdict and a 1–3 sentence explanation referring to the RQ and principles.
-        • End with a reminder that the professor will make the final decision.
-    </ExpectedOutput>
+<!-- ===== EXPECTED OUTPUT ===== -->
+<ExpectedOutput>
+    For **each** LRS section:
+    • Tag + one-sentence verdict + 1–3 sentence justification + reminder professor decides.
+</ExpectedOutput>
 
-    <!-- ===== REVIEW CRITERIA ===== -->
-    <ReviewCriteria>
-        1. Does the section help address the **key analytical term** in the RQ (not general background or adjacent topics)?
-        2. Does it avoid causal explanation, historical narrative, or case-specific detail?
-        3. Is the structure thematic and conceptual—not organized by timeline or author?
-        4. Does the section show synthesis (grouping and comparing concepts), not summary lists?
-        5. Does it build toward a usable **Analytical Framework (AF)** for the empirical chapter?
-    </ReviewCriteria>
+<!-- ===== REVIEW CRITERIA ===== -->
+<ReviewCriteria>
+    1. Addresses the RQ’s key analytical term?  
+    2. Avoids causal, historical, or case-specific content?  
+    3. Thematically organized (not timeline/author)?  
+    4. Shows synthesis (not summary)?  
+    5. Builds toward an AF for empirical work?
+</ReviewCriteria>
 
-    <!-- ===== STUDENT INPUT ===== -->
-    <ResearchQuestion>
-        ${document.getElementById('lit-structure-rq').value.trim()}
-    </ResearchQuestion>
+<!-- ===== STUDENT INPUT ===== -->
+<ResearchQuestion>
+    ${rq}
+</ResearchQuestion>
 
-    <LiteratureReview>
-${lrsBlock.split('\n').map(line=>'        '+line).join('\n')}
-    </LiteratureReview>
+<LiteratureReview>
+${lines.split('\n').map(l=>'    '+l).join('\n')}
+</LiteratureReview>
 </PromptTemplate>`;
-      } else if(mode === 'literature-review') {
+      } 
+      else if (mode === 'literature-review') {
         const q = document.getElementById('literature-review-rq').value.trim();
         const s = document.getElementById('literature-review-structure').value.trim();
         const r = document.getElementById('literature-review').value.trim();
         prompt = `EcoS Prompt-Generator: Literature Review\n\nResearch Question: "${q}"\n\nStructure:\n${s}\n\nReview:\n${r}`;
-      } else if(mode === 'analytical-framework') {
+      } 
+      else if (mode === 'analytical-framework') {
         const q  = document.getElementById('analytical-framework-rq').value.trim();
         const lr = document.getElementById('analytical-framework-lit-review').value.trim();
         const af = document.getElementById('analytical-framework').value.trim();
@@ -341,6 +332,7 @@ ${lrsBlock.split('\n').map(line=>'        '+line).join('\n')}
       copyBtn.classList.remove('hidden');
     });
 
+    // Copy to clipboard
     copyBtn.addEventListener('click', () => {
       navigator.clipboard.writeText(resultDiv.textContent)
         .then(() => copyBtn.textContent = 'Copied!')
