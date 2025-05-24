@@ -1,606 +1,264 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="en" x-data="promptGenerator()" x-bind:class="{ 'dark': dark }">
 <head>
-  <meta charset="UTF-8"/>
-  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <title>EcoS Prompt-Generator</title>
+  <!-- Tailwind CSS -->
   <script src="https://cdn.tailwindcss.com"></script>
-  <script>
-    tailwind.config = {
-      theme: {
-        extend: {
-          animation: {
-            'fade-in': 'fadeIn 0.3s ease-in-out',
-          },
-          keyframes: {
-            fadeIn: {
-              '0%': { opacity: '0' },
-              '100%': { opacity: '1' }
-            }
-          }
-        }
-      }
-    }
-  </script>
+  <!-- Alpine.js for reactivity -->
+  <script src="https://unpkg.com/alpinejs@3.x.x/dist/cdn.min.js" defer></script>
 </head>
-<body class="bg-gray-50 text-gray-900 font-sans">
-  <div class="max-w-4xl mx-auto p-8 space-y-8">
-    
-    <!-- Header -->
-    <div class="text-center space-y-6 border-b border-gray-200 pb-8">
-      <h1 class="text-4xl font-bold text-gray-900 tracking-tight">
-        EcoS Prompt-Generator
-      </h1>
-      <div class="max-w-3xl mx-auto bg-white p-6 rounded-lg border border-gray-200 shadow-sm">
-        <p class="text-gray-700 leading-relaxed">
-          <strong class="text-gray-900">Instructions:</strong><br>
-          Select the current phase of your research project, complete the required fields, then click "Generate Prompt" to create your customized prompt. 
-          Copy the generated prompt and paste it into your preferred AI assistant (ChatGPT, Claude, Gemini, etc.).
-        </p>
-      </div>
-    </div>
-
-    <!-- Phase Selection -->
-    <div class="bg-white rounded-lg border border-gray-200 shadow-sm">
-      <div class="p-6 border-b border-gray-100">
-        <h2 class="text-xl font-semibold text-gray-900 mb-4">Step 1: Select Research Phase</h2>
-        <select id="modeSelect" class="w-full p-3 border border-gray-300 rounded-md shadow-sm focus:ring-2 focus:ring-blue-500 focus:border-blue-500 bg-white text-base">
-          <option value="rq">1. Topic & Research Question</option>
-          <option value="relevance">2. Relevance Table</option>
-          <option value="lit-structure">3. Literature Review Structure</option>
-          <option value="lit-structure-testing">3.1 Literature Review Structure (Testing)</option>
-          <option value="literature-review">4. Literature Review</option>
-          <option value="analytical-framework">5. Analytical Framework</option>
-        </select>
-      </div>
-    </div>
-
-    <!-- Form Sections -->
-    <div class="bg-white rounded-lg border border-gray-200 shadow-sm">
-      <div class="p-6 border-b border-gray-100">
-        <h2 class="text-xl font-semibold text-gray-900">Step 2: Complete Required Fields</h2>
-      </div>
-      
-      <div class="p-6">
-        <!-- RQ Section -->
-        <div id="rq-section" class="space-y-6 hidden">
-          <div class="space-y-3">
-            <label class="block text-sm font-medium text-gray-700">
-              Title of the Thesis <span class="text-red-500">*</span>
-            </label>
-            <input id="title" type="text" maxlength="500" placeholder="Enter your thesis title"
-                   class="w-full p-3 border border-gray-300 rounded-md shadow-sm focus:ring-2 focus:ring-blue-500 focus:border-blue-500"/>
-            <div class="flex justify-between text-sm">
-              <div id="title-count" class="text-gray-500">0 / 500</div>
-              <div class="text-gray-400">Be specific and concise</div>
-            </div>
-          </div>
-          <div class="space-y-3">
-            <label class="block text-sm font-medium text-gray-700">
-              Research Question <span class="text-red-500">*</span>
-            </label>
-            <input id="research-question" type="text" maxlength="500" placeholder="What is your main research question?"
-                   class="w-full p-3 border border-gray-300 rounded-md shadow-sm focus:ring-2 focus:ring-blue-500 focus:border-blue-500"/>
-            <div class="flex justify-between text-sm">
-              <div id="rq-count" class="text-gray-500">0 / 500</div>
-              <div class="text-gray-400">Should be clear and focused</div>
-            </div>
-          </div>
-        </div>
-
-        <!-- Relevance Section -->
-        <div id="relevance-section" class="space-y-6 hidden">
-          <div class="space-y-3">
-            <label class="block text-sm font-medium text-gray-700">
-              Research Question <span class="text-red-500">*</span>
-            </label>
-            <input id="relevance-rq" type="text" maxlength="500" placeholder="Enter your research question"
-                   class="w-full p-3 border border-gray-300 rounded-md shadow-sm focus:ring-2 focus:ring-blue-500 focus:border-blue-500"/>
-            <div id="relevance-rq-count" class="text-sm text-gray-500">0 / 500</div>
-          </div>
-          <div class="space-y-3">
-            <label class="block text-sm font-medium text-gray-700">
-              Relevance Section <span class="text-red-500">*</span>
-            </label>
-            <textarea id="relevance" rows="6" maxlength="50000" placeholder="Describe the relevance and significance of your research"
-                      class="w-full p-3 border border-gray-300 rounded-md shadow-sm focus:ring-2 focus:ring-blue-500 focus:border-blue-500 resize-vertical"></textarea>
-            <div class="flex justify-between text-sm">
-              <div id="relevance-count" class="text-gray-500">0 / 50000</div>
-              <div class="text-gray-400">Explain why this research matters</div>
-            </div>
-          </div>
-        </div>
-
-        <!-- Literature Structure Section -->
-        <div id="lit-structure-section" class="space-y-6 hidden">
-          <div class="space-y-3">
-            <label class="block text-sm font-medium text-gray-700">
-              Research Question <span class="text-red-500">*</span>
-            </label>
-            <input id="lit-structure-rq" type="text" maxlength="500" placeholder="Enter your research question"
-                   class="w-full p-3 border border-gray-300 rounded-md shadow-sm focus:ring-2 focus:ring-blue-500 focus:border-blue-500"/>
-            <div id="lit-structure-rq-count" class="text-sm text-gray-500">0 / 500</div>
-          </div>
-          
-          <div class="space-y-4">
-            <h3 class="text-lg font-medium text-gray-900">Literature Review Issues</h3>
-            <div id="lit-structure-issues" class="space-y-4"></div>
-            <div class="flex gap-3 pt-4 border-t border-gray-200">
-              <button id="add-issue-btn" type="button"
-                      class="px-4 py-2 bg-blue-600 text-white rounded-md hover:bg-blue-700 transition-colors font-medium">
-                Add Issue
-              </button>
-              <button id="remove-issue-btn" type="button"
-                      class="px-4 py-2 bg-gray-600 text-white rounded-md hover:bg-gray-700 transition-colors font-medium hidden">
-                Remove Last Issue
-              </button>
-            </div>
-          </div>
-        </div>
-
-        <!-- Testing Section -->
-        <div id="lit-structure-testing-section" class="space-y-4 hidden">
-          <label class="block text-sm font-medium text-gray-700">
-            Paste Complete RQ + Issues Here <span class="text-red-500">*</span>
-          </label>
-          <textarea id="lit-structure-testing-input" rows="12" maxlength="50000"
-                    placeholder="Paste your research question and all issues here for testing"
-                    class="w-full p-3 border border-gray-300 rounded-md shadow-sm focus:ring-2 focus:ring-blue-500 focus:border-blue-500 resize-vertical"></textarea>
-          <div class="text-sm text-gray-400">This is for testing the literature review structure</div>
-        </div>
-
-        <!-- Literature Review Section -->
-        <div id="literature-review-section" class="space-y-6 hidden">
-          <div class="space-y-3">
-            <label class="block text-sm font-medium text-gray-700">
-              Research Question <span class="text-red-500">*</span>
-            </label>
-            <input id="literature-review-rq" type="text" maxlength="500" placeholder="Enter your research question"
-                   class="w-full p-3 border border-gray-300 rounded-md shadow-sm focus:ring-2 focus:ring-blue-500 focus:border-blue-500"/>
-            <div id="literature-review-rq-count" class="text-sm text-gray-500">0 / 500</div>
-          </div>
-          <div class="space-y-3">
-            <label class="block text-sm font-medium text-gray-700">
-              Literature Review Structure <span class="text-red-500">*</span>
-            </label>
-            <textarea id="literature-review-structure" rows="4" maxlength="50000" placeholder="Outline your literature review structure"
-                      class="w-full p-3 border border-gray-300 rounded-md shadow-sm focus:ring-2 focus:ring-blue-500 focus:border-blue-500 resize-vertical"></textarea>
-            <div id="literature-review-structure-count" class="text-sm text-gray-500">0 / 50000</div>
-          </div>
-          <div class="space-y-3">
-            <label class="block text-sm font-medium text-gray-700">
-              Literature Review <span class="text-red-500">*</span>
-            </label>
-            <textarea id="literature-review" rows="6" maxlength="50000" placeholder="Paste your literature review content"
-                      class="w-full p-3 border border-gray-300 rounded-md shadow-sm focus:ring-2 focus:ring-blue-500 focus:border-blue-500 resize-vertical"></textarea>
-            <div id="literature-review-count" class="text-sm text-gray-500">0 / 50000</div>
-          </div>
-        </div>
-
-        <!-- Analytical Framework Section -->
-        <div id="analytical-framework-section" class="space-y-6 hidden">
-          <div class="space-y-3">
-            <label class="block text-sm font-medium text-gray-700">
-              Research Question <span class="text-red-500">*</span>
-            </label>
-            <input id="analytical-framework-rq" type="text" maxlength="500" placeholder="Enter your research question"
-                   class="w-full p-3 border border-gray-300 rounded-md shadow-sm focus:ring-2 focus:ring-blue-500 focus:border-blue-500"/>
-            <div id="analytical-framework-rq-count" class="text-sm text-gray-500">0 / 500</div>
-          </div>
-          <div class="space-y-3">
-            <label class="block text-sm font-medium text-gray-700">
-              Literature Review <span class="text-red-500">*</span>
-            </label>
-            <textarea id="analytical-framework-lit-review" rows="4" maxlength="50000" placeholder="Paste your literature review"
-                      class="w-full p-3 border border-gray-300 rounded-md shadow-sm focus:ring-2 focus:ring-blue-500 focus:border-blue-500 resize-vertical"></textarea>
-            <div id="analytical-framework-lit-review-count" class="text-sm text-gray-500">0 / 50000</div>
-          </div>
-          <div class="space-y-3">
-            <label class="block text-sm font-medium text-gray-700">
-              Analytical Framework <span class="text-red-500">*</span>
-            </label>
-            <textarea id="analytical-framework" rows="6" maxlength="50000" placeholder="Describe your analytical framework"
-                      class="w-full p-3 border border-gray-300 rounded-md shadow-sm focus:ring-2 focus:ring-blue-500 focus:border-blue-500 resize-vertical"></textarea>
-            <div id="analytical-framework-count" class="text-sm text-gray-500">0 / 50000</div>
-          </div>
-        </div>
-      </div>
-    </div>
-
-    <!-- Generate Button -->
-    <div class="text-center">
-      <button id="submit-btn" class="px-8 py-3 bg-blue-600 text-white rounded-md hover:bg-blue-700 transition-colors text-lg font-medium shadow-sm">
-        Generate Prompt
+<body class="bg-gray-50 text-gray-900 dark:bg-gray-900 dark:text-gray-100 transition-colors duration-200">
+  <div class="max-w-3xl mx-auto p-6 space-y-6">
+    <!-- Header with Dark Mode Toggle -->
+    <header class="flex justify-between items-center">
+      <h1 class="text-3xl font-bold">EcoS Prompt-Generator</h1>
+      <button @click="toggleDark()" class="p-2 rounded hover:bg-gray-200 dark:hover:bg-gray-700 focus:outline-none">
+        <template x-if="!dark">
+          <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 3v1m0 16v1m8.66-12.34l-.7.7M4.34 19.66l-.7.7M21 12h-1M4 12H3m16.66 4.34l-.7-.7M4.34 4.34l-.7-.7" />
+          </svg>
+        </template>
+        <template x-if="dark">
+          <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17.657 16.657A8 8 0 118.343 7.343a8 8 0 009.314 9.314z" />
+          </svg>
+        </template>
       </button>
+    </header>
+
+    <!-- Instructions -->
+    <p class="text-sm text-gray-700 dark:text-gray-300">
+      <strong>Instructions:</strong><br>
+      Select the current phase of your research project, fill in the fields below, then click “Submit” to generate your prompt. Copy it to your preferred AI tool.
+    </p>
+
+    <!-- Mode Selector -->
+    <div>
+      <label for="modeSelect" class="block font-medium mb-1">What to generate</label>
+      <select id="modeSelect" x-model="mode" class="w-full p-3 border border-gray-300 rounded-xl shadow-sm focus:ring-2 focus:ring-blue-500">
+        <option value="rq">1. Topic &amp; Research Question</option>
+        <option value="relevance">2. Relevance Table</option>
+        <option value="lit-structure">3. Literature Review Structure</option>
+        <option value="lit-structure-testing">3.1 Literature Review Structure (Testing)</option>
+        <option value="literature-review">4. Literature Review</option>
+        <option value="analytical-framework">5. Analytical Framework</option>
+      </select>
     </div>
 
-    <!-- Results -->
-    <div id="result-container" class="hidden">
-      <div class="bg-white rounded-lg border border-gray-200 shadow-sm">
-        <div class="p-6 border-b border-gray-100">
-          <div class="flex items-center justify-between">
-            <h3 class="text-xl font-semibold text-gray-900">Generated Prompt</h3>
-            <span class="text-sm text-gray-500 bg-gray-100 px-3 py-1 rounded-md">Ready to copy</span>
-          </div>
-        </div>
-        <div class="p-6">
-          <div id="result" class="whitespace-pre-wrap bg-gray-50 p-4 border border-gray-200 rounded-md text-sm font-mono leading-relaxed max-h-96 overflow-y-auto"></div>
-          <div class="flex gap-3 mt-6">
-            <button id="copy-btn" class="flex-1 px-4 py-2 bg-green-600 text-white rounded-md hover:bg-green-700 transition-colors font-medium">
-              Copy to Clipboard
-            </button>
-            <button id="new-prompt-btn" class="px-4 py-2 bg-gray-600 text-white rounded-md hover:bg-gray-700 transition-colors font-medium">
-              Generate New
-            </button>
-          </div>
-        </div>
+    <!-- Sections -->
+    <!-- 1. RQ -->
+    <section x-show="mode==='rq'" class="space-y-4" x-cloak>
+      <div>
+        <label class="block font-medium">Title of the Thesis</label>
+        <input x-model="title" type="text" maxlength="500" placeholder="Enter your thesis title"
+               class="w-full p-3 border border-gray-300 rounded-xl shadow-sm focus:ring-2 focus:ring-blue-500" />
+        <div class="text-xs text-gray-500" x-text="
+          title.length + ' / 500'
+        "></div>
       </div>
-    </div>
+      <div>
+        <label class="block font-medium">Research Question</label>
+        <input x-model="researchQuestion" type="text" maxlength="500" placeholder="Enter your research question"
+               class="w-full p-3 border border-gray-300 rounded-xl shadow-sm focus:ring-2 focus:ring-blue-500" />
+        <div class="text-xs text-gray-500" x-text="
+          researchQuestion.length + ' / 500'
+        "></div>
+      </div>
+    </section>
 
-    <!-- Toast Notification -->
-    <div id="toast" class="fixed top-6 right-6 bg-green-600 text-white px-4 py-2 rounded-md shadow-lg transform translate-x-full transition-transform duration-300 z-50">
-      <span>Copied to clipboard!</span>
-    </div>
+    <!-- 2. Relevance -->
+    <section x-show="mode==='relevance'" class="space-y-4" x-cloak>
+      <div>
+        <label class="block font-medium">Research Question</label>
+        <input x-model="relevanceRQ" type="text" maxlength="500" placeholder="Enter your research question"
+               class="w-full p-3 border border-gray-300 rounded-xl shadow-sm focus:ring-2 focus:ring-blue-500" />
+        <div class="text-xs text-gray-500" x-text="
+          relevanceRQ.length + ' / 500'
+        "></div>
+      </div>
+      <div>
+        <label class="block font-medium">Relevance Section</label>
+        <textarea x-model="relevance" rows="6" maxlength="50000" placeholder="Explain why this question matters"
+                  class="w-full p-3 border border-gray-300 rounded-xl shadow-sm focus:ring-2 focus:ring-blue-500"></textarea>
+        <div class="text-xs text-gray-500" x-text="
+          relevance.length + ' / 50000'
+        "></div>
+      </div>
+    </section>
 
+    <!-- 3. Literature Review Structure -->
+    <section x-show="mode==='lit-structure'" class="space-y-4" x-cloak>
+      <div>
+        <label class="block font-medium">Research Question</label>
+        <input x-model="litRQ" type="text" maxlength="500" placeholder="Enter your research question"
+               class="w-full p-3 border border-gray-300 rounded-xl shadow-sm focus:ring-2 focus:ring-blue-500" />
+        <div class="text-xs text-gray-500" x-text="
+          litRQ.length + ' / 500'
+        "></div>
+      </div>
+
+      <template x-for="(issue, index) in issues" :key="index">
+        <div class="space-y-2 border-t pt-4">
+          <div>
+            <label :for="`issue-title-${index}`" class="block font-medium">Issue {{ index + 1 }}: Title</label>
+            <input :id="`issue-title-${index}`" x-model="issue.title" type="text" maxlength="500" required
+                   class="w-full p-3 border rounded-xl focus:ring-2 focus:ring-blue-500" />
+          </div>
+          <div>
+            <label :for="`issue-expl-${index}`" class="block font-medium">Issue {{ index + 1 }}: Explanation / Purpose</label>
+            <textarea :id="`issue-expl-${index}`" x-model="issue.expl" rows="4" maxlength="5000" required
+                      class="w-full p-3 border rounded-xl focus:ring-2 focus:ring-blue-500"></textarea>
+          </div>
+        </div>
+      </template>
+
+      <div class="flex gap-2">
+        <button @click="addIssue()" type="button" class="flex-1 bg-gray-200 p-2 rounded-xl hover:bg-gray-300 focus:outline-none"
+                :disabled="issues.length >= 10">+ Add issue</button>
+        <button @click="removeIssue()" type="button" class="flex-1 bg-red-200 p-2 rounded-xl hover:bg-red-300 focus:outline-none"
+                :disabled="issues.length <= 1">– Remove last issue</button>
+      </div>
+    </section>
+
+    <!-- 3.1 Testing LRS -->
+    <section x-show="mode==='lit-structure-testing'" class="space-y-4" x-cloak>
+      <label class="block font-medium">Paste entire RQ + Issues here</label>
+      <textarea x-model="litTesting" rows="10" maxlength="50000" placeholder="Paste RQ and all issues…"
+                class="w-full p-3 border border-gray-300 rounded-xl shadow-sm focus:ring-2 focus:ring-blue-500"></textarea>
+    </section>
+
+    <!-- 4. Literature Review -->
+    <section x-show="mode==='literature-review'" class="space-y-4" x-cloak>
+      <div>
+        <label class="block font-medium">Research Question</label>
+        <input x-model="litReviewRQ" type="text" maxlength="500" placeholder="Enter your research question"
+               class="w-full p-3 border border-gray-300 rounded-xl shadow-sm focus:ring-2 focus:ring-blue-500" />
+        <div class="text-xs text-gray-500" x-text="
+          litReviewRQ.length + ' / 500'
+        "></div>
+      </div>
+      <div>
+        <label class="block font-medium">Literature Review Structure</label>
+        <textarea x-model="litReviewStructure" rows="4" maxlength="50000" placeholder="Provide your outline"
+                  class="w-full p-3 border border-gray-300 rounded-xl shadow-sm focus:ring-2 focus:ring-blue-500"></textarea>
+        <div class="text-xs text-gray-500" x-text="
+          litReviewStructure.length + ' / 50000'
+        "></div>
+      </div>
+      <div>
+        <label class="block font-medium">Literature Review</label>
+        <textarea x-model="litReview" rows="6" maxlength="50000" placeholder="Write your review"
+                  class="w-full p-3 border border-gray-300 rounded-xl shadow-sm focus:ring-2 focus:ring-blue-500"></textarea>
+        <div class="text-xs text-gray-500" x-text="
+          litReview.length + ' / 50000'
+        "></div>
+      </div>
+    </section>
+
+    <!-- 5. Analytical Framework -->
+    <section x-show="mode==='analytical-framework'" class="space-y-4" x-cloak>
+      <div>
+        <label class="block font-medium">Research Question</label>
+        <input x-model="afRQ" type="text" maxlength="500" placeholder="Enter your research question"
+               class="w-full p-3 border border-gray-300 rounded-xl shadow-sm focus:ring-2 focus:ring-blue-500" />
+        <div class="text-xs text-gray-500" x-text="
+          afRQ.length + ' / 500'
+        "></div>
+      </div>
+      <div>
+        <label class="block font-medium">Literature Review</label>
+        <textarea x-model="afLitReview" rows="4" maxlength="50000" placeholder="Paste your literature review"
+                  class="w-full p-3 border border-gray-300 rounded-xl shadow-sm focus:ring-2 focus:ring-blue-500"></textarea>
+        <div class="text-xs text-gray-500" x-text="
+          afLitReview.length + ' / 50000'
+        "></div>
+      </div>
+      <div>
+        <label class="block font-medium">Analytical Framework</label>
+        <textarea x-model="af" rows="6" maxlength="50000" placeholder="Describe your analytical framework"
+                  class="w-full p-3 border border-gray-300 rounded-xl shadow-sm focus:ring-2 focus:ring-blue-500"></textarea>
+        <div class="text-xs text-gray-500" x-text="
+          af.length + ' / 50000'
+        "></div>
+      </div>
+    </section>
+
+    <!-- Submit & Output -->
+    <div class="space-y-4">
+      <button @click="generatePrompt()" class="w-full bg-blue-600 text-white p-3 rounded-xl hover:bg-blue-700 focus:outline-none transition">Submit</button>
+      <div x-show="prompt" x-text="prompt" class="whitespace-pre-wrap bg-white dark:bg-gray-800 p-4 border border-gray-300 dark:border-gray-700 rounded-xl text-sm"></div>
+      <button @click="copyPrompt()" x-show="prompt" class="w-full bg-green-600 text-white p-3 rounded-xl hover:bg-green-700 focus:outline-none transition">Copy to Clipboard</button>
+    </div>
   </div>
 
   <script>
-    // Core functionality
-    const modeSelect = document.getElementById('modeSelect');
-    const sections = {
-      rq: document.getElementById('rq-section'),
-      relevance: document.getElementById('relevance-section'),
-      'lit-structure': document.getElementById('lit-structure-section'),
-      'lit-structure-testing': document.getElementById('lit-structure-testing-section'),
-      'literature-review': document.getElementById('literature-review-section'),
-      'analytical-framework': document.getElementById('analytical-framework-section')
-    };
-    const resultDiv = document.getElementById('result');
-    const resultContainer = document.getElementById('result-container');
-    const copyBtn = document.getElementById('copy-btn');
-    const newPromptBtn = document.getElementById('new-prompt-btn');
-    const toast = document.getElementById('toast');
-
-    // Section switching
-    function showSection(key) {
-      Object.entries(sections).forEach(([k, el]) => {
-        if (k === key) {
-          el.classList.remove('hidden');
-          el.classList.add('animate-fade-in');
-        } else {
-          el.classList.add('hidden');
-          el.classList.remove('animate-fade-in');
+    function promptGenerator() {
+      return {
+        dark: false,
+        mode: 'rq',
+        title: '', researchQuestion: '',
+        relevanceRQ: '', relevance: '',
+        litRQ: '', issues: [{ title: '', expl: '' }, { title: '', expl: '' }, { title: '', expl: '' }],
+        litTesting: '',
+        litReviewRQ: '', litReviewStructure: '', litReview: '',
+        afRQ: '', afLitReview: '', af: '',
+        prompt: '',
+        toggleDark() {
+          this.dark = !this.dark;
+          localStorage.setItem('dark', this.dark);
+        },
+        init() {
+          this.dark = localStorage.getItem('dark') === 'true';
+        },
+        addIssue() {
+          if (this.issues.length < 10) this.issues.push({ title: '', expl: '' });
+        },
+        removeIssue() {
+          if (this.issues.length > 1) this.issues.pop();
+        },
+        generatePrompt() {
+          let out = '';
+          switch (this.mode) {
+            case 'rq':
+              out = `EcoS Prompt-Generator: Research Question\n\nTitle: "${this.title.trim()}"\nResearch Question: "${this.researchQuestion.trim()}"`;
+              break;
+            case 'relevance':
+              out = `EcoS Prompt-Generator: Relevance\n\nResearch Question: "${this.relevanceRQ.trim()}"\n\nRelevance Section:\n${this.relevance.trim()}`;
+              break;
+            case 'lit-structure':
+              const parts = this.issues
+                .filter(i => i.title.trim() && i.expl.trim())
+                .map(i => `Issue: ${i.title.trim()}\nExplanation / Purpose: ${i.expl.trim()}`);
+              out = this.buildLitStructurePrompt(this.litRQ.trim(), parts);
+              break;
+            case 'lit-structure-testing':
+              out = this.buildLitStructureTestingPrompt(this.litTesting.trim());
+              break;
+            case 'literature-review':
+              out = `EcoS Prompt-Generator: Literature Review\n\nResearch Question: "${this.litReviewRQ.trim()}"\n\nStructure:\n${this.litReviewStructure.trim()}\n\nReview:\n${this.litReview.trim()}`;
+              break;
+            case 'analytical-framework':
+              out = `EcoS Prompt-Generator: Analytical Framework\n\nResearch Question: "${this.afRQ.trim()}"\n\nLiterature Review:\n${this.afLitReview.trim()}\n\nAnalytical Framework:\n${this.af.trim()}`;
+              break;
+          }
+          this.prompt = out;
+        },
+        copyPrompt() {
+          navigator.clipboard.writeText(this.prompt);
+          alert('Prompt copied to clipboard!');
+        },
+        buildLitStructurePrompt(rq, sections) {
+          return `<!-- ===== ROLE ===== -->\n<Role>...student input...\n<ResearchQuestion>\n    ${rq}\n</ResearchQuestion>\n\n<LiteratureReviewStructure>\n${sections.join('\n\n')}\n</LiteratureReviewStructure>`;
+        },
+        buildLitStructureTestingPrompt(input) {
+          return `<!-- ===== ROLE ===== -->\n<Role>...\n<PasteInputHere>\n    ${input}\n</PasteInputHere>`;
         }
-      });
-      resultContainer.classList.add('hidden');
-    }
-
-    // Toast notification
-    function showToast(message = 'Copied to clipboard!') {
-      const toastSpan = toast.querySelector('span');
-      toastSpan.textContent = message;
-      toast.classList.remove('translate-x-full');
-      setTimeout(() => {
-        toast.classList.add('translate-x-full');
-      }, 2000);
-    }
-
-    // Character counters
-    function setupCharacterCounter(inputId, max) {
-      const input = document.getElementById(inputId);
-      const counter = document.getElementById(inputId + '-count');
-      if (!input || !counter) return;
-
-      input.addEventListener('input', () => {
-        const length = input.value.length;
-        counter.textContent = `${length} / ${max}`;
-        
-        if (length > max * 0.9) {
-          counter.className = 'text-sm text-red-600 font-medium';
-        } else if (length > max * 0.7) {
-          counter.className = 'text-sm text-yellow-600 font-medium';
-        } else {
-          counter.className = 'text-sm text-gray-500';
-        }
-      });
-    }
-
-    // Setup all character counters
-    const counters = [
-      ['title', 500], ['research-question', 500], ['relevance-rq', 500], 
-      ['relevance', 50000], ['lit-structure-rq', 500], ['literature-review-rq', 500],
-      ['literature-review-structure', 50000], ['literature-review', 50000],
-      ['analytical-framework-rq', 500], ['analytical-framework-lit-review', 50000],
-      ['analytical-framework', 50000]
-    ];
-    counters.forEach(([id, max]) => setupCharacterCounter(id, max));
-
-    // Literature structure management
-    const issuesDiv = document.getElementById('lit-structure-issues');
-    const addIssueBtn = document.getElementById('add-issue-btn');
-    const removeIssueBtn = document.getElementById('remove-issue-btn');
-
-    function updateRemoveBtn() {
-      removeIssueBtn.classList.toggle('hidden', issuesDiv.children.length <= 3);
-    }
-
-    function renumberIssues() {
-      Array.from(issuesDiv.children).forEach((wrapper, i) => {
-        const labels = wrapper.querySelectorAll('label');
-        if (labels[0]) labels[0].innerHTML = `Issue ${i + 1}: Title <span class="text-red-500">*</span>`;
-        if (labels[1]) labels[1].innerHTML = `Issue ${i + 1}: Explanation / Purpose <span class="text-red-500">*</span>`;
-      });
-    }
-
-    function addIssue() {
-      const num = issuesDiv.children.length + 1;
-      const wrapper = document.createElement('div');
-      wrapper.className = 'space-y-4 p-4 border border-gray-200 rounded-md bg-gray-50';
-
-      wrapper.innerHTML = `
-        <div class="space-y-2">
-          <label class="block text-sm font-medium text-gray-700">
-            Issue ${num}: Title <span class="text-red-500">*</span>
-          </label>
-          <input type="text" maxlength="500" required placeholder="Enter issue title"
-                 class="w-full p-3 border border-gray-300 rounded-md shadow-sm focus:ring-2 focus:ring-blue-500 focus:border-blue-500"/>
-          <div class="text-sm text-gray-500">0 / 500</div>
-        </div>
-        <div class="space-y-2">
-          <label class="block text-sm font-medium text-gray-700">
-            Issue ${num}: Explanation / Purpose <span class="text-red-500">*</span>
-          </label>
-          <textarea rows="4" maxlength="5000" required placeholder="Explain the purpose and relevance of this issue"
-                    class="w-full p-3 border border-gray-300 rounded-md shadow-sm focus:ring-2 focus:ring-blue-500 focus:border-blue-500 resize-vertical"></textarea>
-          <div class="text-sm text-gray-500">0 / 5000</div>
-        </div>
-      `;
-
-      // Setup character counters for new issue
-      const input = wrapper.querySelector('input');
-      const textarea = wrapper.querySelector('textarea');
-      const inputCounter = wrapper.querySelectorAll('.text-sm')[0];
-      const textareaCounter = wrapper.querySelectorAll('.text-sm')[1];
-
-      input.addEventListener('input', () => {
-        inputCounter.textContent = `${input.value.length} / 500`;
-      });
-
-      textarea.addEventListener('input', () => {
-        textareaCounter.textContent = `${textarea.value.length} / 5000`;
-      });
-
-      issuesDiv.appendChild(wrapper);
-      updateRemoveBtn();
-    }
-
-    function removeIssue() {
-      if (issuesDiv.children.length > 3) {
-        issuesDiv.removeChild(issuesDiv.lastChild);
-        renumberIssues();
-        updateRemoveBtn();
       }
     }
-
-    // Event listeners
-    modeSelect.addEventListener('change', () => showSection(modeSelect.value));
-    addIssueBtn.addEventListener('click', addIssue);
-    removeIssueBtn.addEventListener('click', removeIssue);
-
-    // Initialize with 3 issues
-    for (let i = 0; i < 3; i++) addIssue();
-    showSection(modeSelect.value);
-
-    // Prompt generation
-    document.getElementById('submit-btn').addEventListener('click', () => {
-      const mode = modeSelect.value;
-      let prompt = '';
-
-      try {
-        if (mode === 'rq') {
-          const title = document.getElementById('title').value.trim();
-          const question = document.getElementById('research-question').value.trim();
-          if (!title || !question) {
-            showToast('Please fill in all required fields');
-            return;
-          }
-          prompt = `EcoS Prompt-Generator: Research Question\n\nTitle: "${title}"\nResearch Question: "${question}"`;
-        } 
-        else if (mode === 'relevance') {
-          const rq = document.getElementById('relevance-rq').value.trim();
-          const relevance = document.getElementById('relevance').value.trim();
-          if (!rq || !relevance) {
-            showToast('Please fill in all required fields');
-            return;
-          }
-          prompt = `EcoS Prompt-Generator: Relevance\n\nResearch Question: "${rq}"\n\nRelevance Section:\n${relevance}`;
-        }
-        else if (mode === 'lit-structure') {
-          const rq = document.getElementById('lit-structure-rq').value.trim();
-          if (!rq) {
-            showToast('Please enter your research question');
-            return;
-          }
-          
-          const items = Array.from(issuesDiv.children).map(wrapper => ({
-            title: wrapper.querySelector('input').value.trim(),
-            explanation: wrapper.querySelector('textarea').value.trim()
-          }));
-
-          const validItems = items.filter(item => item.title && item.explanation);
-          if (validItems.length === 0) {
-            showToast('Please fill in at least one complete issue');
-            return;
-          }
-
-          const parts = validItems.map(item => 
-            `Issue: ${item.title}\nExplanation / Purpose: ${item.explanation}`
-          );
-
-          prompt = `<!-- ===== ROLE ===== -->
-<Role>
-    You are acting as the professor's assistant.
-    Your sole job is to analyse students' proposed **Literature Review Structures (LRS)** and give them feedback *before* they submit to the professor.
-</Role>
-
-<!-- ===== PURPOSE ===== -->
-<Background>
-    The **Literature Review Structure (LRS)** is a planning tool.
-    It helps students identify the conceptual fields, debates, and analytical tools they will need to review in the full Literature Review (LR).
-    The LR will be a **systematic review of existing scholarly work**, used to build a foundation for the student's own **Analytical Framework (AF)**.
-    The AF will be derived from the literature review and represent the student's own method for answering their research question in the empirical chapter.
-</Background>
-
-<!-- ===== INSTRUCTIONS ===== -->
-<Instructions>
-    1. Judge each LRS section only on whether it contributes directly to answering the **key analytical term** in the Research Question (RQ).
-    2. The LRS should prepare the *how* (concepts, typologies, frameworks)—**not** the *why* (causes, drivers) or *what* (cases, results).
-    3. If a section drifts into causal explanations, history, cases, or results, label it **Off-target**.
-    4. Definitions are allowed only if concise (≤2–3 sentences); otherwise label **Adapt**.
-    5. Keep tone supportive but academically precise; remind student professor has final say.
-</Instructions>
-
-<!-- ===== TAGS ===== -->
-<Tags>
-    ✅ On-target – supports the key analytical term.  
-    ⚠️ Off-target – should be cut or moved.  
-    🛠️ Adapt – needs refocusing or shortening.  
-    🧩 Suggestion – optional improvement.
-</Tags>
-
-<!-- ===== EXPECTED OUTPUT ===== -->
-<ExpectedOutput>
-    For **each** LRS section:
-    • Tag + one-sentence verdict + 1–3 sentence justification + reminder professor decides.
-</ExpectedOutput>
-
-<!-- ===== REVIEW CRITERIA ===== -->
-<ReviewCriteria>
-    1. Addresses the RQ's key analytical term?  
-    2. Avoids causal, historical, or case-specific content?  
-    3. Thematically organized (not timeline/author)?  
-    4. Shows synthesis (not summary)?  
-    5. Builds toward an AF for empirical work?
-</ReviewCriteria>
-
-<!-- ===== STUDENT INPUT ===== -->
-<ResearchQuestion>
-    ${rq}
-</ResearchQuestion>
-
-<LiteratureReviewStructure>
-${parts.join('\n\n')}
-</LiteratureReviewStructure>`;
-        }
-        else if (mode === 'lit-structure-testing') {
-          const input = document.getElementById('lit-structure-testing-input').value.trim();
-          if (!input) {
-            showToast('Please paste your RQ and issues');
-            return;
-          }
-          prompt = `<!-- ===== ROLE ===== -->
-<Role>
-    You are acting as the professor's assistant.
-    Your sole job is to analyse students' proposed **Literature Review Structures (LRS)** and give them feedback *before* they submit to the professor.
-</Role>
-
-<!-- ===== PURPOSE ===== -->
-<Background>
-    The **Literature Review Structure (LRS)** is a planning tool.
-    It helps students identify the conceptual fields, debates, and analytical tools they will need to review in the full Literature Review (LR).
-    The LR will be a **systematic review of existing scholarly work**, used to build a foundation for the student's own **Analytical Framework (AF)**.
-    The AF will be derived from the literature review and represent the student's own method for answering their research question in the empirical chapter.
-</Background>
-
-<!-- ===== INSTRUCTIONS ===== -->
-<Instructions>
-    1. Judge each LRS section only on whether it contributes directly to answering the **key analytical term** in the Research Question (RQ).
-    2. The LRS should prepare the *how* (concepts, typologies, frameworks)—**not** the *why* (causes, drivers) or *what* (cases, results).
-    3. If a section drifts into causal explanations, history, cases, or results, label it **Off-target**.
-    4. Definitions are allowed only if concise (≤2–3 sentences); otherwise label **Adapt**.
-    5. Keep tone supportive but academically precise; remind student professor has final say.
-</Instructions>
-
-<!-- ===== TAGS ===== -->
-<Tags>
-    ✅ On-target – supports the key analytical term.  
-    ⚠️ Off-target – should be cut or moved.  
-    🛠️ Adapt – needs refocusing or shortening.  
-    🧩 Suggestion – optional improvement.
-</Tags>
-
-<!-- ===== EXPECTED OUTPUT ===== -->
-<ExpectedOutput>
-    For **each** LRS section:
-    • Tag + one-sentence verdict + 1–3 sentence justification + reminder professor decides.
-</ExpectedOutput>
-
-<!-- ===== REVIEW CRITERIA ===== -->
-<ReviewCriteria>
-    1. Addresses the RQ's key analytical term?  
-    2. Avoids causal, historical, or case-specific content?  
-    3. Thematically organized (not timeline/author)?  
-    4. Shows synthesis (not summary)?  
-    5. Builds toward an AF for empirical work?
-</ReviewCriteria>
-
-<!-- ===== STUDENT INPUT ===== -->
-<PasteInputHere>
-    ${input}
-</PasteInputHere>`;
-        }
-        else if (mode === 'literature-review') {
-          const rq = document.getElementById('literature-review-rq').value.trim();
-          const structure = document.getElementById('literature-review-structure').value.trim();
-          const review = document.getElementById('literature-review').value.trim();
-          if (!rq || !structure || !review) {
-            showToast('Please fill in all required fields');
-            return;
-          }
-          prompt = `EcoS Prompt-Generator: Literature Review\n\nResearch Question: "${rq}"\n\nStructure:\n${structure}\n\nReview:\n${review}`;
-        }
-        else if (mode === 'analytical-framework') {
-          const rq = document.getElementById('analytical-framework-rq').value.trim();
-          const litReview = document.getElementById('analytical-framework-lit-review').value.trim();
-          const framework = document.getElementById('analytical-framework').value.trim();
-          if (!rq || !litReview || !framework) {
-            showToast('Please fill in all required fields');
-            return;
-          }
-          prompt = `EcoS Prompt-Generator: Analytical Framework\n\nResearch Question: "${rq}"\n\nLiterature Review:\n${litReview}\n\nAnalytical Framework:\n${framework}`;
-        }
-
-        if (prompt) {
-          resultDiv.textContent = prompt;
-          resultContainer.classList.remove('hidden');
-          resultContainer.scrollIntoView({ behavior: 'smooth' });
-          showToast('Prompt generated successfully');
-        }
-      } catch (error) {
-        showToast('Error generating prompt. Please try again.');
-        console.error('Error:', error);
-      }
-    });
-
-    // Copy functionality
-    copyBtn.addEventListener('click', async () => {
-      try {
-        await navigator.clipboard.writeText(resultDiv.textContent);
-        copyBtn.textContent = 'Copied!';
-        showToast();
-        
-        setTimeout(() => {
-          copyBtn.textContent = 'Copy to Clipboard';
-        }, 2000);
-      } catch (err) {
-        showToast('Failed to copy. Please try again.');
-      }
-    });
-
-    // New prompt button
-    newPromptBtn.addEventListener('click', () => {
-      resultContainer.classList.add('hidden');
-      window.scrollTo({ top: 0, behavior: 'smooth' });
+    document.addEventListener('alpine:init', () => {
+      Alpine.data('promptGenerator', promptGenerator);
     });
   </script>
 </body>
