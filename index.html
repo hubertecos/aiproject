@@ -10,18 +10,12 @@
       theme: {
         extend: {
           animation: {
-            'fade-in': 'fadeIn 0.5s ease-in-out',
-            'slide-in': 'slideIn 0.3s ease-out',
-            'pulse-gentle': 'pulse 2s cubic-bezier(0.4, 0, 0.6, 1) infinite',
+            'fade-in': 'fadeIn 0.3s ease-in-out',
           },
           keyframes: {
             fadeIn: {
-              '0%': { opacity: '0', transform: 'translateY(10px)' },
-              '100%': { opacity: '1', transform: 'translateY(0)' }
-            },
-            slideIn: {
-              '0%': { opacity: '0', transform: 'translateX(-10px)' },
-              '100%': { opacity: '1', transform: 'translateX(0)' }
+              '0%': { opacity: '0' },
+              '100%': { opacity: '1' }
             }
           }
         }
@@ -29,242 +23,213 @@
     }
   </script>
 </head>
-<body class="min-h-screen bg-gradient-to-br from-indigo-50 via-white to-purple-50">
-  <div class="max-w-4xl mx-auto p-6 space-y-8">
+<body class="bg-gray-50 text-gray-900 font-sans">
+  <div class="max-w-4xl mx-auto p-8 space-y-8">
     
     <!-- Header -->
-    <div class="text-center space-y-4 animate-fade-in">
-      <div class="inline-block p-3 bg-gradient-to-r from-indigo-500 to-purple-600 rounded-2xl mb-4">
-        <svg class="w-8 h-8 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-          <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9.663 17h4.673M12 3v1m6.364 1.636l-.707.707M21 12h-1M4 12H3m3.343-5.657l-.707-.707m2.828 9.9a5 5 0 117.072 0l-.548.547A3.374 3.374 0 0014 18.469V19a2 2 0 11-4 0v-.531c0-.895-.356-1.754-.988-2.386l-.548-.547z"/>
-        </svg>
-      </div>
-      <h1 class="text-4xl font-bold bg-gradient-to-r from-indigo-600 to-purple-600 bg-clip-text text-transparent">
+    <div class="text-center space-y-6 border-b border-gray-200 pb-8">
+      <h1 class="text-4xl font-bold text-gray-900 tracking-tight">
         EcoS Prompt-Generator
       </h1>
-      <div class="max-w-2xl mx-auto p-6 bg-white/70 backdrop-blur-sm rounded-2xl border border-white/50 shadow-xl">
+      <div class="max-w-3xl mx-auto bg-white p-6 rounded-lg border border-gray-200 shadow-sm">
         <p class="text-gray-700 leading-relaxed">
-          <span class="font-semibold text-indigo-600">📋 Instructions:</span><br>
-          Select the current phase of your research project, fill in the fields, then click "Generate Prompt" to create your customized prompt. 
-          You can then copy it and paste into ChatGPT, Claude, Gemini, or any other AI assistant.
+          <strong class="text-gray-900">Instructions:</strong><br>
+          Select the current phase of your research project, complete the required fields, then click "Generate Prompt" to create your customized prompt. 
+          Copy the generated prompt and paste it into your preferred AI assistant (ChatGPT, Claude, Gemini, etc.).
         </p>
       </div>
     </div>
 
     <!-- Phase Selection -->
-    <div class="bg-white/80 backdrop-blur-sm rounded-2xl border border-white/50 shadow-xl p-8 animate-slide-in">
-      <div class="flex items-center gap-3 mb-6">
-        <div class="w-10 h-10 bg-gradient-to-r from-indigo-500 to-purple-500 rounded-xl flex items-center justify-center">
-          <span class="text-white font-bold">1</span>
-        </div>
-        <label for="modeSelect" class="text-xl font-semibold text-gray-800">Select Research Phase</label>
+    <div class="bg-white rounded-lg border border-gray-200 shadow-sm">
+      <div class="p-6 border-b border-gray-100">
+        <h2 class="text-xl font-semibold text-gray-900 mb-4">Step 1: Select Research Phase</h2>
+        <select id="modeSelect" class="w-full p-3 border border-gray-300 rounded-md shadow-sm focus:ring-2 focus:ring-blue-500 focus:border-blue-500 bg-white text-base">
+          <option value="rq">1. Topic & Research Question</option>
+          <option value="relevance">2. Relevance Table</option>
+          <option value="lit-structure">3. Literature Review Structure</option>
+          <option value="lit-structure-testing">3.1 Literature Review Structure (Testing)</option>
+          <option value="literature-review">4. Literature Review</option>
+          <option value="analytical-framework">5. Analytical Framework</option>
+        </select>
       </div>
-      <select id="modeSelect" class="w-full p-4 border-2 border-gray-200 rounded-xl shadow-sm focus:ring-4 focus:ring-indigo-100 focus:border-indigo-500 transition-all duration-200 bg-white text-lg">
-        <option value="rq">🎯 1. Topic & Research Question</option>
-        <option value="relevance">📊 2. Relevance Table</option>
-        <option value="lit-structure">📚 3. Literature Review Structure</option>
-        <option value="lit-structure-testing">🧪 3.1 Literature Review Structure (Testing)</option>
-        <option value="literature-review">📖 4. Literature Review</option>
-        <option value="analytical-framework">🔬 5. Analytical Framework</option>
-      </select>
     </div>
 
     <!-- Form Sections -->
-    <div class="bg-white/80 backdrop-blur-sm rounded-2xl border border-white/50 shadow-xl p-8">
-      <div class="flex items-center gap-3 mb-8">
-        <div class="w-10 h-10 bg-gradient-to-r from-purple-500 to-pink-500 rounded-xl flex items-center justify-center">
-          <span class="text-white font-bold">2</span>
-        </div>
-        <h2 class="text-xl font-semibold text-gray-800">Fill in Your Details</h2>
+    <div class="bg-white rounded-lg border border-gray-200 shadow-sm">
+      <div class="p-6 border-b border-gray-100">
+        <h2 class="text-xl font-semibold text-gray-900">Step 2: Complete Required Fields</h2>
       </div>
-
-      <!-- RQ Section -->
-      <div id="rq-section" class="space-y-6 hidden animate-fade-in">
-        <div class="space-y-2">
-          <label class="block text-lg font-medium text-gray-700 flex items-center gap-2">
-            <span class="w-2 h-2 bg-indigo-500 rounded-full"></span>
-            Title of the Thesis
-          </label>
-          <input id="title" type="text" maxlength="500" placeholder="Enter your thesis title..."
-                 class="w-full p-4 border-2 border-gray-200 rounded-xl shadow-sm focus:ring-4 focus:ring-indigo-100 focus:border-indigo-500 transition-all duration-200"/>
-          <div class="flex justify-between">
-            <div id="title-count" class="text-sm text-gray-500">0 / 500</div>
-            <div class="text-sm text-gray-400">💡 Be specific and concise</div>
+      
+      <div class="p-6">
+        <!-- RQ Section -->
+        <div id="rq-section" class="space-y-6 hidden">
+          <div class="space-y-3">
+            <label class="block text-sm font-medium text-gray-700">
+              Title of the Thesis <span class="text-red-500">*</span>
+            </label>
+            <input id="title" type="text" maxlength="500" placeholder="Enter your thesis title"
+                   class="w-full p-3 border border-gray-300 rounded-md shadow-sm focus:ring-2 focus:ring-blue-500 focus:border-blue-500"/>
+            <div class="flex justify-between text-sm">
+              <div id="title-count" class="text-gray-500">0 / 500</div>
+              <div class="text-gray-400">Be specific and concise</div>
+            </div>
+          </div>
+          <div class="space-y-3">
+            <label class="block text-sm font-medium text-gray-700">
+              Research Question <span class="text-red-500">*</span>
+            </label>
+            <input id="research-question" type="text" maxlength="500" placeholder="What is your main research question?"
+                   class="w-full p-3 border border-gray-300 rounded-md shadow-sm focus:ring-2 focus:ring-blue-500 focus:border-blue-500"/>
+            <div class="flex justify-between text-sm">
+              <div id="rq-count" class="text-gray-500">0 / 500</div>
+              <div class="text-gray-400">Should be clear and focused</div>
+            </div>
           </div>
         </div>
-        <div class="space-y-2">
-          <label class="block text-lg font-medium text-gray-700 flex items-center gap-2">
-            <span class="w-2 h-2 bg-purple-500 rounded-full"></span>
-            Research Question
-          </label>
-          <input id="research-question" type="text" maxlength="500" placeholder="What is your main research question?"
-                 class="w-full p-4 border-2 border-gray-200 rounded-xl shadow-sm focus:ring-4 focus:ring-purple-100 focus:border-purple-500 transition-all duration-200"/>
-          <div class="flex justify-between">
-            <div id="rq-count" class="text-sm text-gray-500">0 / 500</div>
-            <div class="text-sm text-gray-400">🎯 Should be clear and focused</div>
+
+        <!-- Relevance Section -->
+        <div id="relevance-section" class="space-y-6 hidden">
+          <div class="space-y-3">
+            <label class="block text-sm font-medium text-gray-700">
+              Research Question <span class="text-red-500">*</span>
+            </label>
+            <input id="relevance-rq" type="text" maxlength="500" placeholder="Enter your research question"
+                   class="w-full p-3 border border-gray-300 rounded-md shadow-sm focus:ring-2 focus:ring-blue-500 focus:border-blue-500"/>
+            <div id="relevance-rq-count" class="text-sm text-gray-500">0 / 500</div>
+          </div>
+          <div class="space-y-3">
+            <label class="block text-sm font-medium text-gray-700">
+              Relevance Section <span class="text-red-500">*</span>
+            </label>
+            <textarea id="relevance" rows="6" maxlength="50000" placeholder="Describe the relevance and significance of your research"
+                      class="w-full p-3 border border-gray-300 rounded-md shadow-sm focus:ring-2 focus:ring-blue-500 focus:border-blue-500 resize-vertical"></textarea>
+            <div class="flex justify-between text-sm">
+              <div id="relevance-count" class="text-gray-500">0 / 50000</div>
+              <div class="text-gray-400">Explain why this research matters</div>
+            </div>
           </div>
         </div>
-      </div>
 
-      <!-- Relevance Section -->
-      <div id="relevance-section" class="space-y-6 hidden animate-fade-in">
-        <div class="space-y-2">
-          <label class="block text-lg font-medium text-gray-700 flex items-center gap-2">
-            <span class="w-2 h-2 bg-indigo-500 rounded-full"></span>
-            Research Question
-          </label>
-          <input id="relevance-rq" type="text" maxlength="500" placeholder="Enter your research question..."
-                 class="w-full p-4 border-2 border-gray-200 rounded-xl shadow-sm focus:ring-4 focus:ring-indigo-100 focus:border-indigo-500 transition-all duration-200"/>
-          <div id="relevance-rq-count" class="text-sm text-gray-500">0 / 500</div>
-        </div>
-        <div class="space-y-2">
-          <label class="block text-lg font-medium text-gray-700 flex items-center gap-2">
-            <span class="w-2 h-2 bg-purple-500 rounded-full"></span>
-            Relevance Section
-          </label>
-          <textarea id="relevance" rows="6" maxlength="50000" placeholder="Describe the relevance and significance of your research..."
-                    class="w-full p-4 border-2 border-gray-200 rounded-xl shadow-sm focus:ring-4 focus:ring-purple-100 focus:border-purple-500 transition-all duration-200 resize-none"></textarea>
-          <div class="flex justify-between">
-            <div id="relevance-count" class="text-sm text-gray-500">0 / 50000</div>
-            <div class="text-sm text-gray-400">📊 Explain why this research matters</div>
+        <!-- Literature Structure Section -->
+        <div id="lit-structure-section" class="space-y-6 hidden">
+          <div class="space-y-3">
+            <label class="block text-sm font-medium text-gray-700">
+              Research Question <span class="text-red-500">*</span>
+            </label>
+            <input id="lit-structure-rq" type="text" maxlength="500" placeholder="Enter your research question"
+                   class="w-full p-3 border border-gray-300 rounded-md shadow-sm focus:ring-2 focus:ring-blue-500 focus:border-blue-500"/>
+            <div id="lit-structure-rq-count" class="text-sm text-gray-500">0 / 500</div>
+          </div>
+          
+          <div class="space-y-4">
+            <h3 class="text-lg font-medium text-gray-900">Literature Review Issues</h3>
+            <div id="lit-structure-issues" class="space-y-4"></div>
+            <div class="flex gap-3 pt-4 border-t border-gray-200">
+              <button id="add-issue-btn" type="button"
+                      class="px-4 py-2 bg-blue-600 text-white rounded-md hover:bg-blue-700 transition-colors font-medium">
+                Add Issue
+              </button>
+              <button id="remove-issue-btn" type="button"
+                      class="px-4 py-2 bg-gray-600 text-white rounded-md hover:bg-gray-700 transition-colors font-medium hidden">
+                Remove Last Issue
+              </button>
+            </div>
           </div>
         </div>
-      </div>
 
-      <!-- Literature Structure Section -->
-      <div id="lit-structure-section" class="space-y-6 hidden animate-fade-in">
-        <div class="space-y-2">
-          <label class="block text-lg font-medium text-gray-700 flex items-center gap-2">
-            <span class="w-2 h-2 bg-indigo-500 rounded-full"></span>
-            Research Question
+        <!-- Testing Section -->
+        <div id="lit-structure-testing-section" class="space-y-4 hidden">
+          <label class="block text-sm font-medium text-gray-700">
+            Paste Complete RQ + Issues Here <span class="text-red-500">*</span>
           </label>
-          <input id="lit-structure-rq" type="text" maxlength="500" placeholder="Enter your research question..."
-                 class="w-full p-4 border-2 border-gray-200 rounded-xl shadow-sm focus:ring-4 focus:ring-indigo-100 focus:border-indigo-500 transition-all duration-200"/>
-          <div id="lit-structure-rq-count" class="text-sm text-gray-500">0 / 500</div>
+          <textarea id="lit-structure-testing-input" rows="12" maxlength="50000"
+                    placeholder="Paste your research question and all issues here for testing"
+                    class="w-full p-3 border border-gray-300 rounded-md shadow-sm focus:ring-2 focus:ring-blue-500 focus:border-blue-500 resize-vertical"></textarea>
+          <div class="text-sm text-gray-400">This is for testing the literature review structure</div>
         </div>
-        
-        <div class="space-y-4">
-          <div class="flex items-center gap-2 mb-4">
-            <span class="w-2 h-2 bg-purple-500 rounded-full"></span>
-            <h3 class="text-lg font-medium text-gray-700">Literature Review Issues</h3>
+
+        <!-- Literature Review Section -->
+        <div id="literature-review-section" class="space-y-6 hidden">
+          <div class="space-y-3">
+            <label class="block text-sm font-medium text-gray-700">
+              Research Question <span class="text-red-500">*</span>
+            </label>
+            <input id="literature-review-rq" type="text" maxlength="500" placeholder="Enter your research question"
+                   class="w-full p-3 border border-gray-300 rounded-md shadow-sm focus:ring-2 focus:ring-blue-500 focus:border-blue-500"/>
+            <div id="literature-review-rq-count" class="text-sm text-gray-500">0 / 500</div>
           </div>
-          <div id="lit-structure-issues" class="space-y-6"></div>
-          <div class="flex gap-3 pt-4">
-            <button id="add-issue-btn" type="button"
-                    class="flex-1 bg-gradient-to-r from-green-500 to-emerald-500 text-white p-3 rounded-xl hover:from-green-600 hover:to-emerald-600 transition-all duration-200 shadow-lg hover:shadow-xl font-medium">
-              ➕ Add Issue
-            </button>
-            <button id="remove-issue-btn" type="button"
-                    class="flex-1 bg-gradient-to-r from-red-500 to-pink-500 text-white p-3 rounded-xl hover:from-red-600 hover:to-pink-600 transition-all duration-200 shadow-lg hover:shadow-xl font-medium hidden">
-              ➖ Remove Last Issue
-            </button>
+          <div class="space-y-3">
+            <label class="block text-sm font-medium text-gray-700">
+              Literature Review Structure <span class="text-red-500">*</span>
+            </label>
+            <textarea id="literature-review-structure" rows="4" maxlength="50000" placeholder="Outline your literature review structure"
+                      class="w-full p-3 border border-gray-300 rounded-md shadow-sm focus:ring-2 focus:ring-blue-500 focus:border-blue-500 resize-vertical"></textarea>
+            <div id="literature-review-structure-count" class="text-sm text-gray-500">0 / 50000</div>
+          </div>
+          <div class="space-y-3">
+            <label class="block text-sm font-medium text-gray-700">
+              Literature Review <span class="text-red-500">*</span>
+            </label>
+            <textarea id="literature-review" rows="6" maxlength="50000" placeholder="Paste your literature review content"
+                      class="w-full p-3 border border-gray-300 rounded-md shadow-sm focus:ring-2 focus:ring-blue-500 focus:border-blue-500 resize-vertical"></textarea>
+            <div id="literature-review-count" class="text-sm text-gray-500">0 / 50000</div>
           </div>
         </div>
-      </div>
 
-      <!-- Testing Section -->
-      <div id="lit-structure-testing-section" class="space-y-4 hidden animate-fade-in">
-        <label class="block text-lg font-medium text-gray-700 flex items-center gap-2">
-          <span class="w-2 h-2 bg-indigo-500 rounded-full"></span>
-          Paste Complete RQ + Issues Here
-        </label>
-        <textarea id="lit-structure-testing-input" rows="12" maxlength="50000"
-                  placeholder="Paste your research question and all issues here for testing..."
-                  class="w-full p-4 border-2 border-gray-200 rounded-xl shadow-sm focus:ring-4 focus:ring-indigo-100 focus:border-indigo-500 transition-all duration-200 resize-none"></textarea>
-        <div class="text-sm text-gray-400">🧪 This is for testing the literature review structure</div>
-      </div>
-
-      <!-- Literature Review Section -->
-      <div id="literature-review-section" class="space-y-6 hidden animate-fade-in">
-        <div class="space-y-2">
-          <label class="block text-lg font-medium text-gray-700 flex items-center gap-2">
-            <span class="w-2 h-2 bg-indigo-500 rounded-full"></span>
-            Research Question
-          </label>
-          <input id="literature-review-rq" type="text" maxlength="500" placeholder="Enter your research question..."
-                 class="w-full p-4 border-2 border-gray-200 rounded-xl shadow-sm focus:ring-4 focus:ring-indigo-100 focus:border-indigo-500 transition-all duration-200"/>
-          <div id="literature-review-rq-count" class="text-sm text-gray-500">0 / 500</div>
-        </div>
-        <div class="space-y-2">
-          <label class="block text-lg font-medium text-gray-700 flex items-center gap-2">
-            <span class="w-2 h-2 bg-purple-500 rounded-full"></span>
-            Literature Review Structure
-          </label>
-          <textarea id="literature-review-structure" rows="4" maxlength="50000" placeholder="Outline your literature review structure..."
-                    class="w-full p-4 border-2 border-gray-200 rounded-xl shadow-sm focus:ring-4 focus:ring-purple-100 focus:border-purple-500 transition-all duration-200 resize-none"></textarea>
-          <div id="literature-review-structure-count" class="text-sm text-gray-500">0 / 50000</div>
-        </div>
-        <div class="space-y-2">
-          <label class="block text-lg font-medium text-gray-700 flex items-center gap-2">
-            <span class="w-2 h-2 bg-pink-500 rounded-full"></span>
-            Literature Review
-          </label>
-          <textarea id="literature-review" rows="6" maxlength="50000" placeholder="Paste your literature review content..."
-                    class="w-full p-4 border-2 border-gray-200 rounded-xl shadow-sm focus:ring-4 focus:ring-pink-100 focus:border-pink-500 transition-all duration-200 resize-none"></textarea>
-          <div id="literature-review-count" class="text-sm text-gray-500">0 / 50000</div>
-        </div>
-      </div>
-
-      <!-- Analytical Framework Section -->
-      <div id="analytical-framework-section" class="space-y-6 hidden animate-fade-in">
-        <div class="space-y-2">
-          <label class="block text-lg font-medium text-gray-700 flex items-center gap-2">
-            <span class="w-2 h-2 bg-indigo-500 rounded-full"></span>
-            Research Question
-          </label>
-          <input id="analytical-framework-rq" type="text" maxlength="500" placeholder="Enter your research question..."
-                 class="w-full p-4 border-2 border-gray-200 rounded-xl shadow-sm focus:ring-4 focus:ring-indigo-100 focus:border-indigo-500 transition-all duration-200"/>
-          <div id="analytical-framework-rq-count" class="text-sm text-gray-500">0 / 500</div>
-        </div>
-        <div class="space-y-2">
-          <label class="block text-lg font-medium text-gray-700 flex items-center gap-2">
-            <span class="w-2 h-2 bg-purple-500 rounded-full"></span>
-            Literature Review
-          </label>
-          <textarea id="analytical-framework-lit-review" rows="4" maxlength="50000" placeholder="Paste your literature review..."
-                    class="w-full p-4 border-2 border-gray-200 rounded-xl shadow-sm focus:ring-4 focus:ring-purple-100 focus:border-purple-500 transition-all duration-200 resize-none"></textarea>
-          <div id="analytical-framework-lit-review-count" class="text-sm text-gray-500">0 / 50000</div>
-        </div>
-        <div class="space-y-2">
-          <label class="block text-lg font-medium text-gray-700 flex items-center gap-2">
-            <span class="w-2 h-2 bg-pink-500 rounded-full"></span>
-            Analytical Framework
-          </label>
-          <textarea id="analytical-framework" rows="6" maxlength="50000" placeholder="Describe your analytical framework..."
-                    class="w-full p-4 border-2 border-gray-200 rounded-xl shadow-sm focus:ring-4 focus:ring-pink-100 focus:border-pink-500 transition-all duration-200 resize-none"></textarea>
-          <div id="analytical-framework-count" class="text-sm text-gray-500">0 / 50000</div>
+        <!-- Analytical Framework Section -->
+        <div id="analytical-framework-section" class="space-y-6 hidden">
+          <div class="space-y-3">
+            <label class="block text-sm font-medium text-gray-700">
+              Research Question <span class="text-red-500">*</span>
+            </label>
+            <input id="analytical-framework-rq" type="text" maxlength="500" placeholder="Enter your research question"
+                   class="w-full p-3 border border-gray-300 rounded-md shadow-sm focus:ring-2 focus:ring-blue-500 focus:border-blue-500"/>
+            <div id="analytical-framework-rq-count" class="text-sm text-gray-500">0 / 500</div>
+          </div>
+          <div class="space-y-3">
+            <label class="block text-sm font-medium text-gray-700">
+              Literature Review <span class="text-red-500">*</span>
+            </label>
+            <textarea id="analytical-framework-lit-review" rows="4" maxlength="50000" placeholder="Paste your literature review"
+                      class="w-full p-3 border border-gray-300 rounded-md shadow-sm focus:ring-2 focus:ring-blue-500 focus:border-blue-500 resize-vertical"></textarea>
+            <div id="analytical-framework-lit-review-count" class="text-sm text-gray-500">0 / 50000</div>
+          </div>
+          <div class="space-y-3">
+            <label class="block text-sm font-medium text-gray-700">
+              Analytical Framework <span class="text-red-500">*</span>
+            </label>
+            <textarea id="analytical-framework" rows="6" maxlength="50000" placeholder="Describe your analytical framework"
+                      class="w-full p-3 border border-gray-300 rounded-md shadow-sm focus:ring-2 focus:ring-blue-500 focus:border-blue-500 resize-vertical"></textarea>
+            <div id="analytical-framework-count" class="text-sm text-gray-500">0 / 50000</div>
+          </div>
         </div>
       </div>
     </div>
 
-    <!-- Generate & Results -->
-    <div class="space-y-6">
-      <button id="submit-btn" class="w-full bg-gradient-to-r from-indigo-600 to-purple-600 text-white p-4 rounded-xl hover:from-indigo-700 hover:to-purple-700 transition-all duration-200 shadow-xl hover:shadow-2xl text-lg font-semibold transform hover:scale-[1.02]">
-        ✨ Generate Prompt
+    <!-- Generate Button -->
+    <div class="text-center">
+      <button id="submit-btn" class="px-8 py-3 bg-blue-600 text-white rounded-md hover:bg-blue-700 transition-colors text-lg font-medium shadow-sm">
+        Generate Prompt
       </button>
-      
-      <div id="result-container" class="hidden animate-fade-in">
-        <div class="bg-white/90 backdrop-blur-sm rounded-2xl border border-white/50 shadow-xl p-8">
-          <div class="flex items-center justify-between mb-6">
-            <div class="flex items-center gap-3">
-              <div class="w-10 h-10 bg-gradient-to-r from-green-500 to-emerald-500 rounded-xl flex items-center justify-center">
-                <svg class="w-5 h-5 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                  <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z"/>
-                </svg>
-              </div>
-              <h3 class="text-xl font-semibold text-gray-800">Generated Prompt</h3>
-            </div>
-            <div class="text-sm text-gray-500 bg-gray-100 px-3 py-1 rounded-lg">Ready to copy!</div>
+    </div>
+
+    <!-- Results -->
+    <div id="result-container" class="hidden">
+      <div class="bg-white rounded-lg border border-gray-200 shadow-sm">
+        <div class="p-6 border-b border-gray-100">
+          <div class="flex items-center justify-between">
+            <h3 class="text-xl font-semibold text-gray-900">Generated Prompt</h3>
+            <span class="text-sm text-gray-500 bg-gray-100 px-3 py-1 rounded-md">Ready to copy</span>
           </div>
-          <div id="result" class="whitespace-pre-wrap bg-gray-50 p-6 border-2 border-gray-200 rounded-xl text-sm font-mono leading-relaxed max-h-96 overflow-y-auto"></div>
+        </div>
+        <div class="p-6">
+          <div id="result" class="whitespace-pre-wrap bg-gray-50 p-4 border border-gray-200 rounded-md text-sm font-mono leading-relaxed max-h-96 overflow-y-auto"></div>
           <div class="flex gap-3 mt-6">
-            <button id="copy-btn" class="flex-1 bg-gradient-to-r from-green-600 to-emerald-600 text-white p-3 rounded-xl hover:from-green-700 hover:to-emerald-700 transition-all duration-200 shadow-lg hover:shadow-xl font-medium flex items-center justify-center gap-2">
-              <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 16H6a2 2 0 01-2-2V6a2 2 0 012-2h8a2 2 0 012 2v2m-6 12h8a2 2 0 002-2v-8a2 2 0 00-2-2h-8a2 2 0 00-2 2v8a2 2 0 002 2z"/>
-              </svg>
+            <button id="copy-btn" class="flex-1 px-4 py-2 bg-green-600 text-white rounded-md hover:bg-green-700 transition-colors font-medium">
               Copy to Clipboard
             </button>
-            <button id="new-prompt-btn" class="bg-gradient-to-r from-indigo-500 to-purple-500 text-white p-3 rounded-xl hover:from-indigo-600 hover:to-purple-600 transition-all duration-200 shadow-lg hover:shadow-xl font-medium">
+            <button id="new-prompt-btn" class="px-4 py-2 bg-gray-600 text-white rounded-md hover:bg-gray-700 transition-colors font-medium">
               Generate New
             </button>
           </div>
@@ -273,17 +238,14 @@
     </div>
 
     <!-- Toast Notification -->
-    <div id="toast" class="fixed top-6 right-6 bg-green-600 text-white px-6 py-3 rounded-xl shadow-xl transform translate-x-full transition-transform duration-300 flex items-center gap-2 z-50">
-      <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z"/>
-      </svg>
+    <div id="toast" class="fixed top-6 right-6 bg-green-600 text-white px-4 py-2 rounded-md shadow-lg transform translate-x-full transition-transform duration-300 z-50">
       <span>Copied to clipboard!</span>
     </div>
 
   </div>
 
   <script>
-    // Enhanced JavaScript with better UX
+    // Core functionality
     const modeSelect = document.getElementById('modeSelect');
     const sections = {
       rq: document.getElementById('rq-section'),
@@ -299,7 +261,7 @@
     const newPromptBtn = document.getElementById('new-prompt-btn');
     const toast = document.getElementById('toast');
 
-    // Enhanced section switching with animations
+    // Section switching
     function showSection(key) {
       Object.entries(sections).forEach(([k, el]) => {
         if (k === key) {
@@ -323,7 +285,7 @@
       }, 2000);
     }
 
-    // Enhanced character counters with visual feedback
+    // Character counters
     function setupCharacterCounter(inputId, max) {
       const input = document.getElementById(inputId);
       const counter = document.getElementById(inputId + '-count');
@@ -333,11 +295,10 @@
         const length = input.value.length;
         counter.textContent = `${length} / ${max}`;
         
-        // Visual feedback for character count
         if (length > max * 0.9) {
-          counter.className = 'text-sm text-red-500 font-medium';
+          counter.className = 'text-sm text-red-600 font-medium';
         } else if (length > max * 0.7) {
-          counter.className = 'text-sm text-yellow-500 font-medium';
+          counter.className = 'text-sm text-yellow-600 font-medium';
         } else {
           counter.className = 'text-sm text-gray-500';
         }
@@ -366,33 +327,31 @@
     function renumberIssues() {
       Array.from(issuesDiv.children).forEach((wrapper, i) => {
         const labels = wrapper.querySelectorAll('label');
-        if (labels[0]) labels[0].innerHTML = `<span class="w-2 h-2 bg-indigo-500 rounded-full"></span>Issue ${i + 1}: Title`;
-        if (labels[1]) labels[1].innerHTML = `<span class="w-2 h-2 bg-purple-500 rounded-full"></span>Issue ${i + 1}: Explanation / Purpose`;
+        if (labels[0]) labels[0].innerHTML = `Issue ${i + 1}: Title <span class="text-red-500">*</span>`;
+        if (labels[1]) labels[1].innerHTML = `Issue ${i + 1}: Explanation / Purpose <span class="text-red-500">*</span>`;
       });
     }
 
     function addIssue() {
       const num = issuesDiv.children.length + 1;
       const wrapper = document.createElement('div');
-      wrapper.className = 'space-y-4 p-6 border-2 border-gray-100 rounded-xl bg-gray-50/50 animate-slide-in';
+      wrapper.className = 'space-y-4 p-4 border border-gray-200 rounded-md bg-gray-50';
 
       wrapper.innerHTML = `
         <div class="space-y-2">
-          <label class="block text-lg font-medium text-gray-700 flex items-center gap-2">
-            <span class="w-2 h-2 bg-indigo-500 rounded-full"></span>
-            Issue ${num}: Title
+          <label class="block text-sm font-medium text-gray-700">
+            Issue ${num}: Title <span class="text-red-500">*</span>
           </label>
-          <input type="text" maxlength="500" required placeholder="Enter issue title..."
-                 class="w-full p-3 border-2 border-gray-200 rounded-xl shadow-sm focus:ring-4 focus:ring-indigo-100 focus:border-indigo-500 transition-all duration-200"/>
+          <input type="text" maxlength="500" required placeholder="Enter issue title"
+                 class="w-full p-3 border border-gray-300 rounded-md shadow-sm focus:ring-2 focus:ring-blue-500 focus:border-blue-500"/>
           <div class="text-sm text-gray-500">0 / 500</div>
         </div>
         <div class="space-y-2">
-          <label class="block text-lg font-medium text-gray-700 flex items-center gap-2">
-            <span class="w-2 h-2 bg-purple-500 rounded-full"></span>
-            Issue ${num}: Explanation / Purpose
+          <label class="block text-sm font-medium text-gray-700">
+            Issue ${num}: Explanation / Purpose <span class="text-red-500">*</span>
           </label>
-          <textarea rows="4" maxlength="5000" required placeholder="Explain the purpose and relevance of this issue..."
-                    class="w-full p-3 border-2 border-gray-200 rounded-xl shadow-sm focus:ring-4 focus:ring-purple-100 focus:border-purple-500 transition-all duration-200 resize-none"></textarea>
+          <textarea rows="4" maxlength="5000" required placeholder="Explain the purpose and relevance of this issue"
+                    class="w-full p-3 border border-gray-300 rounded-md shadow-sm focus:ring-2 focus:ring-blue-500 focus:border-blue-500 resize-vertical"></textarea>
           <div class="text-sm text-gray-500">0 / 5000</div>
         </div>
       `;
@@ -417,13 +376,9 @@
 
     function removeIssue() {
       if (issuesDiv.children.length > 3) {
-        const lastChild = issuesDiv.lastChild;
-        lastChild.style.animation = 'fadeOut 0.3s ease-out';
-        setTimeout(() => {
-          issuesDiv.removeChild(lastChild);
-          renumberIssues();
-          updateRemoveBtn();
-        }, 300);
+        issuesDiv.removeChild(issuesDiv.lastChild);
+        renumberIssues();
+        updateRemoveBtn();
       }
     }
 
@@ -436,7 +391,7 @@
     for (let i = 0; i < 3; i++) addIssue();
     showSection(modeSelect.value);
 
-    // Enhanced prompt generation
+    // Prompt generation
     document.getElementById('submit-btn').addEventListener('click', () => {
       const mode = modeSelect.value;
       let prompt = '';
@@ -446,7 +401,7 @@
           const title = document.getElementById('title').value.trim();
           const question = document.getElementById('research-question').value.trim();
           if (!title || !question) {
-            showToast('Please fill in all required fields!');
+            showToast('Please fill in all required fields');
             return;
           }
           prompt = `EcoS Prompt-Generator: Research Question\n\nTitle: "${title}"\nResearch Question: "${question}"`;
@@ -455,7 +410,7 @@
           const rq = document.getElementById('relevance-rq').value.trim();
           const relevance = document.getElementById('relevance').value.trim();
           if (!rq || !relevance) {
-            showToast('Please fill in all required fields!');
+            showToast('Please fill in all required fields');
             return;
           }
           prompt = `EcoS Prompt-Generator: Relevance\n\nResearch Question: "${rq}"\n\nRelevance Section:\n${relevance}`;
@@ -463,7 +418,7 @@
         else if (mode === 'lit-structure') {
           const rq = document.getElementById('lit-structure-rq').value.trim();
           if (!rq) {
-            showToast('Please enter your research question!');
+            showToast('Please enter your research question');
             return;
           }
           
@@ -474,7 +429,7 @@
 
           const validItems = items.filter(item => item.title && item.explanation);
           if (validItems.length === 0) {
-            showToast('Please fill in at least one complete issue!');
+            showToast('Please fill in at least one complete issue');
             return;
           }
 
@@ -540,7 +495,7 @@ ${parts.join('\n\n')}
         else if (mode === 'lit-structure-testing') {
           const input = document.getElementById('lit-structure-testing-input').value.trim();
           if (!input) {
-            showToast('Please paste your RQ and issues!');
+            showToast('Please paste your RQ and issues');
             return;
           }
           prompt = `<!-- ===== ROLE ===== -->
@@ -599,7 +554,7 @@ ${parts.join('\n\n')}
           const structure = document.getElementById('literature-review-structure').value.trim();
           const review = document.getElementById('literature-review').value.trim();
           if (!rq || !structure || !review) {
-            showToast('Please fill in all required fields!');
+            showToast('Please fill in all required fields');
             return;
           }
           prompt = `EcoS Prompt-Generator: Literature Review\n\nResearch Question: "${rq}"\n\nStructure:\n${structure}\n\nReview:\n${review}`;
@@ -609,7 +564,7 @@ ${parts.join('\n\n')}
           const litReview = document.getElementById('analytical-framework-lit-review').value.trim();
           const framework = document.getElementById('analytical-framework').value.trim();
           if (!rq || !litReview || !framework) {
-            showToast('Please fill in all required fields!');
+            showToast('Please fill in all required fields');
             return;
           }
           prompt = `EcoS Prompt-Generator: Analytical Framework\n\nResearch Question: "${rq}"\n\nLiterature Review:\n${litReview}\n\nAnalytical Framework:\n${framework}`;
@@ -619,7 +574,7 @@ ${parts.join('\n\n')}
           resultDiv.textContent = prompt;
           resultContainer.classList.remove('hidden');
           resultContainer.scrollIntoView({ behavior: 'smooth' });
-          showToast('Prompt generated successfully!');
+          showToast('Prompt generated successfully');
         }
       } catch (error) {
         showToast('Error generating prompt. Please try again.');
@@ -627,25 +582,15 @@ ${parts.join('\n\n')}
       }
     });
 
-    // Enhanced copy functionality
+    // Copy functionality
     copyBtn.addEventListener('click', async () => {
       try {
         await navigator.clipboard.writeText(resultDiv.textContent);
-        copyBtn.innerHTML = `
-          <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z"/>
-          </svg>
-          Copied!
-        `;
+        copyBtn.textContent = 'Copied!';
         showToast();
         
         setTimeout(() => {
-          copyBtn.innerHTML = `
-            <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 16H6a2 2 0 01-2-2V6a2 2 0 012-2h8a2 2 0 012 2v2m-6 12h8a2 2 0 002-2v-8a2 2 0 00-2-2h-8a2 2 0 00-2 2v8a2 2 0 002 2z"/>
-            </svg>
-            Copy to Clipboard
-          `;
+          copyBtn.textContent = 'Copy to Clipboard';
         }, 2000);
       } catch (err) {
         showToast('Failed to copy. Please try again.');
@@ -657,16 +602,6 @@ ${parts.join('\n\n')}
       resultContainer.classList.add('hidden');
       window.scrollTo({ top: 0, behavior: 'smooth' });
     });
-
-    // Add some CSS for animations
-    const style = document.createElement('style');
-    style.textContent = `
-      @keyframes fadeOut {
-        from { opacity: 1; transform: scale(1); }
-        to { opacity: 0; transform: scale(0.95); }
-      }
-    `;
-    document.head.appendChild(style);
   </script>
 </body>
 </html>
