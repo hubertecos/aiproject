@@ -216,5 +216,3 @@ This is preliminary feedback to help you understand basic requirements and prepa
 - **Guide thinking, don't provide solutions** - use partial examples with "..."
 
 </ImportantReminders>
-
-<!-- ===== STUDENT INPUT ===== -->
