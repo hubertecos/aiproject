@@ -1,0 +1,6 @@
+EcoS Prompt-Generator: Relevance
+
+Research Question: "{{question}}"
+
+Relevance Section:
+{{relevance}}

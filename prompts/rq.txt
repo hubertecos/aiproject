@@ -1,0 +1,4 @@
+EcoS Prompt-Generator: Research Question
+
+Title: "{{title}}"
+Research Question: "{{question}}"
