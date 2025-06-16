@@ -120,8 +120,8 @@
     <!-- Generate Prompt & Output -->
     <div class="space-y-4">
       <button id="submit-btn" class="w-full bg-blue-600 text-white p-3 rounded-xl hover:bg-blue-700 transition">Generate Prompt</button>
-      <div id="result" class="whitespace-pre-wrap bg-white p-4 border border-gray-300 rounded-xl text-sm"></div>
-      <button id="copy-btn" class="w-full bg-green-600 text-white p-3 rounded-xl hover:bg-green-700 transition hidden">Copy to Clipboard</button>
+      <button id="copy-btn" class="w-full bg-green-600 text-white p-3 rounded-xl hover:bg-green-700 transition hidden">Copy Prompt to Clipboard</button>
+      <div id="result" class="whitespace-pre-wrap bg-white p-4 border border-gray-300 rounded-xl text-sm hidden"></div>
     </div>
 
   </div>
@@ -209,7 +209,9 @@
 
     function showSection(key) {
       Object.entries(sections).forEach(([k,el])=> el.classList.toggle('hidden', k!==key));
-      resultDiv.textContent=''; copyBtn.classList.add('hidden');
+      resultDiv.textContent='';
+      resultDiv.classList.add('hidden');
+      copyBtn.classList.add('hidden');
     }
     modeSelect.addEventListener('change', ()=> showSection(modeSelect.value));
     showSection(modeSelect.value);
@@ -236,25 +238,54 @@
       if(mode==='rq'){
         data.title=document.getElementById('title').value.trim();
         data.question=document.getElementById('research-question').value.trim();
+        if(!data.title || !data.question){
+          alert('Please provide information in all fields.');
+          return;
+        }
       } else if(mode==='relevance'){
         data.question=document.getElementById('relevance-rq').value.trim();
         data.relevance=document.getElementById('relevance').value.trim();
+        if(!data.question || !data.relevance){
+          alert('Please provide information in all fields.');
+          return;
+        }
       } else if(mode==='lit-structure'){
         data.researchQuestion=document.getElementById('lit-structure-rq').value.trim();
-        const items=Array.from(issuesDiv.children).map(w=>({title:w.querySelector('input').value.trim(), expl:w.querySelector('textarea').value.trim()})).filter(it=>it.title||it.expl);
+        if(!data.researchQuestion){
+          alert('Please provide information in all fields.');
+          return;
+        }
+        const rawItems=Array.from(issuesDiv.children).map(w=>({title:w.querySelector('input').value.trim(), expl:w.querySelector('textarea').value.trim()}));
+        for(let i=0;i<rawItems.length;i++){
+          const {title,expl}=rawItems[i];
+          if((title && !expl) || (!title && expl)){
+            alert(`Issue ${i+1}: please fill out both title and explanation or clear both fields.`);
+            return;
+          }
+        }
+        const items = rawItems.filter(it=>it.title||it.expl);
         data.structure=items.map(({title,expl})=>`Issue: ${title}\nExplanation / Purpose: ${expl}`).join('\n\n');
         data.issues = items;
       } else if(mode==='literature-review'){
         data.question=document.getElementById('literature-review-rq').value.trim();
         data.review=document.getElementById('literature-review').value.trim();
+        if(!data.question || !data.review){
+          alert('Please provide information in all fields.');
+          return;
+        }
       } else if(mode==='analytical-framework'){
         data.question=document.getElementById('analytical-framework-rq').value.trim();
         data.literature_review=document.getElementById('analytical-framework-lit-review').value.trim();
         data.framework=document.getElementById('analytical-framework').value.trim();
+        if(!data.question || !data.literature_review || !data.framework){
+          alert('Please provide information in all fields.');
+          return;
+        }
       }
       const tmpl = await loadTemplate(mode);
       const prompt = fillTemplate(tmpl, data) + '\n\n' + buildStudentInput(mode,data);
       resultDiv.textContent = prompt;
+      resultDiv.classList.remove('hidden');
       copyBtn.classList.remove('hidden');
     });
     copyBtn.addEventListener('click',()=>navigator.clipboard.writeText(resultDiv.textContent));
