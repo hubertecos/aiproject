@@ -1,0 +1,9 @@
+EcoS Prompt-Generator: Analytical Framework
+
+Research Question: "{{question}}"
+
+Literature Review:
+{{literature_review}}
+
+Analytical Framework:
+{{framework}}

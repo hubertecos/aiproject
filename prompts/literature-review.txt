@@ -1,0 +1,9 @@
+EcoS Prompt-Generator: Literature Review
+
+Research Question: "{{question}}"
+
+Structure:
+{{structure}}
+
+Review:
+{{review}}
