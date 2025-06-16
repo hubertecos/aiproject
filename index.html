@@ -145,6 +145,63 @@
       return tmpl.replace(/{{(\w+)}}/g, (_, k) => data[k] || "");
     }
 
+    function buildStudentInput(mode,data){
+      let parts = [];
+      if(mode==='rq'){
+        parts.push('<ProposedTitle>');
+        parts.push(data.title || '');
+        parts.push('</ProposedTitle>');
+        parts.push('');
+        parts.push('<ResearchQuestion>');
+        parts.push(data.question || '');
+        parts.push('</ResearchQuestion>');
+      } else if(mode==='relevance'){
+        parts.push('<ResearchQuestion>');
+        parts.push(data.question || '');
+        parts.push('</ResearchQuestion>');
+        parts.push('');
+        parts.push('<RelevanceSection>');
+        parts.push(data.relevance || '');
+        parts.push('</RelevanceSection>');
+      } else if(mode==='lit-structure'){
+        parts.push('<ResearchQuestion>');
+        parts.push(data.researchQuestion || '');
+        parts.push('</ResearchQuestion>');
+        (data.issues || []).forEach((it,i)=>{
+          const n=i+1;
+          parts.push('');
+          parts.push(`<Issue${n}Title>`);
+          parts.push(it.title || '');
+          parts.push(`</Issue${n}Title>`);
+          parts.push('');
+          parts.push(`<Issue${n}Explanation>`);
+          parts.push(it.expl || '');
+          parts.push(`</Issue${n}Explanation>`);
+        });
+      } else if(mode==='literature-review'){
+        parts.push('<ResearchQuestion>');
+        parts.push(data.question || '');
+        parts.push('</ResearchQuestion>');
+        parts.push('');
+        parts.push('<LiteratureReview>');
+        parts.push(data.review || '');
+        parts.push('</LiteratureReview>');
+      } else if(mode==='analytical-framework'){
+        parts.push('<ResearchQuestion>');
+        parts.push(data.question || '');
+        parts.push('</ResearchQuestion>');
+        parts.push('');
+        parts.push('<LiteratureReview>');
+        parts.push(data.literature_review || '');
+        parts.push('</LiteratureReview>');
+        parts.push('');
+        parts.push('<AnalyticalFramework>');
+        parts.push(data.framework || '');
+        parts.push('</AnalyticalFramework>');
+      }
+      return ['<!-- ===== STUDENT INPUT ===== -->','',...parts].join('\n');
+    }
+
     // Lit-structure controls
     const issuesDiv      = document.getElementById('lit-structure-issues');
     const addIssueBtn    = document.getElementById('add-issue-btn');
@@ -186,6 +243,7 @@
         data.researchQuestion=document.getElementById('lit-structure-rq').value.trim();
         const items=Array.from(issuesDiv.children).map(w=>({title:w.querySelector('input').value.trim(), expl:w.querySelector('textarea').value.trim()})).filter(it=>it.title||it.expl);
         data.structure=items.map(({title,expl})=>`Issue: ${title}\nExplanation / Purpose: ${expl}`).join('\n\n');
+        data.issues = items;
       } else if(mode==='literature-review'){
         data.question=document.getElementById('literature-review-rq').value.trim();
         data.review=document.getElementById('literature-review').value.trim();
@@ -195,7 +253,7 @@
         data.framework=document.getElementById('analytical-framework').value.trim();
       }
       const tmpl = await loadTemplate(mode);
-      const prompt = fillTemplate(tmpl, data);
+      const prompt = fillTemplate(tmpl, data) + '\n\n' + buildStudentInput(mode,data);
       resultDiv.textContent = prompt;
       copyBtn.classList.remove('hidden');
     });
