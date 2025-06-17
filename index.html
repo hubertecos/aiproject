@@ -10,7 +10,7 @@
   <div class="max-w-3xl mx-auto p-6 space-y-6">
 
     <h1 class="text-3xl font-bold">EcoS Prompt-Generator</h1>
-    <p class="mb-3 text-sm text-gray-700">
+    <p class="mb-3 text-base text-gray-700">
       <strong>Instructions:</strong><br>
       Select the current phase of your research project, fill in the fields, then click “Generate Prompt” to generate your prompt.<br>
       You can then copy the prompt and paste it into ChatGPT, Claude, Gemini, etc.
@@ -130,7 +130,7 @@
   <!-- Info Overlay -->
   <div id="info-overlay" class="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50 hidden">
     <div class="bg-white p-6 rounded-xl max-w-3xl max-h-[90vh] overflow-y-auto relative space-y-4">
-      <button id="info-close" type="button" class="absolute top-2 right-2 text-gray-600 text-xl">&times;</button>
+      <button id="info-close" type="button" class="absolute top-2 right-4 text-gray-600 text-2xl">&times;</button>
       <h1 class="text-2xl font-bold">Why We Built This Tool (And How You Should Use It)</h1>
       <h2 class="text-xl font-semibold mt-4">Our Intentions</h2>
       <p>We embarked on developing this AI-powered feedback tool in summer semester 2025, recognizing the transformative potential of artificial intelligence in academic contexts. Throughout the development process, we realized that given the unprecedented pace at which AI technology continues to evolve, creating specialized prompts would be the most future-proof and versatile approach—allowing you to leverage any AI model that emerges while ensuring the feedback consistently reflects our program's research methodology and standards.</p>
@@ -182,6 +182,7 @@
     const infoOverlay= document.getElementById('info-overlay');
     const infoClose  = document.getElementById('info-close');
     infoBtn.addEventListener('click', () => infoOverlay.classList.remove('hidden'));
+    infoOverlay.addEventListener("click", e => { if(e.target === infoOverlay) infoOverlay.classList.add("hidden"); });
     infoClose.addEventListener('click', () => infoOverlay.classList.add('hidden'));
     async function loadTemplate(name){
       const resp = await fetch(`prompts/${name}.txt`);
