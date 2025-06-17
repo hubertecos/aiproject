@@ -10,11 +10,12 @@
   <div class="max-w-3xl mx-auto p-6 space-y-6">
 
     <h1 class="text-3xl font-bold">EcoS Prompt-Generator</h1>
-    <p class="mb-6 text-sm text-gray-700">
+    <p class="mb-3 text-sm text-gray-700">
       <strong>Instructions:</strong><br>
       Select the current phase of your research project, fill in the fields, then click “Generate Prompt” to generate your prompt.<br>
       You can then copy the prompt and paste it into ChatGPT, Claude, Gemini, etc.
     </p>
+    <button id="info-btn" type="button" class="bg-gray-200 text-gray-800 px-4 py-2 rounded-xl hover:bg-gray-300">Why We Built This Tool (And How You Should Use It)</button>
 
     <!-- Single dropdown with Testing option -->
     <div>
@@ -126,6 +127,46 @@
 
   </div>
 
+  <!-- Info Overlay -->
+  <div id="info-overlay" class="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50 hidden">
+    <div class="bg-white p-6 rounded-xl max-w-3xl max-h-[90vh] overflow-y-auto relative space-y-4">
+      <button id="info-close" type="button" class="absolute top-2 right-2 text-gray-600 text-xl">&times;</button>
+      <h1 class="text-2xl font-bold">Why We Built This Tool (And How You Should Use It)</h1>
+      <h2 class="text-xl font-semibold mt-4">Our Intentions</h2>
+      <p>We embarked on developing this AI-powered feedback tool in summer semester 2025, recognizing the transformative potential of artificial intelligence in academic contexts. Throughout the development process, we realized that given the unprecedented pace at which AI technology continues to evolve, creating specialized prompts would be the most future-proof and versatile approach—allowing you to leverage any AI model that emerges while ensuring the feedback consistently reflects our program's research methodology and standards.</p>
+      <p>After extensive testing and refinement, we developed prompts that encode how we approach research design and structure in our program. This wasn't merely about identifying potential issues, but about harnessing the opportunities that AI's emergence presents for academic support. We wanted to create something accessible for all EcoS students—whether you're experienced with AI tools or encountering them for the first time. The system we built is simple to use and fundamentally equitable, giving every student the same foundation for leveraging AI's potential in developing their research projects at EcoS.</p>
+      <p>Our goal was to help students understand how the research methodology and standards at EcoS apply to their individual work and maximize their consultation time with professors by ensuring discussions can focus on the substantive, nuanced aspects of research that require genuine understanding and experience. But we also knew from the beginning that what we were creating wouldn't be perfect—and that understanding its limitations would be just as important as understanding its capabilities.</p>
+
+      <h2 class="text-xl font-semibold mt-4">What We Learned About AI (And What It Means for This Tool)</h2>
+      <p>Developing this tool taught us interesting insights about how large language models (LLMs) actually operate. When you test your research question or literature review structure, you're not consulting a knowledgeable expert—you're engaging with a system that generates text based on patterns gleaned from massive amounts of training data. The AI responds to the detailed prompts we've created, which specify exactly what to look for and how to evaluate your work according to our program's standards.</p>
+      <p>This led us to develop a key understanding foundational for this project and beyond: despite having access to enormous amounts of information through its training data, AI doesn't actually "know" anything in the way we humans do. When you ask an AI chatbot whether there's sufficient literature on your research topic, it might confidently respond "yes"—but that judgment isn't based on systematically scanning academic databases or carefully evaluating research gaps the way a real researcher would. Instead, it's making a probability-based prediction about what response seems most likely, because it's designed to provide you with an answer.</p>
+      <p>We crafted our prompts to channel this pattern-matching capability toward evaluating your work against our program's requirements, creating a system that delivers informative, user-friendly feedback to help you understand how your research aligns with our standards. Think of it as sophisticated quality control—but with important limitations.</p>
+      <p>Even with these carefully crafted prompts, different AI tools can provide varying assessments of identical work. Perhaps more surprisingly, the same AI tool can also generate different feedback if you simply start a new chat session and resubmit the same content, because it performs fresh probability calculations each time. This isn't a system flaw—it's how these technologies fundamentally operate. As users of this technology, we cannot create perfect AI that provides ideal solutions consistently, but we can optimize our approach to extract the best possible results from the tools available to us.</p>
+
+      <h2 class="text-xl font-semibold mt-4">How We Think You Should Approach This</h2>
+      <p><strong>Start early in your development process.</strong> This isn't designed as a last-minute submission check. If you discover an hour before the deadline that your approach needs fundamental revision, you won't have adequate time to address the issues properly. Even if you simply submit an AI-generated version at the last minute, that completely misses the point—this is <em>your</em> research project, and the goal isn't merely to produce output, but to develop your own understanding and expertise about a topic you're genuinely interested in examining.</p>
+      <p><strong>Engage your critical thinking.</strong> The AI isn't perfect, and you shouldn't simply accept or reject its feedback without careful consideration. Instead, use it as a stimulus to better understand and critically examine your own work. Remember, what you develop during the theoretical part of your thesis becomes the foundation for the empirical and analytical sections where you actually answer your research question. That's precisely why <em>you yourself</em> need to thoroughly understand what you're writing about, not the AI. The value lies in the reflection process the feedback encourages, not in the AI's specific conclusions.</p>
+      <p><strong>Use it to prepare for professor consultations.</strong> In academia, the time you have with supervisors during research development is invaluable—they bring expertise and experience from supervising countless research projects, understanding common challenges and offering guidance derived from years in the field. When your work already meets basic requirements and demonstrates that your project is manageable, you can dedicate consultation time with professors to discussing theoretical nuances, methodological considerations, and other sophisticated aspects of research. This requires you to genuinely understand your topic and engage meaningfully with the feedback you've received.</p>
+      <p><strong>Take advantage of AI's broader capabilities.</strong> Beyond generating quality control assessments of your submissions, AI can help you better understand program requirements as well as various aspects of your chosen topic. If, for instance, you don't understand why research questions implying causality can be problematic, you can simply request an explanation. You can also ask follow-up questions about the AI's comments regarding your specific topic. While AI might not always provide perfectly relevant insights for your research area, it can help clarify concepts to deepen your understanding of the subject matter. Additionally, if English isn't your native language, you can engage with AI in your preferred language or request translations and clarifications. At EcoS we use English as our common language, but that doesn't preclude seeking understanding in whatever way works best for you.</p>
+
+      <h2 class="text-xl font-semibold mt-4">Understanding the Boundaries</h2>
+      <p>While this tool offers valuable support, it's important to understand what it cannot replace. Your professors will still expect you to demonstrate deep understanding of your research topic—in consultation meetings, class presentations, and ultimately during your thesis defense. The goal of this tool isn't to perform the intellectual work for you, but to help ensure you're developing that understanding effectively.</p>
+      <p>Over-reliance on AI feedback can actually undermine the fundamental learning objectives that cultivate critical thinking and analytical skills essential for any thoughtful professional, regardless of your future path. That's why we believe it's essential to understand that artificial intelligence fundamentally cannot replicate human judgment because of how it operates—through statistical predictions and pattern matching rather than genuine understanding and contextual reasoning.</p>
+      <p>That said, AI does possess certain strengths. As mentioned previously, you can leverage its capabilities and extensive training data to enhance your understanding of your research topic. AI has access to more background information across a vast range of topics than any individual professor could possess—no one can be an expert in every possible research area. But it's equally important to remember its significant limitations: it cannot assess whether your theoretical framework truly suits your research context or whether your methodology will actually prove effective in practice.</p>
+      <p>Remember that the feedback you receive comes from an AI system designed to improve your understanding of academic work, not to provide authoritative academic judgment. When you meet with professors, focus on engaging with the substance of your research rather than reporting what "AI said" about your work. Professors are there to guide your intellectual development and supervise your research project, not to validate AI assessments.</p>
+
+      <h2 class="text-xl font-semibold mt-4">Why This Matters for Your Future</h2>
+      <p>Our experience building this tool has shown us that this represents merely the beginning. The emergence of generative AI tools has transformed how people engage with technology and highlighted how essential human qualities like critical thinking remain in academic and professional contexts. People across industries are learning to work effectively with AI systems—understanding when AI feedback is useful, when to maintain skepticism, and when human expertise proves irreplaceable.</p>
+      <p>We hope this tool not only assists you with research projects but also provides a valuable opportunity to develop nuanced understanding of how generative AI works and how to maintain appropriate critical distance while benefiting from its capabilities. We believe that learning to extract value from AI while preserving your intellectual independence will serve you well beyond this program—these skills will likely become increasingly important across many professional contexts.</p>
+      <p>We envision this as training for working effectively in an AI-integrated world, where the key isn't avoiding these technologies but learning to use them strategically while maintaining the distinctly human skills that AI cannot replicate.</p>
+
+      <h2 class="text-xl font-semibold mt-4">The Bottom Line</h2>
+      <p>We decided to create this tool because we saw an opportunity to harness emerging technology for genuine educational benefit—providing round-the-clock feedback that democratizes access to detailed academic support regardless of students' prior AI experience. This approach allows us to help you catch fundamental requirement issues early and avoid unproductive research directions, while scaling personalized guidance in ways that human resources alone cannot achieve. AI's ability to adapt to individual inputs and provide specific feedback represents something genuinely innovative in academic support, and we believe it offers tremendous value when used appropriately.</p>
+      <p>However, it is important to remember that the goal isn't to satisfy an AI system—it's to help ensure you're developing research that serves <em>your</em> intellectual goals while aligning with sound methodological principles. We want to help you focus your energy on the original thinking and rigorous analysis that define excellent research, rather than working in directions that won't ultimately serve your research objectives.</p>
+      <p>We have invested significant effort in making this tool as useful as possible, but we remain fully aware of its limitations. That's why we consider it crucial to communicate these considerations clearly—we hope this foundation will help you approach the tool strategically and extract genuine value from the support it can provide.</p>
+    </div>
+  </div>
+
   <script>
     const modeSelect = document.getElementById('modeSelect');
     const sections   = {
@@ -137,6 +178,11 @@
     };
     const resultDiv  = document.getElementById('result');
     const copyBtn    = document.getElementById('copy-btn');
+    const infoBtn    = document.getElementById('info-btn');
+    const infoOverlay= document.getElementById('info-overlay');
+    const infoClose  = document.getElementById('info-close');
+    infoBtn.addEventListener('click', () => infoOverlay.classList.remove('hidden'));
+    infoClose.addEventListener('click', () => infoOverlay.classList.add('hidden'));
     async function loadTemplate(name){
       const resp = await fetch(`prompts/${name}.txt`);
       return resp.text();
