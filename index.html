@@ -122,6 +122,7 @@
     <div class="space-y-4">
       <button id="submit-btn" class="w-full bg-blue-600 text-white p-3 rounded-xl hover:bg-blue-700 transition">Generate Prompt</button>
       <button id="copy-btn" class="w-full bg-green-600 text-white p-3 rounded-xl hover:bg-green-700 transition hidden">Copy Prompt to Clipboard</button>
+      <div id="status-msg" class="text-center text-green-600 text-sm font-medium hidden">New prompt generated!</div>
       <div id="result" class="whitespace-pre-wrap bg-white p-4 border border-gray-300 rounded-xl text-sm hidden"></div>
     </div>
 
@@ -176,8 +177,10 @@
       'literature-review': document.getElementById('literature-review-section'),
       'analytical-framework': document.getElementById('analytical-framework-section')
     };
-    const resultDiv  = document.getElementById('result');
-    const copyBtn    = document.getElementById('copy-btn');
+      const resultDiv  = document.getElementById('result');
+      const copyBtn    = document.getElementById('copy-btn');
+      const statusMsg  = document.getElementById('status-msg');
+      let statusTimeout;
     const infoBtn    = document.getElementById('info-btn');
     const infoOverlay= document.getElementById('info-overlay');
     const infoClose  = document.getElementById('info-close');
@@ -330,9 +333,12 @@
       }
       const tmpl = await loadTemplate(mode);
       const prompt = fillTemplate(tmpl, data) + '\n\n' + buildStudentInput(mode,data);
-      resultDiv.textContent = prompt;
-      resultDiv.classList.remove('hidden');
-      copyBtn.classList.remove('hidden');
+        resultDiv.textContent = prompt;
+        resultDiv.classList.remove('hidden');
+        copyBtn.classList.remove('hidden');
+        statusMsg.classList.remove('hidden');
+        clearTimeout(statusTimeout);
+        statusTimeout = setTimeout(()=>statusMsg.classList.add('hidden'), 1500);
     });
     copyBtn.addEventListener('click',()=>navigator.clipboard.writeText(resultDiv.textContent));
   </script>
