@@ -89,10 +89,20 @@
         <div id="literature-review-rq-count" class="text-xs text-gray-500">0 / 500</div>
       </div>
       <div>
+        <label class="block font-medium">Provide Literature Review</label>
+        <div class="space-y-1 ml-4">
+          <label class="block"><input type="radio" name="lr-input-mode" value="text" class="mr-1" checked>Paste text into the form</label>
+          <label class="block"><input type="radio" name="lr-input-mode" value="file" class="mr-1">Upload document later</label>
+        </div>
+      </div>
+      <div id="literature-review-textfields" class="space-y-2">
         <label class="block font-medium">Literature Review</label>
         <textarea id="literature-review" rows="6" maxlength="50000"
                   class="w-full p-3 border border-gray-300 rounded-xl shadow-sm focus:ring-2 focus:ring-blue-500"></textarea>
         <div id="literature-review-count" class="text-xs text-gray-500">0 / 50000</div>
+      </div>
+      <div id="literature-review-file-reminder" class="hidden text-sm bg-blue-100 text-blue-700 p-2 rounded">
+        When using the AI, upload your Literature Review file together with this prompt.
       </div>
     </div>
 
@@ -105,16 +115,24 @@
         <div id="analytical-framework-rq-count" class="text-xs text-gray-500">0 / 500</div>
       </div>
       <div>
+        <label class="block font-medium">Provide Literature Review and Analytical Framework</label>
+        <div class="space-y-1 ml-4">
+          <label class="block"><input type="radio" name="af-input-mode" value="text" class="mr-1" checked>Paste text into the form</label>
+          <label class="block"><input type="radio" name="af-input-mode" value="file" class="mr-1">Upload document later</label>
+        </div>
+      </div>
+      <div id="analytical-framework-textfields" class="space-y-2">
         <label class="block font-medium">Literature Review</label>
         <textarea id="analytical-framework-lit-review" rows="4" maxlength="50000"
                   class="w-full p-3 border border-gray-300 rounded-xl shadow-sm focus:ring-2 focus:ring-blue-500"></textarea>
         <div id="analytical-framework-lit-review-count" class="text-xs text-gray-500">0 / 50000</div>
-      </div>
-      <div>
         <label class="block font-medium">Analytical Framework</label>
         <textarea id="analytical-framework" rows="6" maxlength="50000"
                   class="w-full p-3 border border-gray-300 rounded-xl shadow-sm focus:ring-2 focus:ring-blue-500"></textarea>
         <div id="analytical-framework-count" class="text-xs text-gray-500">0 / 50000</div>
+      </div>
+      <div id="analytical-framework-file-reminder" class="hidden text-sm bg-blue-100 text-blue-700 p-2 rounded">
+        When using the AI, upload both your Literature Review and Analytical Framework files together with this prompt.
       </div>
     </div>
 
@@ -186,6 +204,31 @@
     const infoClose  = document.getElementById('info-close');
     infoBtn.addEventListener('click', () => infoOverlay.classList.remove('hidden'));
     infoClose.addEventListener('click', () => infoOverlay.classList.add('hidden'));
+
+    // Toggle LR and AF input modes
+    const lrTextFields = document.getElementById('literature-review-textfields');
+    const lrReminder   = document.getElementById('literature-review-file-reminder');
+    document.querySelectorAll('input[name="lr-input-mode"]').forEach(r=>r.addEventListener('change',()=>{
+      const fileMode = document.querySelector('input[name="lr-input-mode"]:checked').value === 'file';
+      lrTextFields.classList.toggle('hidden', fileMode);
+      lrReminder.classList.toggle('hidden', !fileMode);
+    }));
+    const afTextFields = document.getElementById('analytical-framework-textfields');
+    const afReminder   = document.getElementById('analytical-framework-file-reminder');
+    document.querySelectorAll('input[name="af-input-mode"]').forEach(r=>r.addEventListener('change',()=>{
+      const fileMode = document.querySelector('input[name="af-input-mode"]:checked').value === 'file';
+      afTextFields.classList.toggle('hidden', fileMode);
+      afReminder.classList.toggle('hidden', !fileMode);
+    }));
+
+    // Set initial state for input mode toggles
+    const lrFileInitial = document.querySelector('input[name="lr-input-mode"]:checked').value === 'file';
+    lrTextFields.classList.toggle('hidden', lrFileInitial);
+    lrReminder.classList.toggle('hidden', !lrFileInitial);
+    const afFileInitial = document.querySelector('input[name="af-input-mode"]:checked').value === 'file';
+    afTextFields.classList.toggle('hidden', afFileInitial);
+    afReminder.classList.toggle('hidden', !afFileInitial);
+
     async function loadTemplate(name){
       const resp = await fetch(`prompts/${name}.txt`);
       return resp.text();
@@ -235,6 +278,10 @@
         parts.push('<LiteratureReview>');
         parts.push(data.review || '');
         parts.push('</LiteratureReview>');
+      } else if(mode==='literature-review-file'){
+        parts.push('<ResearchQuestion>');
+        parts.push(data.question || '');
+        parts.push('</ResearchQuestion>');
       } else if(mode==='analytical-framework'){
         parts.push('<ResearchQuestion>');
         parts.push(data.question || '');
@@ -247,6 +294,10 @@
         parts.push('<AnalyticalFramework>');
         parts.push(data.framework || '');
         parts.push('</AnalyticalFramework>');
+      } else if(mode==='analytical-framework-file'){
+        parts.push('<ResearchQuestion>');
+        parts.push(data.question || '');
+        parts.push('</ResearchQuestion>');
       }
       return ['<!-- ===== STUDENT INPUT ===== -->','',...parts].join('\n');
     }
@@ -282,7 +333,7 @@
 
     // Generate prompt
     document.getElementById('submit-btn').addEventListener('click', async () => {
-      const mode = modeSelect.value;
+      let mode = modeSelect.value;
       const data = {};
       if(mode==='rq'){
         data.title=document.getElementById('title').value.trim();
@@ -320,19 +371,37 @@
         data.structure=items.map(({title,expl})=>`Issue: ${title}\nExplanation / Purpose: ${expl}`).join('\n\n');
         data.issues = items;
       } else if(mode==='literature-review'){
+        const lrFile = document.querySelector('input[name="lr-input-mode"]:checked').value === 'file';
         data.question=document.getElementById('literature-review-rq').value.trim();
-        data.review=document.getElementById('literature-review').value.trim();
-        if(!data.question || !data.review){
-          alert('Please provide information in all fields.');
-          return;
+        if(lrFile){
+          if(!data.question){
+            alert('Please provide the research question.');
+            return;
+          }
+          mode = 'literature-review-file';
+        } else {
+          data.review=document.getElementById('literature-review').value.trim();
+          if(!data.question || !data.review){
+            alert('Please provide information in all fields.');
+            return;
+          }
         }
       } else if(mode==='analytical-framework'){
+        const afFile = document.querySelector('input[name="af-input-mode"]:checked').value === 'file';
         data.question=document.getElementById('analytical-framework-rq').value.trim();
-        data.literature_review=document.getElementById('analytical-framework-lit-review').value.trim();
-        data.framework=document.getElementById('analytical-framework').value.trim();
-        if(!data.question || !data.literature_review || !data.framework){
-          alert('Please provide information in all fields.');
-          return;
+        if(afFile){
+          if(!data.question){
+            alert('Please provide the research question.');
+            return;
+          }
+          mode = 'analytical-framework-file';
+        } else {
+          data.literature_review=document.getElementById('analytical-framework-lit-review').value.trim();
+          data.framework=document.getElementById('analytical-framework').value.trim();
+          if(!data.question || !data.literature_review || !data.framework){
+            alert('Please provide information in all fields.');
+            return;
+          }
         }
       }
       const tmpl = await loadTemplate(mode);
