@@ -301,7 +301,7 @@
       } else if(mode==='lit-structure'){
         data.researchQuestion=document.getElementById('lit-structure-rq').value.trim();
         if(!data.researchQuestion){
-          alert('Please provide information in all fields.');
+          alert('Please provide the research question and at least one issue.');
           return;
         }
         const rawItems=Array.from(issuesDiv.children).map(w=>({title:w.querySelector('input').value.trim(), expl:w.querySelector('textarea').value.trim()}));
@@ -313,6 +313,10 @@
           }
         }
         const items = rawItems.filter(it=>it.title||it.expl);
+        if(items.length===0){
+          alert('Please provide the research question and at least one issue.');
+          return;
+        }
         data.structure=items.map(({title,expl})=>`Issue: ${title}\nExplanation / Purpose: ${expl}`).join('\n\n');
         data.issues = items;
       } else if(mode==='literature-review'){
