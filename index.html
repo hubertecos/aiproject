@@ -23,7 +23,7 @@
       <select id="modeSelect"
               class="w-full p-3 border border-gray-300 rounded-xl shadow-sm focus:ring-2 focus:ring-blue-500">
         <option value="rq">1. Topic &amp; Research Question</option>
-        <option value="relevance">2. Relevance Table</option>
+        <option value="relevance">2. Relevance</option>
         <option value="lit-structure">3. Literature Review Structure</option>
         <option value="literature-review">4. Literature Review</option>
         <option value="analytical-framework">5. Analytical Framework</option>
@@ -54,16 +54,17 @@
                class="w-full p-3 border border-gray-300 rounded-xl shadow-sm focus:ring-2 focus:ring-blue-500"/>
         <div id="relevance-rq-count" class="text-xs text-gray-500">0 / 500</div>
       </div>
-      <div>
-        <label class="block font-medium">Relevance Section</label>
-        <textarea id="relevance" rows="6" maxlength="50000"
-                  class="w-full p-3 border border-gray-300 rounded-xl shadow-sm focus:ring-2 focus:ring-blue-500"></textarea>
-        <div id="relevance-count" class="text-xs text-gray-500">0 / 50000</div>
+      <div id="relevance-stakeholders" class="space-y-6"></div>
+      <div class="flex gap-2">
+        <button id="add-stakeholder-btn" type="button"
+                class="flex-1 bg-gray-200 p-2 rounded-xl hover:bg-gray-300">+ Add stakeholder</button>
+        <button id="remove-stakeholder-btn" type="button"
+                class="flex-1 bg-red-200 p-2 rounded-xl hover:bg-red-300 hidden">– Remove last stakeholder</button>
       </div>
     </div>
 
     <!-- 3. Official Literature Review Structure -->
-    <div id="lit-structure-section" class="space-y-4 hidden">
+<div id="lit-structure-section" class="space-y-4 hidden">
       <div>
         <label class="block font-medium">Research Question</label>
         <input id="lit-structure-rq" type="text" maxlength="500"
@@ -248,13 +249,24 @@
         parts.push(data.question || '');
         parts.push('</ResearchQuestion>');
       } else if(mode==='relevance'){
-        parts.push('<ResearchQuestion>');
-        parts.push(data.question || '');
-        parts.push('</ResearchQuestion>');
-        parts.push('');
-        parts.push('<RelevanceSection>');
-        parts.push(data.relevance || '');
-        parts.push('</RelevanceSection>');
+        parts.push("<ResearchQuestion>");
+        parts.push(data.question || "");
+        parts.push("</ResearchQuestion>");
+        (data.stakeholders || []).forEach((it,i)=>{
+          const n=i+1;
+          parts.push("");
+          parts.push(`<Stakeholder${n}Name>`);
+          parts.push(it.name || "");
+          parts.push(`</Stakeholder${n}Name>`);
+          parts.push("");
+          parts.push(`<Stakeholder${n}Reasons>`);
+          parts.push(it.reasons || "");
+          parts.push(`</Stakeholder${n}Reasons>`);
+          parts.push("");
+          parts.push(`<Stakeholder${n}Arguments>`);
+          parts.push(it.arguments || "");
+          parts.push(`</Stakeholder${n}Arguments>`);
+        });
       } else if(mode==='lit-structure'){
         parts.push('<ResearchQuestion>');
         parts.push(data.researchQuestion || '');
@@ -317,7 +329,7 @@
     showSection(modeSelect.value);
 
     // Counters
-    [['title',500],['research-question',500],['relevance-rq',500],['relevance',50000],['lit-structure-rq',500],['literature-review-rq',500],['literature-review',50000],['analytical-framework-rq',500],['analytical-framework-lit-review',50000],['analytical-framework',50000]].forEach(([id,max])=>{
+    [['title',500],['research-question',500],['relevance-rq',500],['lit-structure-rq',500],['literature-review-rq',500],['literature-review',50000],['analytical-framework-rq',500],['analytical-framework-lit-review',50000],['analytical-framework',50000]].forEach(([id,max])=>{
       const el=document.getElementById(id), cnt=document.getElementById(id+'-count');
       if(el&&cnt) el.addEventListener('input',()=>cnt.textContent = `${el.value.length} / ${max}`);
     });
@@ -325,6 +337,18 @@
     // Lit-Structure add/remove
     function updateRemoveBtn(){ removeIssueBtn.classList.toggle('hidden', issuesDiv.children.length <=3); }
     function renumberIssues(){ Array.from(issuesDiv.children).forEach((w,i)=>{ w.querySelector('label:nth-of-type(1)').textContent = `Issue ${i+1}: Title`; w.querySelector('label:nth-of-type(2)').textContent = `Issue ${i+1}: Explanation / Purpose`; }); }
+    // Relevance add/remove
+    const stakeholdersDiv      = document.getElementById("relevance-stakeholders");
+    const addStakeholderBtn    = document.getElementById("add-stakeholder-btn");
+    const removeStakeholderBtn = document.getElementById("remove-stakeholder-btn");
+    function updateStakeholderRemoveBtn(){ removeStakeholderBtn.classList.toggle("hidden", stakeholdersDiv.children.length <=3); }
+    function renumberStakeholders(){ Array.from(stakeholdersDiv.children).forEach((w,i)=>{ w.querySelector("label:nth-of-type(1)").textContent = `Stakeholder ${i+1}`; }); }
+    function addStakeholder(){ const num = stakeholdersDiv.children.length+1; const w=document.createElement("div"); w.className="space-y-2 border-t pt-4"; const l1=document.createElement("label"); l1.className="block font-medium"; l1.textContent=`Stakeholder ${num}`; const i1=document.createElement("input"); i1.type="text"; i1.maxLength=500; i1.required=true; i1.className="w-full p-3 border rounded-xl focus:ring-2 focus:ring-blue-500"; const c1=document.createElement("div"); c1.className="text-xs text-gray-500"; c1.textContent="0 / 500"; i1.addEventListener("input",()=>c1.textContent=`${i1.value.length} / ${i1.maxLength}`); const l2=document.createElement("label"); l2.className="block font-medium"; l2.textContent="Reasons why they would be interested in the research findings"; const i2=document.createElement("textarea"); i2.rows=4; i2.maxLength=5000; i2.required=true; i2.className="w-full p-3 border rounded-xl focus:ring-2 focus:ring-blue-500"; const c2=document.createElement("div"); c2.className="text-xs text-gray-500"; c2.textContent="0 / 5000"; i2.addEventListener("input",()=>c2.textContent=`${i2.value.length} / ${i2.maxLength}`); const l3=document.createElement("label"); l3.className="block font-medium"; l3.textContent="Arguments (data, quotes, references)"; const i3=document.createElement("textarea"); i3.rows=4; i3.maxLength=5000; i3.required=true; i3.className="w-full p-3 border rounded-xl focus:ring-2 focus:ring-blue-500"; const c3=document.createElement("div"); c3.className="text-xs text-gray-500"; c3.textContent="0 / 5000"; i3.addEventListener("input",()=>c3.textContent=`${i3.value.length} / ${i3.maxLength}`); w.append(l1,i1,c1,l2,i2,c2,l3,i3,c3); stakeholdersDiv.appendChild(w); updateStakeholderRemoveBtn(); }
+    function removeStakeholder(){ if(stakeholdersDiv.children.length>3){ stakeholdersDiv.removeChild(stakeholdersDiv.lastChild); renumberStakeholders(); updateStakeholderRemoveBtn(); }}
+    addStakeholderBtn.addEventListener("click", addStakeholder);
+    removeStakeholderBtn.addEventListener("click", removeStakeholder);
+    for(let i=0;i<3;i++) addStakeholder();
+
     function addIssue(){ const num = issuesDiv.children.length+1; const w=document.createElement('div'); w.className='space-y-2 border-t pt-4'; const l1=document.createElement('label');l1.className='block font-medium';l1.textContent=`Issue ${num}: Title`; const i1=document.createElement('input');i1.type='text';i1.maxLength=500; i1.required=true; i1.className='w-full p-3 border rounded-xl focus:ring-2 focus:ring-blue-500'; const c1=document.createElement('div');c1.className='text-xs text-gray-500';c1.textContent='0 / 500';i1.addEventListener('input',()=>c1.textContent=`${i1.value.length} / ${i1.maxLength}`); const l2=document.createElement('label');l2.className='block font-medium';l2.textContent=`Issue ${num}: Explanation / Purpose`; const i2=document.createElement('textarea');i2.rows=4;i2.maxLength=5000;i2.required=true;i2.className='w-full p-3 border rounded-xl focus:ring-2 focus:ring-blue-500'; const c2=document.createElement('div');c2.className='text-xs text-gray-500';c2.textContent='0 / 5000';i2.addEventListener('input',()=>c2.textContent=`${i2.value.length} / ${i2.maxLength}`); w.append(l1,i1,c1,l2,i2,c2); issuesDiv.appendChild(w); updateRemoveBtn(); }
     function removeIssue(){ if(issuesDiv.children.length>3){ issuesDiv.removeChild(issuesDiv.lastChild); renumberIssues(); updateRemoveBtn(); }}
     addIssueBtn.addEventListener('click', addIssue);
@@ -342,12 +366,31 @@
           alert('Please provide information in all fields.');
           return;
         }
-      } else if(mode==='relevance'){
-        data.question=document.getElementById('relevance-rq').value.trim();
-        data.relevance=document.getElementById('relevance').value.trim();
-        if(!data.question || !data.relevance){
-          alert('Please provide information in all fields.');
-          return;
+        } else if(mode=='relevance'){
+          data.question=document.getElementById("relevance-rq").value.trim();
+          const rawStake=Array.from(stakeholdersDiv.children).map(w=>({
+            name:w.querySelector("input").value.trim(),
+            reasons:w.querySelectorAll("textarea")[0].value.trim(),
+            arguments:w.querySelectorAll("textarea")[1].value.trim()}));
+          if(!data.question){
+            alert("Please provide the research question and at least one stakeholder.");
+            return;
+          }
+          for(let i=0;i<rawStake.length;i++){
+            const {name,reasons,arguments:args}=rawStake[i];
+            if(name || reasons || args){
+              if(!name || !reasons || !args){
+                alert(`Stakeholder ${i+1}: please fill out all fields or clear all fields.`);
+                return;
+              }
+            }
+          }
+          const items=rawStake.filter(it=>it.name||it.reasons||it.arguments);
+          if(items.length===0){
+            alert("Please provide the research question and at least one stakeholder.");
+            return;
+          }
+          data.stakeholders=items;
         }
       } else if(mode==='lit-structure'){
         data.researchQuestion=document.getElementById('lit-structure-rq').value.trim();
