@@ -90,12 +90,12 @@
       </div>
       <div>
         <label class="block font-medium">Provide Literature Review</label>
-        <div class="flex gap-4">
-          <label><input type="radio" name="lr-input-mode" value="text" class="mr-1" checked>Paste text</label>
-          <label><input type="radio" name="lr-input-mode" value="file" class="mr-1">Upload file</label>
+        <div class="space-y-1 ml-4">
+          <label class="block"><input type="radio" name="lr-input-mode" value="text" class="mr-1" checked>Paste text into the form</label>
+          <label class="block"><input type="radio" name="lr-input-mode" value="file" class="mr-1">Upload document to AI later</label>
         </div>
       </div>
-      <div id="literature-review-textfields">
+      <div id="literature-review-textfields" class="space-y-2">
         <label class="block font-medium">Literature Review</label>
         <textarea id="literature-review" rows="6" maxlength="50000"
                   class="w-full p-3 border border-gray-300 rounded-xl shadow-sm focus:ring-2 focus:ring-blue-500"></textarea>
@@ -115,13 +115,13 @@
         <div id="analytical-framework-rq-count" class="text-xs text-gray-500">0 / 500</div>
       </div>
       <div>
-        <label class="block font-medium">Provide Analytical Framework</label>
-        <div class="flex gap-4">
-          <label><input type="radio" name="af-input-mode" value="text" class="mr-1" checked>Paste text</label>
-          <label><input type="radio" name="af-input-mode" value="file" class="mr-1">Upload file</label>
+        <label class="block font-medium">Provide Literature Review and Analytical Framework</label>
+        <div class="space-y-1 ml-4">
+          <label class="block"><input type="radio" name="af-input-mode" value="text" class="mr-1" checked>Paste text into the form</label>
+          <label class="block"><input type="radio" name="af-input-mode" value="file" class="mr-1">Upload document to AI later</label>
         </div>
       </div>
-      <div id="analytical-framework-textfields">
+      <div id="analytical-framework-textfields" class="space-y-2">
         <label class="block font-medium">Literature Review</label>
         <textarea id="analytical-framework-lit-review" rows="4" maxlength="50000"
                   class="w-full p-3 border border-gray-300 rounded-xl shadow-sm focus:ring-2 focus:ring-blue-500"></textarea>
