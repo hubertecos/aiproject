@@ -516,7 +516,7 @@
         resultDiv.textContent = prompt;
         resultDiv.classList.remove('hidden');
         copyBtn.classList.remove('hidden');
-      },500);
+      },100);
       statusMsg.classList.remove('hidden');
       clearTimeout(statusTimeout);
       statusTimeout = setTimeout(()=>statusMsg.classList.add('hidden'), 1500);
