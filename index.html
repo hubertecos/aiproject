@@ -5,46 +5,20 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
   <title>EcoS AI Prompt-Generator</title>
   <script src="https://cdn.tailwindcss.com"></script>
-  <style>
-    /* Minimal improvements only */
-    .section-header {
-      font-size: 1.0625rem; /* Just slightly larger than default */
-      font-weight: 600;
-    }
-    
-    .instructions-text {
-      font-size: 0.9375rem; /* Slightly larger than original */
-    }
-    
-    .character-counter {
-      font-size: 0.8125rem; /* Slightly larger than original */
-      color: #6b7280;
-      font-weight: 500;
-    }
-    
-    .input-field.error {
-      border-color: #ef4444 !important;
-      box-shadow: 0 0 0 1px #ef4444;
-    }
-    
-    .section-spacing {
-      margin-bottom: 2rem; /* Slightly more space than original */
-    }
-  </style>
 </head>
 <body class="bg-gray-50 text-gray-900 font-sans">
   <div class="max-w-3xl mx-auto p-6 space-y-6">
 
     <h1 class="text-3xl font-bold">EcoS AI Prompt-Generator</h1>
-    <p class="mb-3 instructions-text text-gray-700">
+    <p class="mb-3 text-sm text-gray-700">
       <strong>Instructions:</strong><br>
       Choose your current research development phase below, insert the relevant information into the input fields, and generate a customized prompt. Copy the result and use it with any large language model (ChatGPT, Claude, Gemini, etc.) to get targeted feedback on your work.
     </p>
     <button id="info-btn" type="button" class="bg-gray-200 text-gray-800 px-4 py-2 rounded-xl hover:bg-gray-300">Why We Built This Tool (And How You Should Use It)</button>
 
     <!-- Single dropdown with Testing option -->
-    <div class="section-spacing">
-      <label for="modeSelect" class="block section-header mb-1">Research development phase</label>
+    <div>
+      <label for="modeSelect" class="block font-medium mb-1">Research development phase</label>
       <select id="modeSelect"
               class="w-full p-3 border border-gray-300 rounded-xl shadow-sm focus:ring-2 focus:ring-blue-500">
         <option value="rq">1. Topic &amp; Research Question</option>
@@ -57,43 +31,43 @@
     </div>
 
     <!-- Official: RQ -->
-    <div id="rq-section" class="section-spacing hidden">
+    <div id="rq-section" class="space-y-4 hidden">
       <div>
-        <label class="block section-header">Project Type</label>
+        <label class="block font-medium">Project Type</label>
         <div class="space-y-1 ml-4">
           <label class="block"><input type="radio" name="project-type" value="thesis" class="mr-1" checked>Master's thesis</label>
           <label class="block"><input type="radio" name="project-type" value="term" class="mr-1">Term paper</label>
         </div>
       </div>
       <div>
-        <label id="title-label" class="block section-header">Title of the Thesis</label>
+        <label id="title-label" class="block font-medium">Title of the Thesis</label>
         <input id="title" type="text" maxlength="500"
                class="w-full p-3 border border-gray-300 rounded-xl shadow-sm focus:ring-2 focus:ring-blue-500"/>
-        <div id="title-count" class="character-counter">0 / 500</div>
+        <div id="title-count" class="text-xs text-gray-500">0 / 500</div>
       </div>
       <div>
-        <label class="block section-header">Research Question</label>
+        <label class="block font-medium">Research Question</label>
         <input id="research-question" type="text" maxlength="500"
                class="w-full p-3 border border-gray-300 rounded-xl shadow-sm focus:ring-2 focus:ring-blue-500"/>
-        <div id="rq-count" class="character-counter">0 / 500</div>
+        <div id="rq-count" class="text-xs text-gray-500">0 / 500</div>
       </div>
     </div>
 
     <!-- Official: Relevance -->
-    <div id="relevance-section" class="section-spacing hidden">
+    <div id="relevance-section" class="space-y-4 hidden">
       <div>
-        <label class="block section-header">Research Question</label>
+        <label class="block font-medium">Research Question</label>
         <input id="relevance-rq" type="text" maxlength="500"
                class="w-full p-3 border border-gray-300 rounded-xl shadow-sm focus:ring-2 focus:ring-blue-500"/>
-        <div id="relevance-rq-count" class="character-counter">0 / 500</div>
+        <div id="relevance-rq-count" class="text-xs text-gray-500">0 / 500</div>
       </div>
       <div>
-        <label class="block section-header">How would you like to provide your relevance analysis?</label>
+        <label class="block font-medium">How would you like to provide your relevance analysis?</label>
         <div class="space-y-1 ml-4">
           <label class="block"><input type="radio" name="relevance-input-mode" value="fields" class="mr-1" checked>Fill out structured fields</label>
           <label class="block"><input type="radio" name="relevance-input-mode" value="text" class="mr-1">Paste entire table as text</label>
         </div>
-        <p id="relevance-text-reminder" class="hidden instructions-text bg-yellow-100 text-yellow-700 p-2 rounded mt-2">
+        <p id="relevance-text-reminder" class="hidden text-sm bg-yellow-100 text-yellow-700 p-2 rounded mt-2">
           Note that pasting your table may affect formatting. Pay attention that your submission remains complete and correctly structured. For more reliable formatting, filling out the structured fields is recommended.
         </p>
       </div>
@@ -107,28 +81,28 @@
         </div>
       </div>
       <div id="relevance-textfield" class="space-y-2 hidden">
-        <label class="block section-header">Relevance Table</label>
+        <label class="block font-medium">Relevance Table</label>
         <textarea id="relevance-text" rows="6" maxlength="50000"
                   class="w-full p-3 border border-gray-300 rounded-xl shadow-sm focus:ring-2 focus:ring-blue-500"></textarea>
-        <div id="relevance-text-count" class="character-counter">0 / 50000</div>
+        <div id="relevance-text-count" class="text-xs text-gray-500">0 / 50000</div>
       </div>
     </div>
 
     <!-- 3. Official Literature Review Structure -->
-    <div id="lit-structure-section" class="section-spacing hidden">
+    <div id="lit-structure-section" class="space-y-4 hidden">
       <div>
-        <label class="block section-header">Research Question</label>
+        <label class="block font-medium">Research Question</label>
         <input id="lit-structure-rq" type="text" maxlength="500"
                class="w-full p-3 border border-gray-300 rounded-xl shadow-sm focus:ring-2 focus:ring-blue-500"/>
-        <div id="lit-structure-rq-count" class="character-counter">0 / 500</div>
+        <div id="lit-structure-rq-count" class="text-xs text-gray-500">0 / 500</div>
       </div>
       <div>
-        <label class="block section-header">How would you like to provide your literature review structure?</label>
+        <label class="block font-medium">How would you like to provide your literature review structure?</label>
         <div class="space-y-1 ml-4">
           <label class="block"><input type="radio" name="ls-input-mode" value="fields" class="mr-1" checked>Fill out structured fields</label>
           <label class="block"><input type="radio" name="ls-input-mode" value="text" class="mr-1">Paste full structure as text</label>
         </div>
-        <p id="ls-text-reminder" class="hidden instructions-text bg-yellow-100 text-yellow-700 p-2 rounded mt-2">
+        <p id="ls-text-reminder" class="hidden text-sm bg-yellow-100 text-yellow-700 p-2 rounded mt-2">
           Note that pasting your table may affect formatting. Pay attention that your submission remains complete and correctly structured. For more reliable formatting, filling out the structured fields is recommended.
         </p>
       </div>
@@ -142,81 +116,81 @@
         </div>
       </div>
       <div id="lit-structure-textfield" class="space-y-2 hidden">
-        <label class="block section-header">Literature Review Structure</label>
+        <label class="block font-medium">Literature Review Structure</label>
         <textarea id="lit-structure-text" rows="6" maxlength="50000"
                   class="w-full p-3 border border-gray-300 rounded-xl shadow-sm focus:ring-2 focus:ring-blue-500"></textarea>
-        <div id="lit-structure-text-count" class="character-counter">0 / 50000</div>
+        <div id="lit-structure-text-count" class="text-xs text-gray-500">0 / 50000</div>
       </div>
     </div>
 
 
     <!-- Official: Literature Review -->
-    <div id="literature-review-section" class="section-spacing hidden">
+    <div id="literature-review-section" class="space-y-4 hidden">
       <div>
-        <label class="block section-header">Research Question</label>
+        <label class="block font-medium">Research Question</label>
         <input id="literature-review-rq" type="text" maxlength="500"
                class="w-full p-3 border border-gray-300 rounded-xl shadow-sm focus:ring-2 focus:ring-blue-500"/>
-        <div id="literature-review-rq-count" class="character-counter">0 / 500</div>
+        <div id="literature-review-rq-count" class="text-xs text-gray-500">0 / 500</div>
       </div>
       <div>
-        <label class="block section-header">How would you like to provide your literature review?</label>
+        <label class="block font-medium">How would you like to provide your literature review?</label>
         <div class="space-y-1 ml-4">
           <label class="block"><input type="radio" name="lr-input-mode" value="text" class="mr-1" checked>Enter text directly</label>
           <label class="block"><input type="radio" name="lr-input-mode" value="file" class="mr-1">Upload file separately when using AI</label>
         </div>
       </div>
       <div id="literature-review-textfields" class="space-y-2">
-        <label class="block section-header">Literature Review</label>
+        <label class="block font-medium">Literature Review</label>
         <textarea id="literature-review" rows="6" maxlength="50000"
                   class="w-full p-3 border border-gray-300 rounded-xl shadow-sm focus:ring-2 focus:ring-blue-500"></textarea>
-        <div id="literature-review-count" class="character-counter">0 / 50000</div>
+        <div id="literature-review-count" class="text-xs text-gray-500">0 / 50000</div>
       </div>
-      <div id="literature-review-file-reminder" class="hidden instructions-text bg-blue-100 text-blue-700 p-2 rounded">
+      <div id="literature-review-file-reminder" class="hidden text-sm bg-blue-100 text-blue-700 p-2 rounded">
         Remember to upload your document(s) alongside the generated prompt when using your AI chatbot.
       </div>
     </div>
 
     <!-- Official: Analytical Framework -->
-    <div id="analytical-framework-section" class="section-spacing hidden">
+    <div id="analytical-framework-section" class="space-y-4 hidden">
       <div>
-        <label class="block section-header">Research Question</label>
+        <label class="block font-medium">Research Question</label>
         <input id="analytical-framework-rq" type="text" maxlength="500"
                class="w-full p-3 border border-gray-300 rounded-xl shadow-sm focus:ring-2 focus:ring-blue-500"/>
-        <div id="analytical-framework-rq-count" class="character-counter">0 / 500</div>
+        <div id="analytical-framework-rq-count" class="text-xs text-gray-500">0 / 500</div>
       </div>
       <div>
-        <label class="block section-header">How would you like to provide your literature review and analytical framework?</label>
+        <label class="block font-medium">How would you like to provide your literature review and analytical framework?</label>
         <div class="space-y-1 ml-4">
           <label class="block"><input type="radio" name="af-input-mode" value="text" class="mr-1" checked>Enter text directly</label>
           <label class="block"><input type="radio" name="af-input-mode" value="file" class="mr-1">Upload file separately when using AI</label>
         </div>
       </div>
       <div id="analytical-framework-textfields" class="space-y-2">
-        <label class="block section-header">Literature Review</label>
+        <label class="block font-medium">Literature Review</label>
         <textarea id="analytical-framework-lit-review" rows="4" maxlength="50000"
                   class="w-full p-3 border border-gray-300 rounded-xl shadow-sm focus:ring-2 focus:ring-blue-500"></textarea>
-        <div id="analytical-framework-lit-review-count" class="character-counter">0 / 50000</div>
-        <label class="block section-header">Analytical Framework</label>
+        <div id="analytical-framework-lit-review-count" class="text-xs text-gray-500">0 / 50000</div>
+        <label class="block font-medium">Analytical Framework</label>
         <textarea id="analytical-framework" rows="6" maxlength="50000"
                   class="w-full p-3 border border-gray-300 rounded-xl shadow-sm focus:ring-2 focus:ring-blue-500"></textarea>
-        <div id="analytical-framework-count" class="character-counter">0 / 50000</div>
+        <div id="analytical-framework-count" class="text-xs text-gray-500">0 / 50000</div>
       </div>
-      <div id="analytical-framework-file-reminder" class="hidden instructions-text bg-blue-100 text-blue-700 p-2 rounded">
+      <div id="analytical-framework-file-reminder" class="hidden text-sm bg-blue-100 text-blue-700 p-2 rounded">
         Remember to upload your document(s) alongside the generated prompt when using your AI chatbot.
       </div>
     </div>
 
     <!-- Formal Aspects -->
-    <div id="formal-aspects-section" class="section-spacing hidden">
-      <p class="instructions-text">
+    <div id="formal-aspects-section" class="space-y-4 hidden">
+      <p class="text-sm">
         You can use this prompt to have AI check your submission's formal formatting. Use it with any AI chatbot by uploading your document (ideally in PDF) alongside this prompt. You may remove personal information from your cover page before uploading, though your final submission must include a complete cover page.
       </p>
     </div>
 
     <!-- Generate Prompt & Output -->
-    <div class="section-spacing">
+    <div class="space-y-4">
       <button id="submit-btn" class="w-full bg-blue-600 text-white p-3 rounded-xl hover:bg-blue-700 transition">Generate Prompt</button>
-      <button id="copy-btn" class="w-full bg-gray-600 text-white p-3 rounded-xl hover:bg-gray-700 transition hidden">Copy to Clipboard</button>
+      <button id="copy-btn" class="w-full bg-green-600 text-white p-3 rounded-xl hover:bg-green-700 transition hidden">Copy to Clipboard</button>
       <div id="status-msg" class="text-center text-red-700 text-sm font-medium hidden">New prompt has been generated.</div>
       <div id="result" class="whitespace-pre-wrap bg-white p-4 border border-gray-300 rounded-xl text-sm hidden"></div>
     </div>
@@ -291,17 +265,6 @@
     }
     document.querySelectorAll('input[name="project-type"]').forEach(r=>r.addEventListener('change', updateTitleLabel));
     updateTitleLabel();
-
-    // Error validation functions
-    function clearErrors() {
-      document.querySelectorAll('.input-field.error').forEach(el => {
-        el.classList.remove('error');
-      });
-    }
-
-    function showError(element) {
-      element.classList.add('error');
-    }
 
       // Toggle LR and AF input modes
       const lrTextFields = document.getElementById('literature-review-textfields');
@@ -474,7 +437,6 @@
         submitBtn.classList.remove('hidden');
         copyBtn.classList.add('hidden');
       }
-      clearErrors();
     }
     modeSelect.addEventListener('change', ()=> showSection(modeSelect.value));
     showSection(modeSelect.value);
@@ -488,7 +450,7 @@
     // Lit-Structure add/remove
     function updateRemoveBtn(){ removeIssueBtn.classList.toggle('hidden', issuesDiv.children.length <=3); }
     function renumberIssues(){ Array.from(issuesDiv.children).forEach((w,i)=>{ w.querySelector('label:nth-of-type(1)').textContent = `Issue ${i+1}: Title`; w.querySelector('label:nth-of-type(2)').textContent = `Issue ${i+1}: Explanation / Purpose`; }); }
-    function addIssue(){ const num = issuesDiv.children.length+1; const w=document.createElement('div'); w.className='space-y-2 border-t pt-4'; const l1=document.createElement('label');l1.className='block section-header';l1.textContent=`Issue ${num}: Title`; const i1=document.createElement('input');i1.type='text';i1.maxLength=500; i1.required=true; i1.className='w-full p-3 border border-gray-300 rounded-xl focus:ring-2 focus:ring-blue-500'; const c1=document.createElement('div');c1.className='character-counter';c1.textContent='0 / 500';i1.addEventListener('input',()=>c1.textContent=`${i1.value.length} / ${i1.maxLength}`); const l2=document.createElement('label');l2.className='block section-header';l2.textContent=`Issue ${num}: Explanation / Purpose`; const i2=document.createElement('textarea');i2.rows=4;i2.maxLength=5000;i2.required=true;i2.className='w-full p-3 border border-gray-300 rounded-xl focus:ring-2 focus:ring-blue-500'; const c2=document.createElement('div');c2.className='character-counter';c2.textContent='0 / 5000';i2.addEventListener('input',()=>c2.textContent=`${i2.value.length} / ${i2.maxLength}`); w.append(l1,i1,c1,l2,i2,c2); issuesDiv.appendChild(w); updateRemoveBtn(); }
+    function addIssue(){ const num = issuesDiv.children.length+1; const w=document.createElement('div'); w.className='space-y-2 border-t pt-4'; const l1=document.createElement('label');l1.className='block font-medium';l1.textContent=`Issue ${num}: Title`; const i1=document.createElement('input');i1.type='text';i1.maxLength=500; i1.required=true; i1.className='w-full p-3 border rounded-xl focus:ring-2 focus:ring-blue-500'; const c1=document.createElement('div');c1.className='text-xs text-gray-500';c1.textContent='0 / 500';i1.addEventListener('input',()=>c1.textContent=`${i1.value.length} / ${i1.maxLength}`); const l2=document.createElement('label');l2.className='block font-medium';l2.textContent=`Issue ${num}: Explanation / Purpose`; const i2=document.createElement('textarea');i2.rows=4;i2.maxLength=5000;i2.required=true;i2.className='w-full p-3 border rounded-xl focus:ring-2 focus:ring-blue-500'; const c2=document.createElement('div');c2.className='text-xs text-gray-500';c2.textContent='0 / 5000';i2.addEventListener('input',()=>c2.textContent=`${i2.value.length} / ${i2.maxLength}`); w.append(l1,i1,c1,l2,i2,c2); issuesDiv.appendChild(w); updateRemoveBtn(); }
     function removeIssue(){ if(issuesDiv.children.length>3){ issuesDiv.removeChild(issuesDiv.lastChild); renumberIssues(); updateRemoveBtn(); }}
     addIssueBtn.addEventListener('click', addIssue);
     removeIssueBtn.addEventListener('click', removeIssue);
@@ -505,17 +467,17 @@
       const num = stakeholdersDiv.children.length+1;
       const w = document.createElement('div');
       w.className = 'space-y-2 border-t pt-4';
-      const l1 = document.createElement('label'); l1.className='block section-header'; l1.textContent=`Stakeholder ${num}`;
-      const i1 = document.createElement('input'); i1.type='text'; i1.maxLength=500; i1.className='w-full p-3 border border-gray-300 rounded-xl focus:ring-2 focus:ring-blue-500';
-      const c1 = document.createElement('div'); c1.className='character-counter'; c1.textContent='0 / 500';
+      const l1 = document.createElement('label'); l1.className='block font-medium'; l1.textContent=`Stakeholder ${num}`;
+      const i1 = document.createElement('input'); i1.type='text'; i1.maxLength=500; i1.className='w-full p-3 border rounded-xl focus:ring-2 focus:ring-blue-500';
+      const c1 = document.createElement('div'); c1.className='text-xs text-gray-500'; c1.textContent='0 / 500';
       i1.addEventListener('input',()=>c1.textContent=`${i1.value.length} / ${i1.maxLength}`);
-      const l2 = document.createElement('label'); l2.className='block section-header'; l2.textContent='Reasons why they would be interested in the research findings';
-      const t1 = document.createElement('textarea'); t1.rows=3; t1.maxLength=5000; t1.className='w-full p-3 border border-gray-300 rounded-xl focus:ring-2 focus:ring-blue-500';
-      const c2 = document.createElement('div'); c2.className='character-counter'; c2.textContent='0 / 5000';
+      const l2 = document.createElement('label'); l2.className='block font-medium'; l2.textContent='Reasons why they would be interested in the research findings';
+      const t1 = document.createElement('textarea'); t1.rows=3; t1.maxLength=5000; t1.className='w-full p-3 border rounded-xl focus:ring-2 focus:ring-blue-500';
+      const c2 = document.createElement('div'); c2.className='text-xs text-gray-500'; c2.textContent='0 / 5000';
       t1.addEventListener('input',()=>c2.textContent=`${t1.value.length} / ${t1.maxLength}`);
-      const l3 = document.createElement('label'); l3.className='block section-header'; l3.textContent='Evidence (data, quotes, references)';
-      const t2 = document.createElement('textarea'); t2.rows=3; t2.maxLength=5000; t2.className='w-full p-3 border border-gray-300 rounded-xl focus:ring-2 focus:ring-blue-500';
-      const c3 = document.createElement('div'); c3.className='character-counter'; c3.textContent='0 / 5000';
+      const l3 = document.createElement('label'); l3.className='block font-medium'; l3.textContent='Evidence (data, quotes, references)';
+      const t2 = document.createElement('textarea'); t2.rows=3; t2.maxLength=5000; t2.className='w-full p-3 border rounded-xl focus:ring-2 focus:ring-blue-500';
+      const c3 = document.createElement('div'); c3.className='text-xs text-gray-500'; c3.textContent='0 / 5000';
       t2.addEventListener('input',()=>c3.textContent=`${t2.value.length} / ${t2.maxLength}`);
       w.append(l1,i1,c1,l2,t1,c2,l3,t2,c3);
       stakeholdersDiv.appendChild(w);
@@ -532,266 +494,154 @@
     removeStakeholderBtn.addEventListener('click', removeStakeholder);
     for(let i=0;i<3;i++) addStakeholder();
 
-    // Generate prompt logic with improved validation
+    // Generate prompt logic
     async function generatePrompt() {
-      clearErrors();
-      let hasErrors = false;
-      
       let mode = modeSelect.value;
       const data = {};
-      
       if(mode==='rq'){
-        const titleEl = document.getElementById('title');
-        const questionEl = document.getElementById('research-question');
-        
-        data.title = titleEl.value.trim();
-        data.question = questionEl.value.trim();
-        data.type = document.querySelector('input[name="project-type"]:checked').value;
-        
-        if(!data.title) {
-          showError(titleEl);
-          hasErrors = true;
-        }
-        if(!data.question) {
-          showError(questionEl);
-          hasErrors = true;
-        }
-        
-        if(hasErrors) {
+        data.title=document.getElementById('title').value.trim();
+        data.question=document.getElementById('research-question').value.trim();
+        data.type=document.querySelector('input[name="project-type"]:checked').value;
+        if(!data.title || !data.question){
           alert('Please provide information in all fields.');
-          return null;
+          return;
         }
-        
         mode = data.type==='term' ? 'rq-term-paper' : 'rq';
-        
-      } else if(mode==='relevance'){
-        const questionEl = document.getElementById('relevance-rq');
-        const relTextMode = document.querySelector('input[name="relevance-input-mode"]:checked').value === 'text';
-        
-        data.question = questionEl.value.trim();
-        
-        if(!data.question) {
-          showError(questionEl);
-          hasErrors = true;
-        }
-        
-        if(relTextMode){
-          const textEl = document.getElementById('relevance-text');
-          data.relevance_text = textEl.value.trim();
-          if(!data.relevance_text){
-            showError(textEl);
-            hasErrors = true;
-          }
-          mode='relevance-text';
-        } else {
-          // Validate structured stakeholder fields
-          const stakeholderElements = Array.from(stakeholdersDiv.children);
-          const rawItems = stakeholderElements.map(w=>{
-            const nameInput = w.querySelector('input');
-            const textareas = w.querySelectorAll('textarea');
-            return {
-              name: nameInput.value.trim(),
-              reasons: textareas[0].value.trim(),
-              evidence: textareas[1].value.trim(),
-              nameEl: nameInput,
-              reasonsEl: textareas[0],
-              evidenceEl: textareas[1]
-            };
-          });
-          
-          let stakeholderErrors = false;
-          for(let i=0;i<rawItems.length;i++){
-            const {name,reasons,evidence,nameEl,reasonsEl,evidenceEl}=rawItems[i];
-            const filled = [name,reasons,evidence].filter(x=>x);
-            if(filled.length>0 && filled.length<3){
-              // Highlight incomplete stakeholder fields
-              if(!name) showError(nameEl);
-              if(!reasons) showError(reasonsEl);
-              if(!evidence) showError(evidenceEl);
-              stakeholderErrors = true;
+        } else if(mode==='relevance'){
+          const relTextMode = document.querySelector('input[name="relevance-input-mode"]:checked').value === 'text';
+          data.question=document.getElementById('relevance-rq').value.trim();
+          if(relTextMode){
+            data.relevance_text=document.getElementById('relevance-text').value.trim();
+            if(!data.question || !data.relevance_text){
+              alert('Please provide the research question and the relevance table.');
+              return;
             }
-          }
-          
-          if(stakeholderErrors) {
-            alert('Please fill out all fields for each stakeholder or clear them completely.');
-            return null;
-          }
-          
-          const items = rawItems.filter(it=>it.name||it.reasons||it.evidence);
-          if(items.length===0 && !hasErrors){
-            alert('Please provide at least one stakeholder.');
-            return null;
-          }
-          data.stakeholders = items;
-        }
-        
-        if(hasErrors) {
-          alert('Please provide the research question and the relevance information.');
-          return null;
-        }
-        
-      } else if(mode==='lit-structure'){
-        const questionEl = document.getElementById('lit-structure-rq');
-        const lsTextMode = document.querySelector('input[name="ls-input-mode"]:checked').value === 'text';
-        
-        data.researchQuestion = questionEl.value.trim();
-        
-        if(!data.researchQuestion) {
-          showError(questionEl);
-          hasErrors = true;
-        }
-        
-        if(lsTextMode){
-          const textEl = document.getElementById('lit-structure-text');
-          data.ls_text = textEl.value.trim();
-          if(!data.ls_text){
-            showError(textEl);
-            hasErrors = true;
-          }
-          mode='lit-structure-text';
-        } else {
-          // Validate structured issue fields
-          const issueElements = Array.from(issuesDiv.children);
-          const rawItems = issueElements.map(w=>{
-            const titleInput = w.querySelector('input');
-            const explTextarea = w.querySelector('textarea');
-            return {
-              title: titleInput.value.trim(),
-              expl: explTextarea.value.trim(),
-              titleEl: titleInput,
-              explEl: explTextarea
-            };
-          });
-          
-          let issueErrors = false;
-          for(let i=0;i<rawItems.length;i++){
-            const {title,expl,titleEl,explEl}=rawItems[i];
-            if((title && !expl) || (!title && expl)){
-              if(!title) showError(titleEl);
-              if(!expl) showError(explEl);
-              issueErrors = true;
+            mode='relevance-text';
+          } else {
+            if(!data.question){
+              alert('Please provide the research question and at least one stakeholder.');
+              return;
             }
+            const rawItems = Array.from(stakeholdersDiv.children).map(w=>{
+              const t = w.querySelectorAll('textarea');
+              return {
+                name: w.querySelector('input').value.trim(),
+                reasons: t[0].value.trim(),
+                evidence: t[1].value.trim()
+              };
+            });
+            for(let i=0;i<rawItems.length;i++){
+              const {name,reasons,evidence:ev}=rawItems[i];
+              const filled = [name,reasons,ev].filter(x=>x);
+              if(filled.length>0 && filled.length<3){
+                alert(`Stakeholder ${i+1}: please fill out all fields or clear them.`);
+                return;
+              }
+            }
+            const items = rawItems.filter(it=>it.name||it.reasons||it.evidence);
+            if(items.length===0){
+              alert('Please provide the research question and at least one stakeholder.');
+              return;
+            }
+            data.stakeholders = items;
           }
-          
-          if(issueErrors) {
-            alert('Please fill out both title and explanation for each issue or clear both fields.');
-            return null;
+        } else if(mode==='lit-structure'){
+          const lsTextMode = document.querySelector('input[name="ls-input-mode"]:checked').value === 'text';
+          data.researchQuestion=document.getElementById('lit-structure-rq').value.trim();
+          if(lsTextMode){
+            data.ls_text=document.getElementById('lit-structure-text').value.trim();
+            if(!data.researchQuestion || !data.ls_text){
+              alert('Please provide the research question and the literature review structure.');
+              return;
+            }
+            mode='lit-structure-text';
+          } else {
+            if(!data.researchQuestion){
+              alert('Please provide the research question and at least one issue.');
+              return;
+            }
+            const rawItems=Array.from(issuesDiv.children).map(w=>({title:w.querySelector('input').value.trim(), expl:w.querySelector('textarea').value.trim()}));
+            for(let i=0;i<rawItems.length;i++){
+              const {title,expl}=rawItems[i];
+              if((title && !expl) || (!title && expl)){
+                alert(`Issue ${i+1}: please fill out both title and explanation or clear both fields.`);
+                return;
+              }
+            }
+            const items = rawItems.filter(it=>it.title||it.expl);
+            if(items.length===0){
+              alert('Please provide the research question and at least one issue.');
+              return;
+            }
+            data.structure=items.map(({title,expl})=>`Issue: ${title}\nExplanation / Purpose: ${expl}`).join('\n\n');
+            data.issues = items;
           }
-          
-          const items = rawItems.filter(it=>it.title||it.expl);
-          if(items.length===0 && !hasErrors){
-            alert('Please provide at least one issue.');
-            return null;
-          }
-          data.structure=items.map(({title,expl})=>`Issue: ${title}\nExplanation / Purpose: ${expl}`).join('\n\n');
-          data.issues = items;
-        }
-        
-        if(hasErrors) {
-          alert('Please provide the research question and the literature review structure.');
-          return null;
-        }
-        
       } else if(mode==='literature-review'){
-        const questionEl = document.getElementById('literature-review-rq');
         const lrFile = document.querySelector('input[name="lr-input-mode"]:checked').value === 'file';
-        
-        data.question = questionEl.value.trim();
-        
-        if(!data.question) {
-          showError(questionEl);
-          hasErrors = true;
-        }
-        
+        data.question=document.getElementById('literature-review-rq').value.trim();
         if(lrFile){
+          if(!data.question){
+            alert('Please provide the research question.');
+            return;
+          }
           mode = 'literature-review-file';
         } else {
-          const reviewEl = document.getElementById('literature-review');
-          data.review = reviewEl.value.trim();
-          if(!data.review){
-            showError(reviewEl);
-            hasErrors = true;
+          data.review=document.getElementById('literature-review').value.trim();
+          if(!data.question || !data.review){
+            alert('Please provide information in all fields.');
+            return;
           }
         }
-        
-        if(hasErrors) {
-          alert('Please provide information in all fields.');
-          return null;
-        }
-        
       } else if(mode==='analytical-framework'){
-        const questionEl = document.getElementById('analytical-framework-rq');
         const afFile = document.querySelector('input[name="af-input-mode"]:checked').value === 'file';
-        
-        data.question = questionEl.value.trim();
-        
-        if(!data.question) {
-          showError(questionEl);
-          hasErrors = true;
-        }
-        
+        data.question=document.getElementById('analytical-framework-rq').value.trim();
         if(afFile){
+          if(!data.question){
+            alert('Please provide the research question.');
+            return;
+          }
           mode = 'analytical-framework-file';
         } else {
-          const litReviewEl = document.getElementById('analytical-framework-lit-review');
-          const frameworkEl = document.getElementById('analytical-framework');
-          
-          data.literature_review = litReviewEl.value.trim();
-          data.framework = frameworkEl.value.trim();
-          
-          if(!data.literature_review){
-            showError(litReviewEl);
-            hasErrors = true;
-          }
-          if(!data.framework){
-            showError(frameworkEl);
-            hasErrors = true;
+          data.literature_review=document.getElementById('analytical-framework-lit-review').value.trim();
+          data.framework=document.getElementById('analytical-framework').value.trim();
+          if(!data.question || !data.literature_review || !data.framework){
+            alert('Please provide information in all fields.');
+            return;
           }
         }
-        
-        if(hasErrors) {
-          alert('Please provide information in all fields.');
-          return null;
-        }
-        
       } else if(mode==='formal-aspects'){
         // No additional data required
       }
-      
       const tmpl = await loadTemplate(mode);
       let prompt = fillTemplate(tmpl, data);
       if(mode !== 'formal-aspects') {
         prompt += '\n\n' + buildStudentInput(mode, data);
       }
-      
-      return prompt;
-    }
-    
-    submitBtn.addEventListener('click', async () => {
-      const prompt = await generatePrompt();
-      if(prompt) {
+      resultDiv.classList.add('hidden');
+      copyBtn.classList.remove('hidden');
+      setTimeout(()=>{
         resultDiv.textContent = prompt;
         resultDiv.classList.remove('hidden');
-        copyBtn.classList.remove('hidden');
-        statusMsg.textContent = 'New prompt has been generated.';
-        statusMsg.classList.remove('hidden');
-        clearTimeout(statusTimeout);
-        statusTimeout = setTimeout(()=>statusMsg.classList.add('hidden'), 1500);
-      }
+      },100);
+      return prompt;
+    }
+    submitBtn.addEventListener('click', async () => {
+      await generatePrompt();
+      statusMsg.textContent = 'New prompt has been generated.';
+      statusMsg.classList.remove('hidden');
+      clearTimeout(statusTimeout);
+      statusTimeout = setTimeout(()=>statusMsg.classList.add('hidden'), 1500);
     });
-    
     copyBtn.addEventListener('click', async ()=>{
       let text = resultDiv.textContent;
       if(modeSelect.value==='formal-aspects' || !text.trim()) {
         text = await generatePrompt();
       }
-      if(text) {
-        navigator.clipboard.writeText(text);
-        statusMsg.textContent = 'Prompt has been copied to the clipboard.';
-        statusMsg.classList.remove('hidden');
-        clearTimeout(statusTimeout);
-        statusTimeout = setTimeout(()=>statusMsg.classList.add('hidden'), 1500);
-      }
+      navigator.clipboard.writeText(text);
+      statusMsg.textContent = 'Prompt has been copied to the clipboard.';
+      statusMsg.classList.remove('hidden');
+      clearTimeout(statusTimeout);
+      statusTimeout = setTimeout(()=>statusMsg.classList.add('hidden'), 1500);
     });
   </script>
 </body>
