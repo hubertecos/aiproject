@@ -281,16 +281,10 @@
           const n=i+1;
           parts.push('');
           parts.push(`<Stakeholder${n}>`);
-          parts.push(it.name || '');
+          parts.push(`<Name>${it.name || ''}</Name>`);
+          parts.push(`<Interest>${it.reasons || ''}</Interest>`);
+          parts.push(`<Evidence>${it.evidence || ''}</Evidence>`);
           parts.push(`</Stakeholder${n}>`);
-          parts.push('');
-          parts.push(`<Interest${n}>`);
-          parts.push(it.reasons || '');
-          parts.push(`</Interest${n}>`);
-          parts.push('');
-          parts.push(`<Arguments${n}>`);
-          parts.push(it.arguments || '');
-          parts.push(`</Arguments${n}>`);
         });
       } else if(mode==='lit-structure'){
         parts.push('<ResearchQuestion>');
@@ -299,13 +293,10 @@
         (data.issues || []).forEach((it,i)=>{
           const n=i+1;
           parts.push('');
-          parts.push(`<Issue${n}Title>`);
-          parts.push(it.title || '');
-          parts.push(`</Issue${n}Title>`);
-          parts.push('');
-          parts.push(`<Issue${n}Explanation>`);
-          parts.push(it.expl || '');
-          parts.push(`</Issue${n}Explanation>`);
+          parts.push(`<Issue${n}>`);
+          parts.push(`<Title>${it.title || ''}</Title>`);
+          parts.push(`<Explanation>${it.expl || ''}</Explanation>`);
+          parts.push(`</Issue${n}>`);
         });
       } else if(mode==='literature-review'){
         parts.push('<ResearchQuestion>');
@@ -398,7 +389,7 @@
       const t1 = document.createElement('textarea'); t1.rows=3; t1.maxLength=5000; t1.className='w-full p-3 border rounded-xl focus:ring-2 focus:ring-blue-500';
       const c2 = document.createElement('div'); c2.className='text-xs text-gray-500'; c2.textContent='0 / 5000';
       t1.addEventListener('input',()=>c2.textContent=`${t1.value.length} / ${t1.maxLength}`);
-      const l3 = document.createElement('label'); l3.className='block font-medium'; l3.textContent='Arguments (data, quotes, references)';
+      const l3 = document.createElement('label'); l3.className='block font-medium'; l3.textContent='Evidence (data, quotes, references)';
       const t2 = document.createElement('textarea'); t2.rows=3; t2.maxLength=5000; t2.className='w-full p-3 border rounded-xl focus:ring-2 focus:ring-blue-500';
       const c3 = document.createElement('div'); c3.className='text-xs text-gray-500'; c3.textContent='0 / 5000';
       t2.addEventListener('input',()=>c3.textContent=`${t2.value.length} / ${t2.maxLength}`);
@@ -441,18 +432,18 @@
           return {
             name: w.querySelector('input').value.trim(),
             reasons: t[0].value.trim(),
-            arguments: t[1].value.trim()
+            evidence: t[1].value.trim()
           };
         });
         for(let i=0;i<rawItems.length;i++){
-          const {name,reasons,arguments:args}=rawItems[i];
-          const filled = [name,reasons,args].filter(x=>x);
+          const {name,reasons,evidence:ev}=rawItems[i];
+          const filled = [name,reasons,ev].filter(x=>x);
           if(filled.length>0 && filled.length<3){
             alert(`Stakeholder ${i+1}: please fill out all fields or clear them.`);
             return;
           }
         }
-        const items = rawItems.filter(it=>it.name||it.reasons||it.arguments);
+        const items = rawItems.filter(it=>it.name||it.reasons||it.evidence);
         if(items.length===0){
           alert('Please provide the research question and at least one stakeholder.');
           return;
