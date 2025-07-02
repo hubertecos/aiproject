@@ -156,7 +156,7 @@
     <div class="space-y-4">
       <button id="submit-btn" class="w-full bg-blue-600 text-white p-3 rounded-xl hover:bg-blue-700 transition">Generate Prompt</button>
       <button id="copy-btn" class="w-full bg-green-600 text-white p-3 rounded-xl hover:bg-green-700 transition hidden">Copy Prompt to Clipboard</button>
-      <div id="status-msg" class="text-center text-red-600 text-sm font-medium hidden">New prompt generated!</div>
+      <div id="status-msg" class="text-center text-red-600 text-sm font-medium hidden">New prompt has been generated.</div>
       <div id="result" class="whitespace-pre-wrap bg-white p-4 border border-gray-300 rounded-xl text-sm hidden"></div>
     </div>
 
@@ -517,11 +517,18 @@
         resultDiv.classList.remove('hidden');
         copyBtn.classList.remove('hidden');
       },100);
+      statusMsg.textContent = 'New prompt has been generated.';
       statusMsg.classList.remove('hidden');
       clearTimeout(statusTimeout);
       statusTimeout = setTimeout(()=>statusMsg.classList.add('hidden'), 1500);
     });
-    copyBtn.addEventListener('click',()=>navigator.clipboard.writeText(resultDiv.textContent));
+    copyBtn.addEventListener('click',()=>{
+      navigator.clipboard.writeText(resultDiv.textContent);
+      statusMsg.textContent = 'Copied. Prompt has been copied to the clipboard.';
+      statusMsg.classList.remove('hidden');
+      clearTimeout(statusTimeout);
+      statusTimeout = setTimeout(()=>statusMsg.classList.add('hidden'), 1500);
+    });
   </script>
 </body>
 </html>
