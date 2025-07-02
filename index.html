@@ -27,6 +27,7 @@
         <option value="lit-structure">3. Literature Review Structure</option>
         <option value="literature-review">4. Literature Review</option>
         <option value="analytical-framework">5. Analytical Framework</option>
+        <option value="formal-aspects">6. Formal Aspects</option>
       </select>
     </div>
 
@@ -144,6 +145,13 @@
       </div>
     </div>
 
+    <!-- Formal Aspects -->
+    <div id="formal-aspects-section" class="space-y-4 hidden">
+      <p class="text-sm">
+        Use this prompt to have the AI check your theoretical submission for formal formatting. After generating the prompt, paste it into the AI and upload your text, PDF, or Word file. For privacy you may remove your cover page before uploading, but your final submission must include a cover page with all required information.
+      </p>
+    </div>
+
     <!-- Generate Prompt & Output -->
     <div class="space-y-4">
       <button id="submit-btn" class="w-full bg-blue-600 text-white p-3 rounded-xl hover:bg-blue-700 transition">Generate Prompt</button>
@@ -201,7 +209,8 @@
       relevance: document.getElementById('relevance-section'),
       'lit-structure': document.getElementById('lit-structure-section'),
       'literature-review': document.getElementById('literature-review-section'),
-      'analytical-framework': document.getElementById('analytical-framework-section')
+      'analytical-framework': document.getElementById('analytical-framework-section'),
+      'formal-aspects': document.getElementById('formal-aspects-section')
     };
       const resultDiv  = document.getElementById('result');
       const copyBtn    = document.getElementById('copy-btn');
@@ -496,6 +505,8 @@
             return;
           }
         }
+      } else if(mode==='formal-aspects'){
+        // No additional data required
       }
       const tmpl = await loadTemplate(mode);
       const prompt = fillTemplate(tmpl, data) + '\n\n' + buildStudentInput(mode,data);
