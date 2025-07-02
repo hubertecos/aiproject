@@ -499,12 +499,16 @@
       }
       const tmpl = await loadTemplate(mode);
       const prompt = fillTemplate(tmpl, data) + '\n\n' + buildStudentInput(mode,data);
+      resultDiv.classList.add('hidden');
+      copyBtn.classList.add('hidden');
+      setTimeout(()=>{
         resultDiv.textContent = prompt;
         resultDiv.classList.remove('hidden');
         copyBtn.classList.remove('hidden');
-        statusMsg.classList.remove('hidden');
-        clearTimeout(statusTimeout);
-        statusTimeout = setTimeout(()=>statusMsg.classList.add('hidden'), 1500);
+      },500);
+      statusMsg.classList.remove('hidden');
+      clearTimeout(statusTimeout);
+      statusTimeout = setTimeout(()=>statusMsg.classList.add('hidden'), 1500);
     });
     copyBtn.addEventListener('click',()=>navigator.clipboard.writeText(resultDiv.textContent));
   </script>
