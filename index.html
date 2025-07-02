@@ -33,7 +33,14 @@
     <!-- Official: RQ -->
     <div id="rq-section" class="space-y-4 hidden">
       <div>
-        <label class="block font-medium">Title of the Thesis</label>
+        <label class="block font-medium">Project Type</label>
+        <div class="space-y-1 ml-4">
+          <label class="block"><input type="radio" name="project-type" value="thesis" class="mr-1" checked>Master's thesis</label>
+          <label class="block"><input type="radio" name="project-type" value="term" class="mr-1">Term paper</label>
+        </div>
+      </div>
+      <div>
+        <label id="title-label" class="block font-medium">Title of the Thesis</label>
         <input id="title" type="text" maxlength="500"
                class="w-full p-3 border border-gray-300 rounded-xl shadow-sm focus:ring-2 focus:ring-blue-500"/>
         <div id="title-count" class="text-xs text-gray-500">0 / 500</div>
@@ -206,6 +213,14 @@
     infoBtn.addEventListener('click', () => infoOverlay.classList.remove('hidden'));
     infoClose.addEventListener('click', () => infoOverlay.classList.add('hidden'));
 
+    const titleLabel = document.getElementById('title-label');
+    function updateTitleLabel(){
+      const type = document.querySelector('input[name="project-type"]:checked').value;
+      titleLabel.textContent = type === 'term' ? 'Title of the Term Paper' : 'Title of the Thesis';
+    }
+    document.querySelectorAll('input[name="project-type"]').forEach(r=>r.addEventListener('change', updateTitleLabel));
+    updateTitleLabel();
+
     // Toggle LR and AF input modes
     const lrTextFields = document.getElementById('literature-review-textfields');
     const lrReminder   = document.getElementById('literature-review-file-reminder');
@@ -240,7 +255,7 @@
 
     function buildStudentInput(mode,data){
       let parts = [];
-      if(mode==='rq'){
+      if(mode==='rq' || mode==='rq-term-paper'){
         parts.push('<ProposedTitle>');
         parts.push(data.title || '');
         parts.push('</ProposedTitle>');
@@ -393,10 +408,12 @@
       if(mode==='rq'){
         data.title=document.getElementById('title').value.trim();
         data.question=document.getElementById('research-question').value.trim();
+        data.type=document.querySelector('input[name="project-type"]:checked').value;
         if(!data.title || !data.question){
           alert('Please provide information in all fields.');
           return;
         }
+        mode = data.type==='term' ? 'rq-term-paper' : 'rq';
       } else if(mode==='relevance'){
         data.question=document.getElementById('relevance-rq').value.trim();
         if(!data.question){
