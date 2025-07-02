@@ -524,7 +524,7 @@
     });
     copyBtn.addEventListener('click',()=>{
       navigator.clipboard.writeText(resultDiv.textContent);
-      statusMsg.textContent = 'Copied. Prompt has been copied to the clipboard.';
+      statusMsg.textContent = 'Prompt has been copied to the clipboard.';
       statusMsg.classList.remove('hidden');
       clearTimeout(statusTimeout);
       statusTimeout = setTimeout(()=>statusMsg.classList.add('hidden'), 1500);
