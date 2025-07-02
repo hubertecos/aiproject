@@ -214,6 +214,7 @@
     };
       const resultDiv  = document.getElementById('result');
       const copyBtn    = document.getElementById('copy-btn');
+      const submitBtn  = document.getElementById('submit-btn');
       const statusMsg  = document.getElementById('status-msg');
       let statusTimeout;
     const infoBtn    = document.getElementById('info-btn');
@@ -352,7 +353,13 @@
       Object.entries(sections).forEach(([k,el])=> el.classList.toggle('hidden', k!==key));
       resultDiv.textContent='';
       resultDiv.classList.add('hidden');
-      copyBtn.classList.add('hidden');
+      if(key==='formal-aspects') {
+        submitBtn.classList.add('hidden');
+        copyBtn.classList.remove('hidden');
+      } else {
+        submitBtn.classList.remove('hidden');
+        copyBtn.classList.add('hidden');
+      }
     }
     modeSelect.addEventListener('change', ()=> showSection(modeSelect.value));
     showSection(modeSelect.value);
@@ -410,8 +417,8 @@
     removeStakeholderBtn.addEventListener('click', removeStakeholder);
     for(let i=0;i<3;i++) addStakeholder();
 
-    // Generate prompt
-    document.getElementById('submit-btn').addEventListener('click', async () => {
+    // Generate prompt logic
+    async function generatePrompt() {
       let mode = modeSelect.value;
       const data = {};
       if(mode==='rq'){
@@ -516,13 +523,21 @@
         resultDiv.textContent = prompt;
         resultDiv.classList.remove('hidden');
       },100);
+      return prompt;
+    }
+    submitBtn.addEventListener('click', async () => {
+      await generatePrompt();
       statusMsg.textContent = 'New prompt has been generated.';
       statusMsg.classList.remove('hidden');
       clearTimeout(statusTimeout);
       statusTimeout = setTimeout(()=>statusMsg.classList.add('hidden'), 1500);
     });
-    copyBtn.addEventListener('click',()=>{
-      navigator.clipboard.writeText(resultDiv.textContent);
+    copyBtn.addEventListener('click', async ()=>{
+      let text = resultDiv.textContent;
+      if(modeSelect.value==='formal-aspects' || !text.trim()) {
+        text = await generatePrompt();
+      }
+      navigator.clipboard.writeText(text);
       statusMsg.textContent = 'Prompt has been copied to the clipboard.';
       statusMsg.classList.remove('hidden');
       clearTimeout(statusTimeout);
