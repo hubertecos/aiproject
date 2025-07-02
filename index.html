@@ -12,14 +12,13 @@
     <h1 class="text-3xl font-bold">EcoS AI Prompt-Generator</h1>
     <p class="mb-3 text-sm text-gray-700">
       <strong>Instructions:</strong><br>
-      Select the current phase of your research project, fill in the fields, then click “Generate Prompt” to generate your prompt.<br>
-      You can then copy the prompt and paste it into ChatGPT, Claude, Gemini, etc.
+      Choose your current research development phase below, insert the relevant information into the input fields, and generate a customized prompt. Copy the result and use it with any large language model (ChatGPT, Claude, Gemini, etc.) to get targeted feedback on your work.
     </p>
     <button id="info-btn" type="button" class="bg-gray-200 text-gray-800 px-4 py-2 rounded-xl hover:bg-gray-300">Why We Built This Tool (And How You Should Use It)</button>
 
     <!-- Single dropdown with Testing option -->
     <div>
-      <label for="modeSelect" class="block font-medium mb-1">What to generate</label>
+      <label for="modeSelect" class="block font-medium mb-1">Research development phase</label>
       <select id="modeSelect"
               class="w-full p-3 border border-gray-300 rounded-xl shadow-sm focus:ring-2 focus:ring-blue-500">
         <option value="rq">1. Topic &amp; Research Question</option>
@@ -63,13 +62,13 @@
         <div id="relevance-rq-count" class="text-xs text-gray-500">0 / 500</div>
       </div>
       <div>
-        <label class="block font-medium">Provide Relevance Table</label>
+        <label class="block font-medium">How would you like to provide your relevance analysis?</label>
         <div class="space-y-1 ml-4">
-          <label class="block"><input type="radio" name="relevance-input-mode" value="fields" class="mr-1" checked>Use individual fields</label>
+          <label class="block"><input type="radio" name="relevance-input-mode" value="fields" class="mr-1" checked>Fill out structured fields</label>
           <label class="block"><input type="radio" name="relevance-input-mode" value="text" class="mr-1">Paste entire table as text</label>
         </div>
         <p id="relevance-text-reminder" class="hidden text-sm bg-yellow-100 text-yellow-700 p-2 rounded mt-2">
-          Copying your table into one field may shift formatting. Ensure the entries remain complete and in the correct order. The individual fields generally provide more reliable results.
+          Note that pasting your table may affect formatting. Pay attention that your submission remains complete and correctly structured. For more reliable formatting, filling out the structured fields is recommended.
         </p>
       </div>
       <div id="relevance-stakeholder-fields">
@@ -98,13 +97,13 @@
         <div id="lit-structure-rq-count" class="text-xs text-gray-500">0 / 500</div>
       </div>
       <div>
-        <label class="block font-medium">Provide Literature Review Structure</label>
+        <label class="block font-medium">How would you like to provide your literature review structure?</label>
         <div class="space-y-1 ml-4">
-          <label class="block"><input type="radio" name="ls-input-mode" value="fields" class="mr-1" checked>Use individual fields</label>
+          <label class="block"><input type="radio" name="ls-input-mode" value="fields" class="mr-1" checked>Fill out structured fields</label>
           <label class="block"><input type="radio" name="ls-input-mode" value="text" class="mr-1">Paste full structure as text</label>
         </div>
         <p id="ls-text-reminder" class="hidden text-sm bg-yellow-100 text-yellow-700 p-2 rounded mt-2">
-          Pasting everything at once may alter formatting. Double-check the order and completeness of your entries. The separate fields are the safest method.
+          Note that pasting your table may affect formatting. Pay attention that your submission remains complete and correctly structured. For more reliable formatting, filling out the structured fields is recommended.
         </p>
       </div>
       <div id="lit-structure-fieldset">
@@ -134,10 +133,10 @@
         <div id="literature-review-rq-count" class="text-xs text-gray-500">0 / 500</div>
       </div>
       <div>
-        <label class="block font-medium">Provide Literature Review</label>
+        <label class="block font-medium">How would you like to provide your literature review?</label>
         <div class="space-y-1 ml-4">
-          <label class="block"><input type="radio" name="lr-input-mode" value="text" class="mr-1" checked>Paste text into the form</label>
-          <label class="block"><input type="radio" name="lr-input-mode" value="file" class="mr-1">Upload document to AI later</label>
+          <label class="block"><input type="radio" name="lr-input-mode" value="text" class="mr-1" checked>Enter text directly</label>
+          <label class="block"><input type="radio" name="lr-input-mode" value="file" class="mr-1">Upload file separately when using AI</label>
         </div>
       </div>
       <div id="literature-review-textfields" class="space-y-2">
@@ -147,7 +146,7 @@
         <div id="literature-review-count" class="text-xs text-gray-500">0 / 50000</div>
       </div>
       <div id="literature-review-file-reminder" class="hidden text-sm bg-blue-100 text-blue-700 p-2 rounded">
-        When using the AI, upload your Literature Review file together with this prompt.
+        Remember to upload your document(s) alongside the generated prompt when using your AI chatbot.
       </div>
     </div>
 
@@ -160,10 +159,10 @@
         <div id="analytical-framework-rq-count" class="text-xs text-gray-500">0 / 500</div>
       </div>
       <div>
-        <label class="block font-medium">Provide Literature Review and Analytical Framework</label>
+        <label class="block font-medium">How would you like to provide your literature review and analytical framework?</label>
         <div class="space-y-1 ml-4">
-          <label class="block"><input type="radio" name="af-input-mode" value="text" class="mr-1" checked>Paste text into the form</label>
-          <label class="block"><input type="radio" name="af-input-mode" value="file" class="mr-1">Upload document to AI later</label>
+          <label class="block"><input type="radio" name="af-input-mode" value="text" class="mr-1" checked>Enter text directly</label>
+          <label class="block"><input type="radio" name="af-input-mode" value="file" class="mr-1">Upload file separately when using AI</label>
         </div>
       </div>
       <div id="analytical-framework-textfields" class="space-y-2">
@@ -177,21 +176,21 @@
         <div id="analytical-framework-count" class="text-xs text-gray-500">0 / 50000</div>
       </div>
       <div id="analytical-framework-file-reminder" class="hidden text-sm bg-blue-100 text-blue-700 p-2 rounded">
-        When using the AI, upload both your Literature Review and Analytical Framework files together with this prompt.
+        Remember to upload your document(s) alongside the generated prompt when using your AI chatbot.
       </div>
     </div>
 
     <!-- Formal Aspects -->
     <div id="formal-aspects-section" class="space-y-4 hidden">
       <p class="text-sm">
-        Use this prompt to have the AI check your theoretical submission for formal formatting. After generating the prompt, paste it into the AI and upload your text, PDF, or Word file. For privacy you may remove your cover page before uploading, but your final submission must include a cover page with all required information.
+        You can use this prompt to have AI check your submission's formal formatting. Use it with any AI chatbot by uploading your document (ideally in PDF) alongside this prompt. You may remove personal information from your cover page before uploading, though your final submission must include a complete cover page.
       </p>
     </div>
 
     <!-- Generate Prompt & Output -->
     <div class="space-y-4">
       <button id="submit-btn" class="w-full bg-blue-600 text-white p-3 rounded-xl hover:bg-blue-700 transition">Generate Prompt</button>
-      <button id="copy-btn" class="w-full bg-green-600 text-white p-3 rounded-xl hover:bg-green-700 transition hidden">Copy Prompt to Clipboard</button>
+      <button id="copy-btn" class="w-full bg-green-600 text-white p-3 rounded-xl hover:bg-green-700 transition hidden">Copy to Clipboard</button>
       <div id="status-msg" class="text-center text-red-700 text-sm font-medium hidden">New prompt has been generated.</div>
       <div id="result" class="whitespace-pre-wrap bg-white p-4 border border-gray-300 rounded-xl text-sm hidden"></div>
     </div>
