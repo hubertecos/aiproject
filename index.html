@@ -322,7 +322,12 @@
       lsWarning.classList.toggle('hidden', !lsTextInitial);
 
     async function loadTemplate(name){
-      const resp = await fetch(`prompts/${name}.txt`);
+      const map = {
+        'relevance-text': 'relevance',
+        'lit-structure-text': 'lit-structure'
+      };
+      const file = map[name] || name;
+      const resp = await fetch(`prompts/${file}.txt`);
       return resp.text();
     }
     function fillTemplate(tmpl,data){
