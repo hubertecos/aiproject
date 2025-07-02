@@ -511,11 +511,10 @@
       const tmpl = await loadTemplate(mode);
       const prompt = fillTemplate(tmpl, data) + '\n\n' + buildStudentInput(mode,data);
       resultDiv.classList.add('hidden');
-      copyBtn.classList.add('hidden');
+      copyBtn.classList.remove('hidden');
       setTimeout(()=>{
         resultDiv.textContent = prompt;
         resultDiv.classList.remove('hidden');
-        copyBtn.classList.remove('hidden');
       },100);
       statusMsg.textContent = 'New prompt has been generated.';
       statusMsg.classList.remove('hidden');
