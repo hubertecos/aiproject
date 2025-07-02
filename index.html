@@ -516,7 +516,10 @@
         // No additional data required
       }
       const tmpl = await loadTemplate(mode);
-      const prompt = fillTemplate(tmpl, data) + '\n\n' + buildStudentInput(mode,data);
+      let prompt = fillTemplate(tmpl, data);
+      if(mode !== 'formal-aspects') {
+        prompt += '\n\n' + buildStudentInput(mode, data);
+      }
       resultDiv.classList.add('hidden');
       copyBtn.classList.remove('hidden');
       setTimeout(()=>{
