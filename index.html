@@ -36,9 +36,8 @@
         <option value="rq">1. Topic &amp; Research Question</option>
         <option value="relevance">2. Relevance of the Research Question</option>
         <option value="lit-structure">3. Literature Review Structure</option>
-        <option value="literature-review">4. Literature Review</option>
-        <option value="analytical-framework">5. Analytical Framework</option>
-        <option value="formal-aspects">6. Formal Aspects</option>
+        <option value="analytical-framework">4. Literature Review and Analytical Framework</option>
+        <option value="formal-aspects">5. Formal Aspects</option>
       </select>
     </div>
 
@@ -135,33 +134,6 @@
       </div>
     </div>
 
-
-    <!-- Official: Literature Review -->
-    <div id="literature-review-section" class="section space-y-6 hidden">
-      <div>
-        <label class="block font-medium">Research Question</label>
-        <input id="literature-review-rq" type="text" maxlength="500"
-               class="input-field w-full p-3 border border-gray-300 rounded-xl shadow-sm focus:ring-2 focus:ring-blue-500"/>
-        <div id="literature-review-rq-count" class="char-count text-gray-500">0 / 500</div>
-      </div>
-      <div>
-        <label class="block font-medium">How would you like to provide your literature review?</label>
-        <div class="space-y-1 ml-4">
-          <label class="block"><input type="radio" name="lr-input-mode" value="text" class="mr-1" checked>Enter text directly</label>
-          <label class="block"><input type="radio" name="lr-input-mode" value="file" class="mr-1">Upload file separately when using AI</label>
-        </div>
-      </div>
-      <div id="literature-review-textfields" class="space-y-2">
-        <label class="block font-medium">Literature Review</label>
-        <textarea id="literature-review" rows="6" maxlength="50000"
-                  class="input-field w-full p-3 border border-gray-300 rounded-xl shadow-sm focus:ring-2 focus:ring-blue-500"></textarea>
-        <div id="literature-review-count" class="char-count text-gray-500">0 / 50000</div>
-      </div>
-      <div id="literature-review-file-reminder" class="hidden instruction-text bg-blue-100 text-blue-700 p-2 rounded">
-        Remember to upload your document(s) alongside the generated prompt when using your AI chatbot.
-      </div>
-    </div>
-
     <!-- Official: Analytical Framework -->
     <div id="analytical-framework-section" class="section space-y-6 hidden">
       <div>
@@ -255,7 +227,6 @@
       rq: document.getElementById('rq-section'),
       relevance: document.getElementById('relevance-section'),
       'lit-structure': document.getElementById('lit-structure-section'),
-      'literature-review': document.getElementById('literature-review-section'),
       'analytical-framework': document.getElementById('analytical-framework-section'),
       'formal-aspects': document.getElementById('formal-aspects-section')
     };
@@ -278,14 +249,7 @@
     document.querySelectorAll('input[name="project-type"]').forEach(r=>r.addEventListener('change', updateTitleLabel));
     updateTitleLabel();
 
-      // Toggle LR and AF input modes
-      const lrTextFields = document.getElementById('literature-review-textfields');
-      const lrReminder   = document.getElementById('literature-review-file-reminder');
-      document.querySelectorAll('input[name="lr-input-mode"]').forEach(r=>r.addEventListener('change',()=>{
-        const fileMode = document.querySelector('input[name="lr-input-mode"]:checked').value === 'file';
-        lrTextFields.classList.toggle('hidden', fileMode);
-        lrReminder.classList.toggle('hidden', !fileMode);
-      }));
+      // Toggle AF input mode
       const afTextFields = document.getElementById('analytical-framework-textfields');
       const afReminder   = document.getElementById('analytical-framework-file-reminder');
       document.querySelectorAll('input[name="af-input-mode"]').forEach(r=>r.addEventListener('change',()=>{
@@ -317,9 +281,6 @@
       }));
 
       // Set initial state for input mode toggles
-      const lrFileInitial = document.querySelector('input[name="lr-input-mode"]:checked').value === 'file';
-      lrTextFields.classList.toggle('hidden', lrFileInitial);
-      lrReminder.classList.toggle('hidden', !lrFileInitial);
       const afFileInitial = document.querySelector('input[name="af-input-mode"]:checked').value === 'file';
       afTextFields.classList.toggle('hidden', afFileInitial);
       afReminder.classList.toggle('hidden', !afFileInitial);
@@ -335,7 +296,8 @@
     async function loadTemplate(name){
       const map = {
         'relevance-text': 'relevance',
-        'lit-structure-text': 'lit-structure'
+        'lit-structure-text': 'lit-structure',
+        'analytical-framework-file': 'analytical-framework'
       };
       const file = map[name] || name;
       const resp = await fetch(`prompts/${file}.txt`);
@@ -407,18 +369,6 @@
           parts.push('<LiteratureReviewStructure>');
           parts.push(data.ls_text || '');
           parts.push('</LiteratureReviewStructure>');
-      } else if(mode==='literature-review'){
-        parts.push('<ResearchQuestion>');
-        parts.push(data.question || '');
-        parts.push('</ResearchQuestion>');
-        parts.push('');
-        parts.push('<LiteratureReview>');
-        parts.push(data.review || '');
-        parts.push('</LiteratureReview>');
-      } else if(mode==='literature-review-file'){
-        parts.push('<ResearchQuestion>');
-        parts.push(data.question || '');
-        parts.push('</ResearchQuestion>');
       } else if(mode==='analytical-framework'){
         parts.push('<ResearchQuestion>');
         parts.push(data.question || '');
@@ -466,7 +416,7 @@
     showSection(modeSelect.value);
 
     // Counters
-      [['title',500],['research-question',500],['relevance-rq',500],['relevance-text',50000],['lit-structure-rq',500],['lit-structure-text',50000],['literature-review-rq',500],['literature-review',50000],['analytical-framework-rq',500],['analytical-framework-lit-review',50000],['analytical-framework',50000]].forEach(([id,max])=>{
+      [['title',500],['research-question',500],['relevance-rq',500],['relevance-text',50000],['lit-structure-rq',500],['lit-structure-text',50000],['analytical-framework-rq',500],['analytical-framework-lit-review',50000],['analytical-framework',50000]].forEach(([id,max])=>{
         const el=document.getElementById(id), cnt=document.getElementById(id+'-count');
         if(el&&cnt) el.addEventListener('input',()=>cnt.textContent = `${el.value.length} / ${max}`);
       });
@@ -606,20 +556,6 @@
           if(!valid){ alert('Please provide the research question and complete issue information.'); return; }
           data.structure=items.map(({title,expl})=>`Issue: ${title}\nExplanation / Purpose: ${expl}`).join('\n\n');
           data.issues=items;
-        }
-      } else if(mode==='literature-review'){
-        const lrFile = document.querySelector('input[name="lr-input-mode"]:checked').value === 'file';
-        const rqEl=document.getElementById('literature-review-rq');
-        data.question=rqEl.value.trim();
-        if(lrFile){
-          if(!data.question){ showError(rqEl); alert('Please provide the research question.'); return; }
-          mode='literature-review-file';
-        } else {
-          const revEl=document.getElementById('literature-review');
-          data.review=revEl.value.trim();
-          if(!data.question){ showError(rqEl); }
-          if(!data.review){ showError(revEl); }
-          if(!data.question || !data.review){ alert('Please provide information in all fields.'); return; }
         }
       } else if(mode==='analytical-framework'){
         const afFile = document.querySelector('input[name="af-input-mode"]:checked').value === 'file';
