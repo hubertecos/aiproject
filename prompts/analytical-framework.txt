@@ -26,9 +26,10 @@ information
 
 **Submission Options:**
 - Submit as text below the prompt, OR
-- Upload as file (PDF, Word, or text document)
+- Upload as a separate file (PDF, Word, or text document)
+If the LR and AF are not provided below this prompt, check if the user uploaded a separate file.
 
-**Completeness Check:** Only proceed if submission includes complete LR and AF text. If incomplete, request complete submission before analysis.
+**Completeness Check:** Only proceed if submission includes both the complete LR and AF text. If incomplete, request complete submission before analysis.
 </SubmissionRequirements>
 
 <!-- ===== KEY DEFINITIONS ===== -->
