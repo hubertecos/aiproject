@@ -77,50 +77,6 @@ The EcoS AI Prompt-Generator is an educational tool designed to help graduate st
 |**4. Analytical Framework**       |Verify framework-literature alignment         |Literature grounding, measurement specification, data collection|
 |**5. Formal Aspects**             |Check formatting and presentation standards   |Document structure, heading hierarchy, visual elements          |
 
-## Installation
-
-### Prerequisites
-
-- Modern web browser (Chrome, Firefox, Safari, Edge)
-- Web server (for local development) or static hosting service
-
-### Quick Start
-
-1. **Clone the repository**
-   
-   ```bash
-   git clone https://github.com/your-username/ecos-ai-prompt-generator.git
-   cd ecos-ai-prompt-generator
-   ```
-1. **Serve the application**
-   
-   **Option A: Using Python**
-   
-   ```bash
-   python -m http.server 8000
-   ```
-   
-   **Option B: Using Node.js**
-   
-   ```bash
-   npx serve .
-   ```
-   
-   **Option C: Using Live Server (VS Code)**
-- Install Live Server extension
-- Right-click on `index.html` → “Open with Live Server”
-1. **Access the application**
-- Open your browser and navigate to `http://localhost:8000`
-
-### Deployment
-
-The application is a static site and can be deployed to any web hosting service:
-
-- **GitHub Pages**: Push to a repository and enable GitHub Pages
-- **Netlify**: Drag and drop the project folder or connect via Git
-- **Vercel**: Import the repository for automatic deployment
-- **Traditional hosting**: Upload files to any web server
-
 ## Usage
 
 ### Basic Workflow
@@ -208,37 +164,6 @@ ecos-ai-prompt-generator/
 - Safari: ✅ Full support
 - Edge: ✅ Full support
 - Internet Explorer: ❌ Not supported
-
-## Contributing
-
-We welcome contributions to improve the EcoS AI Prompt-Generator! Here’s how you can help:
-
-### Development Setup
-
-1. Fork the repository
-1. Create a feature branch (`git checkout -b feature/amazing-feature`)
-1. Make your changes
-1. Test thoroughly across different browsers
-1. Commit your changes (`git commit -m 'Add amazing feature'`)
-1. Push to the branch (`git push origin feature/amazing-feature`)
-1. Open a Pull Request
-
-### Contribution Guidelines
-
-- **Code Style**: Follow existing JavaScript and HTML patterns
-- **Testing**: Test across multiple browsers and devices
-- **Documentation**: Update README.md for significant changes
-- **Templates**: Be extremely careful when modifying prompt templates
-- **Academic Accuracy**: Ensure changes align with program requirements
-
-### Areas for Contribution
-
-- 🐛 Bug fixes and error handling improvements
-- 🎨 UI/UX enhancements and accessibility improvements
-- 📱 Mobile responsiveness optimizations
-- 🌍 Internationalization support
-- 📊 Analytics and usage tracking
-- 🔧 Performance optimizations
 
 ## Educational Context
 
