@@ -1,6 +1,5 @@
 # EcoS AI Prompt-Generator
 
-[![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](https://opensource.org/licenses/MIT)
 [![HTML5](https://img.shields.io/badge/HTML5-E34F26?style=flat&logo=html5&logoColor=white)](https://developer.mozilla.org/en-US/docs/Web/HTML)
 [![JavaScript](https://img.shields.io/badge/JavaScript-F7DF1E?style=flat&logo=javascript&logoColor=black)](https://developer.mozilla.org/en-US/docs/Web/JavaScript)
 [![Tailwind CSS](https://img.shields.io/badge/Tailwind_CSS-38B2AC?style=flat&logo=tailwind-css&logoColor=white)](https://tailwindcss.com/)
@@ -15,7 +14,6 @@
 - [Usage](#usage)
 - [Technical Details](#technical-details)
 - [Educational Context](#educational-context)
-- [License](#license)
 
 ## Overview
 
@@ -172,10 +170,6 @@ The tool embodies a responsible approach to AI in education:
 - Cannot replace human expertise and contextual understanding
 - May show inconsistencies across multiple submissions
 - Students should always consult professors for comprehensive evaluation
-
-## License
-
-This project is licensed under the MIT License - see the <LICENSE> file for details.
 
 -----
 
