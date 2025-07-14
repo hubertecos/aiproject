@@ -328,8 +328,10 @@
     async function loadTemplate(name){
       const map = {
         'relevance-text': 'relevance',
-        'lit-structure-text': 'lit-structure',
-        'analytical-framework-file': 'analytical-framework'
+        'lit-structure-text': 'lr-structure',
+        'lit-structure': 'lr-structure',
+        'analytical-framework-file': 'lr-af',
+        'analytical-framework': 'lr-af'
       };
       const file = map[name] || name;
       const resp = await fetch(`prompts/${file}.txt`);
