@@ -12,11 +12,8 @@
 - [Overview](#overview)
 - [Features](#features)
 - [Research Development Phases](#research-development-phases)
-- [Installation](#installation)
 - [Usage](#usage)
-- [Project Structure](#project-structure)
 - [Technical Details](#technical-details)
-- [Contributing](#contributing)
 - [Educational Context](#educational-context)
 - [License](#license)
 
@@ -123,22 +120,6 @@ The EcoS AI Prompt-Generator is an educational tool designed to help graduate st
 - **Engage Critically**: Use AI feedback as a starting point for deeper reflection
 - **Iterate**: Generate prompts multiple times as your work evolves
 - **Consult Professors**: Use feedback to prepare for meaningful academic discussions
-
-## Project Structure
-
-```
-ecos-ai-prompt-generator/
-├── index.html                    # Main application file
-├── prompts/
-│   ├── rq.txt                   # Research question template (thesis)
-│   ├── rq-term-paper.txt        # Research question template (term paper)
-│   ├── relevance.txt            # Relevance analysis template
-│   ├── lit-structure.txt        # Literature review structure template
-│   ├── analytical-framework.txt # Analytical framework template
-│   └── formal-aspects.txt       # Formal aspects template
-├── README.md                    # Project documentation
-└── LICENSE                     # License file
-```
 
 ## Technical Details
 
