@@ -12,7 +12,6 @@
 - [Features](#features)
 - [Research Development Phases](#research-development-phases)
 - [Usage](#usage)
-- [Technical Details](#technical-details)
 - [Educational Context](#educational-context)
 
 ## Overview
@@ -119,31 +118,6 @@ The EcoS AI Prompt-Generator is an educational tool designed to help graduate st
 - **Iterate**: Generate prompts multiple times as your work evolves
 - **Consult Professors**: Use feedback to prepare for meaningful academic discussions
 
-## Technical Details
-
-### Built With
-
-- **HTML5**: Semantic structure and accessibility
-- **Vanilla JavaScript**: Dynamic functionality and form management
-- **Tailwind CSS**: Responsive styling and design system
-- **Template System**: Text-based prompt templates with variable substitution
-
-### Key JavaScript Functions
-
-- `showSection(key)`: Manages section visibility based on selected phase
-- `generatePrompt()`: Validates input and generates customized prompts
-- `buildStudentInput()`: Formats student data into structured XML output
-- `addStakeholder()/removeStakeholder()`: Dynamic stakeholder management
-- `addIssue()/removeIssue()`: Dynamic issue management
-
-### Browser Compatibility
-
-- Chrome/Chromium: ✅ Full support
-- Firefox: ✅ Full support
-- Safari: ✅ Full support
-- Edge: ✅ Full support
-- Internet Explorer: ❌ Not supported
-
 ## Educational Context
 
 ### Learning Objectives
@@ -174,5 +148,3 @@ The tool embodies a responsible approach to AI in education:
 -----
 
 **Developed for the MA Program East Asian Economy and Society**
-
-*For questions, issues, or suggestions, please open an issue on GitHub or contact the program administration.*
